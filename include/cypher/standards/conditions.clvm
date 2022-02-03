@@ -1,0 +1,80 @@
+(
+  ; Condition
+
+  (defun-inline cypher.standards.conditions.Condition (condition_code f . r)
+    (list condition_code f . r))
+  (defun-inline cypher.standards.conditions.Condition.is-condition (condition_code condition)
+    (= (cypher.standards.conditions.Condition.get-condition-code condition) condition_code))
+
+  (defun-inline cypher.standards.conditions.Condition.get-condition-code (condition)
+    (f condition))
+  (defun-inline cypher.standards.conditions.Condition.output-amount (condition)
+    (if (= (cypher.standards.conditions.Condition.get-condition-code condition) CREATE_COIN)
+      (cypher.standards.conditions.CreateCoin.get-amount condition)
+      0))
+
+  ; CreateCoin
+
+  (defun-inline cypher.standards.conditions.CreateCoin (puzzle_hash amount)
+    (cypher.standards.conditions.Condition CREATE_COIN puzzle_hash amount))
+  (defun-inline cypher.standards.conditions.CreateCoin.is-condition (condition)
+    (cypher.standards.conditions.Condition.is-condition CREATE_COIN condition))
+  (defun-inline cypher.standards.conditions.CreateCoin.get-puzzle-hash (condition)
+    (f (r condition)))
+  (defun-inline cypher.standards.conditions.CreateCoin.get-puzzle-hash-rest (condition)
+    (r (r condition)))
+  (defun-inline cypher.standards.conditions.CreateCoin.get-amount (condition)
+    (f (r (r condition))))
+  (defun-inline cypher.standards.conditions.CreateCoin.get-amount-rest (condition)
+    (r (r (r condition))))
+
+  ; CreateCoinAnnouncement
+
+  (defun-inline cypher.standards.conditions.CreateCoinAnnouncement (message)
+    (cypher.standards.conditions.Condition CREATE_COIN_ANNOUNCEMENT message))
+  (defun-inline cypher.standards.conditions.CreateCoinAnnouncement.is-condition (condition)
+    (cypher.standards.conditions.Condition.is-condition CREATE_COIN_ANNOUNCEMENT condition))
+  (defun-inline cypher.standards.conditions.CreateCoinAnnouncement.get-message (condition)
+    (f (r condition)))
+  (defun-inline cypher.standards.conditions.CreateCoinAnnouncement.get-message-rest (condition)
+    (r (r condition)))
+
+  ; AssertCoinAnnouncement
+
+  (defun-inline cypher.standards.conditions.AssertCoinAnnouncement (coin_id message)
+    (list ASSERT_COIN_ANNOUNCEMENT (sha256 coin_id message)))
+
+  ;; Exports
+
+  (defun-inline cf.Condition (f . r)
+    (cypher.standards.conditions.Condition f . r))
+  (defun-inline cf.Condition.is-condition (f . r)
+    (cypher.standards.conditions.Condition.is-condition f . r))
+  (defun-inline cf.Condition.get-condition-code (f . r)
+    (cypher.standards.conditions.Condition.get-condition-code f . r))
+  (defun-inline cf.Condition.output-amount (f . r)
+    (cypher.standards.conditions.Condition.output-amount f . r))
+  (defun-inline cf.CreateCoin (f . r)
+    (cypher.standards.conditions.CreateCoin f . r))
+  (defun-inline cf.CreateCoin.is-condition (f . r)
+    (cypher.standards.conditions.CreateCoin.is-condition f . r))
+  (defun-inline cf.CreateCoin.get-puzzle-hash (f . r)
+    (cypher.standards.conditions.CreateCoin.get-puzzle-hash f . r))
+  (defun-inline cf.CreateCoin.get-puzzle-hash-rest (f . r)
+    (cypher.standards.conditions.CreateCoin.get-puzzle-hash-rest f . r))
+  (defun-inline cf.CreateCoin.get-amount (f . r)
+    (cypher.standards.conditions.CreateCoin.get-amount f . r))
+  (defun-inline cf.CreateCoin.get-amount-rest (f . r)
+    (cypher.standards.conditions.CreateCoin.get-amount-rest f . r))
+  (defun-inline cf.CreateCoinAnnouncement (f . r)
+    (cypher.standards.conditions.CreateCoinAnnouncement f . r))
+  (defun-inline cf.CreateCoinAnnouncement.is-condition (f . r)
+    (cypher.standards.conditions.CreateCoinAnnouncement.is-condition f . r))
+  (defun-inline cf.CreateCoinAnnouncement.get-message (f . r)
+    (cypher.standards.conditions.CreateCoinAnnouncement.get-message f . r))
+  (defun-inline cf.CreateCoinAnnouncement.get-message-rest (f . r)
+    (cypher.standards.conditions.CreateCoinAnnouncement.get-message-rest f . r))
+  (defun-inline cf.AssertCoinAnnouncement (f . r)
+    (cypher.standards.conditions.AssertCoinAnnouncement f . r))
+
+)

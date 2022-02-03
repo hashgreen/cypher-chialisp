@@ -1,0 +1,153 @@
+(mod
+  (
+    MOD_HASH
+    TAIL_PROGRAM_HASH
+    INNER_PUZZLE
+
+    inner_solution
+    parent_coin
+    prev_coin_id
+    this_coin
+    next_inner_coin
+    prev_subtotal
+    extra_delta
+  )
+
+  (include cypher.clvm)
+  (include chia/cat-lib.clvm)
+
+  (defun check-lineage-or-run-tail-program
+    (
+      this_coin
+      tail_truth
+      parent_is_cat
+      parent_coin
+      cat_truth
+      extra_delta
+      inner_conditions
+    )
+    (if tail_truth
+      (cf.ASSERT
+        (CatMod.verify-tail-program-hash (CatTruth.get-cat-mod cat_truth)
+          tail_truth
+        )
+        (merge-iterables
+          (TailTruth.apply-program tail_truth
+            cat_truth
+            parent_is_cat
+            parent_coin
+            extra_delta
+            inner_conditions
+          )
+          inner_conditions
+        )
+      )
+      (cf.ASSERT
+        parent_is_cat
+        (not extra_delta)
+        inner_conditions
+      )
+    )
+  )
+
+  (defun-inline generate-final-output-conditions
+    (
+      prev_subtotal
+      this_subtotal
+      cat_conditions
+      prev_coin_id
+      this_coin_id
+      next_coin_id
+    )
+    (cf.CC
+      (cf.CreateCoinAnnouncement
+        (CatMessage.ring prev_coin_id prev_subtotal))
+      (cf.AssertCoinAnnouncement next_coin_id
+        (CatMessage.ring this_coin_id this_subtotal))
+      cat_conditions
+    )
+  )
+
+  (defun stager-two
+    (
+      cat_truth
+      cat_conditions
+      parent_coin
+      prev_coin_id
+      this_coin
+      next_coin_id
+      prev_subtotal
+      extra_delta
+    )
+
+    (check-lineage-or-run-tail-program
+      this_coin
+      (CatConditions.get-tail-truth cat_conditions)  ; tail_truth
+      (cf.AND                                        ; parent_is_cat
+        parent_coin
+        (CatMod.is-coin-cat (CatTruth.get-cat-mod cat_truth)
+          parent_coin
+          (cf.Coin.get-parent-id (CatTruth.get-coin cat_truth))
+        )
+      )
+      parent_coin
+      cat_truth
+      extra_delta
+      (generate-final-output-conditions              ; inner_conditions
+        prev_subtotal
+        (+
+          prev_subtotal
+          (-
+            (cf.Coin.get-amount this_coin)
+            (CatConditions.get-output-amount cat_conditions))
+          extra_delta
+        )
+        (CatConditions.get-conditions cat_conditions)
+        prev_coin_id
+        (CatTruth.get-coin-id cat_truth)
+        next_coin_id
+      )
+    )
+  )
+
+  (defun stager
+    (
+      cat_mod
+      inner_conditions
+      parent_coin
+      inner_puzzle_hash
+      this_coin_id
+      prev_coin_id
+      this_coin
+      next_inner_coin
+      prev_subtotal
+      extra_delta
+    )
+    (c
+      (list ASSERT_MY_COIN_ID this_coin_id)
+      (stager-two
+        (CatTruth inner_puzzle_hash cat_mod this_coin_id this_coin)  ; cat_truth
+        (CatMod.morph-conditions cat_mod inner_conditions ())        ; cat_conditions
+        parent_coin
+        prev_coin_id
+        this_coin
+        (CatMod.morph-coin-id cat_mod next_inner_coin)               ; next_coin_id
+        prev_subtotal
+        extra_delta
+      )
+    )
+  )
+
+  (stager
+    (CatMod MOD_HASH TAIL_PROGRAM_HASH)  ; cat_mod
+    (a INNER_PUZZLE inner_solution)      ; inner_conditions
+    parent_coin
+    (sha256tree INNER_PUZZLE)            ; inner_puzzle_hash
+    (cf.Coin.id this_coin)               ; this_coin_id
+    prev_coin_id
+    this_coin
+    next_inner_coin
+    prev_subtotal
+    extra_delta
+  )
+)

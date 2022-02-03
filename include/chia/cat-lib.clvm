@@ -1,0 +1,184 @@
+(
+  ;; Truths
+
+  ; CatTruth
+
+  (defun-inline CatTruth (inner_puzzle_hash cat_mod coin_id coin)
+    (c (c inner_puzzle_hash cat_mod) (c coin_id coin)))
+  (defun-inline CatTruth.get-inner-puzzle-hash (cat_truth)
+    (f (f cat_truth)))
+  (defun-inline CatTruth.get-cat-mod (cat_truth)
+    (r (f cat_truth)))
+  (defun-inline CatTruth.get-coin-id (cat_truth)
+    (f (r cat_truth)))
+  (defun-inline CatTruth.get-coin (cat_truth)
+    (r (r cat_truth)))
+
+  ; TailTruth
+
+  (defun-inline TailTruth (tail_program tail_solution)
+    (c tail_program tail_solution))
+  (defun-inline TailTruth.from-cat-create-coin (cat_create_coin)
+    (c
+      (CatCreateCoin.get-tail-reveal cat_create_coin)
+      (CatCreateCoin.get-tail-solution cat_create_coin)))
+  (defun-inline TailTruth.get-program (tail_truth)
+    (f tail_truth))
+  (defun-inline TailTruth.get-solution (tail_truth)
+    (r tail_truth))
+  (defun-inline TailTruth.apply-program
+    (tail_truth cat_truth parent_is_cat parent_coin extra_delta conditions)
+    (a
+      (TailTruth.get-program tail_truth)
+      (list
+        cat_truth
+        parent_is_cat
+        parent_coin
+        extra_delta
+        conditions
+        (TailTruth.get-solution tail_truth)
+      )
+    )
+  )
+
+  ;; Morphs
+
+  ; Messages
+
+  (defconstant ANNOUNCEMENT_MORPH_BYTE 0xca)
+  (defconstant RING_MORPH_BYTE 0xcb)
+
+  (defun-inline CatMessage.morph (message)
+    (sha256 ANNOUNCEMENT_MORPH_BYTE message))
+  (defun-inline CatMessage.ring (coin_id subtotal)
+    (sha256 RING_MORPH_BYTE coin_id subtotal))
+
+  ; Conditions
+
+  (defun-inline CatConditions (conditions output_amount tail_truth)
+    (cf.CC conditions output_amount tail_truth))
+  (defun-inline CatConditions.get-conditions (cat_conditions)
+    (f cat_conditions))
+  (defun-inline CatConditions.get-output-amount (cat_conditions)
+    (f (r cat_conditions)))
+  (defun-inline CatConditions.get-tail-truth (cat_conditions)
+    (r (r cat_conditions)))
+  (defun-inline CatConditions.prepend (cat_conditions condition output_amount)
+    (cons#CatConditions.prepend condition output_amount cat_conditions))
+  (defun cons#CatConditions.prepend (condition output_amount cat_conditions)
+    (CatConditions
+      (c condition (CatConditions.get-conditions cat_conditions))
+      (+ output_amount (CatConditions.get-output-amount cat_conditions))
+      (CatConditions.get-tail-truth cat_conditions)))
+
+  ; CreateCoin
+
+  (defun-inline CatCreateCoin.is-condition (condition)
+    (= (cf.Condition.output-amount condition) -113))
+  (defun-inline CatCreateCoin.get-tail-reveal (condition)
+    (f (r (r (r condition)))))
+  (defun-inline CatCreateCoin.get-tail-solution (condition)
+    (f (r (r (r (r condition))))))
+
+  ;; Mod
+
+  (defun-inline CatMod (mod_hash tail_program_hash)
+    (list mod_hash (cf.sha256one mod_hash) tail_program_hash))
+  (defun-inline CatMod.get-mod-hash (cat_mod)
+    (f cat_mod))
+  (defun-inline CatMod.get-mod-hash-hash (cat_mod)
+    (f (r cat_mod)))
+  (defun-inline CatMod.get-tail-program-hash (cat_mod)
+    (f (r (r cat_mod))))
+  (defun-inline CatMod.is-coin-cat (cat_mod coin coin_id)
+    (= coin_id (CatMod.morph-coin-id cat_mod coin)))
+  (defun-inline CatMod.verify-tail-program-hash (cat_mod tail_truth)
+    (=
+      (sha256tree (TailTruth.get-program tail_truth))
+      (CatMod.get-tail-program-hash cat_mod)))
+
+  (defun-inline CatMod.morph-puzzle-hash (cat_mod inner_puzzle_hash)
+    (cf.puzzle-hash-of-curried-function
+      (CatMod.get-mod-hash cat_mod)
+      inner_puzzle_hash
+      (cf.sha256one (CatMod.get-tail-program-hash cat_mod))
+      (CatMod.get-mod-hash-hash cat_mod)
+    )
+  )
+  (defun-inline CatMod.morph-coin-id (cat_mod coin)
+    (cf.Coin.id
+      (cf.Coin
+        (cf.Coin.get-parent-id coin)
+        (CatMod.morph-puzzle-hash cat_mod (cf.Coin.get-puzzle-hash coin))
+        (cf.Coin.get-amount coin)
+      )
+    )
+  )
+  (defun-inline CatMod.morph-condition (cat_mod inner_condition)
+    (cf.II
+      (cf.CreateCoin.is-condition inner_condition)
+      (cf.CC
+        CREATE_COIN
+        (CatMod.morph-puzzle-hash cat_mod
+          (cf.CreateCoin.get-puzzle-hash inner_condition))
+        (cf.CreateCoin.get-puzzle-hash-rest inner_condition)
+      )
+      (cf.CreateCoinAnnouncement.is-condition inner_condition)
+      (cf.CC
+        CREATE_COIN_ANNOUNCEMENT
+        (CatMessage.morph (cf.CreateCoinAnnouncement.get-message inner_condition))
+        (cf.CreateCoinAnnouncement.get-message-rest inner_condition)
+      )
+      inner_condition
+    )
+  )
+  (defun-inline CatMod.morph-conditions (cat_mod inner_conditions tail_truth)
+    (find_and_strip_tail_info#CatMod.morph-conditions inner_conditions cat_mod tail_truth))
+  (defun find_and_strip_tail_info#CatMod.morph-conditions 
+    (inner_conditions cat_mod tail_truth)
+
+    (if inner_conditions
+      (if (CatCreateCoin.is-condition (f inner_conditions))
+        (find_and_strip_tail_info#CatMod.morph-conditions
+          (r inner_conditions)
+          cat_mod
+          (TailTruth.from-cat-create-coin (f inner_conditions))
+        )
+        (CatConditions.prepend
+          (find_and_strip_tail_info#CatMod.morph-conditions
+            (r inner_conditions)
+            cat_mod
+            tail_truth
+          )
+          (CatMod.morph-condition cat_mod (f inner_conditions))
+          (cf.Condition.output-amount (f inner_conditions))
+        )
+      )
+      (CatConditions () () tail_truth)
+    )
+  )
+
+  ;; Utils
+
+  (defun sha256tree (tree)
+    (if (l tree)
+      (sha256 2 
+        (sha256tree (f tree)) 
+        (sha256tree (r tree))
+      )
+      (cf.sha256one tree)
+    )
+  )
+  (defun merge-iterables (iterable_a iterable_b)
+    (if iterable_a
+      (c
+        (f iterable_a)
+        (merge-iterables
+          (r iterable_a)
+          iterable_b
+        )
+      )
+      iterable_b
+    )
+  )
+)

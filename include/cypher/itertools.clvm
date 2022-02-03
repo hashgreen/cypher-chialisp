@@ -1,0 +1,71 @@
+;; Iterator processing library.
+;
+; Mocks the design of python itertools module.
+
+(
+  (defun cypher.itertools.chain-two (iterable_a iterable_b)
+    ;; Flatten two iterables.
+    ;
+    ; Args:
+    ;   iterable_a: List.
+    ;   iterable_b: Another list.
+    ;
+    ; Returns:
+    ;   The flattend list.
+
+    (if iterable_a
+      (c
+        (f iterable_a)
+        (cypher.itertools.chain-two
+          (r iterable_a)
+          iterable_b
+        )
+      )
+      iterable_b
+    )
+  )
+
+  (defun cypher.itertools.chain (iterables)
+    ;; Flatten multiple iterables.
+    ;
+    ; Args:
+    ;   iterables: List of list to flatten.
+    ;
+    ; Returns:
+    ;   The flattend list.
+
+    (if iterables
+      (cypher.itertools.chain-two
+        (f iterables)
+        (cypher.itertools.chain (r iterables))
+      )
+      cypher.constants.NIL
+    )
+  )
+
+  (defun cypher.itertools.map (func args)
+    ;; Apply map function to each element.
+    ;
+    ; Args:
+    ;   func: Compiled function. More commonly done by
+    ;     (mod (arg) (...)).
+    ;   args: List of arguments to apply func on.
+    ;
+    ; Returns:
+    ;   A list of mapped results from func.
+
+    (if args
+      (c
+        (a func (list (f args)))
+        (cypher.itertools.map func (r args))
+      )
+      cypher.constants.NIL
+    )
+  )
+
+  ;; Exports
+
+  (defun-inline cf.chain-two (f . r) (cypher.itertools.chain-two f . r))
+  (defun-inline cf.chain (f . r) (cypher.itertools.chain f . r))
+  (defun-inline cf.map (f . r) (cypher.itertools.map f . r))
+)

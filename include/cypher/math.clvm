@@ -1,0 +1,25 @@
+(
+  (defun-inline cypher.math.unsigned-sub (minuend subtrahend)
+    (if (> subtrahend minuend)
+      (x)
+      (- minuend subtrahend)
+    )
+  )
+
+  (defun-inline cypher.math.div (numerator denominator)
+    ; The vanilla `/` operator has some unintended behavior, so we fall back to
+    ; `divmod` operator.
+
+    (f (divmod numerator denominator))
+  )
+
+  (defun-inline cypher.math.mulfrac (var numerator denominator)
+    (cypher.math.div (* var numerator) denominator)
+  )
+
+  ;; Exports
+
+  (defun-inline cf.unsigned-sub (f . r) (cypher.math.unsigned-sub f . r))
+  (defun-inline cf.div (f . r) (cypher.math.div f . r))
+  (defun-inline cf.mulfrac (f . r) (cypher.math.mulfrac f . r))
+)

@@ -1,0 +1,156 @@
+;; Hashing library.
+
+(
+  ; name mingling to be compatible with curry-and-treehash.clinc
+
+  (defconstant ONE#cypher.constants.ONE 1)
+  (defconstant TWO#cypher.constants.TWO 2)
+  (defconstant A_KW#cypher.constants.APPLY a)
+  (defconstant Q_KW#cypher.constants.QUOTE q)
+  (defconstant C_KW#cypher.constants.CONS c)
+
+  (defun-inline cypher.hashlib.sha256one (tree)
+    (sha256 ONE#cypher.constants.ONE tree))
+  (defun-inline cypher.hashlib.sha256two (ftree rtree)
+    (sha256 TWO#cypher.constants.TWO ftree rtree))
+
+  (defun cypher.hashlib.sha256tree (tree)
+    ;; Takes a lisp tree and returns the hash of it.
+    ;
+    ; Taken from chia/wallet/puzzles/sha256tree_module.clvm.
+    ;
+    ; Args:
+    ;   tree: The tree to take hash of.
+    ;
+    ; Returns:
+    ;   The tree hash of the input.
+
+    (if (l tree)
+      (cypher.hashlib.sha256two 
+        (cypher.hashlib.sha256tree (f tree))
+        (cypher.hashlib.sha256tree (r tree))
+      )
+      (cypher.hashlib.sha256one tree)
+    )
+  )
+
+  (defun-inline cypher.hashlib.update-hash-for-parameter-hash
+    (parameter_hash environment_hash)
+    ;; Given the tree hash `environment_hash` of an environment tree E
+    ;; and the tree hash `paramete_-hash` of a constant parameter P
+    ;; return the tree hash of the tree corresponding to `(c (q . P) E)`.
+    ;
+    ; Taken from chia/wallet/puzzles/curry-and-treehash.clinc.
+    ;
+    ; This is the new environment tree with the addition parameter P curried in.
+    ; Note that `(c (q . P) E)` = `(c . ((q . P) . (E . 0)))`
+
+    (sha256 TWO#cypher.constants.TWO
+      (sha256 ONE#cypher.constants.ONE C_KW#cypher.constants.CONS)
+      (sha256 TWO#cypher.constants.TWO
+        (sha256 TWO#cypher.constants.TWO
+          (sha256 ONE#cypher.constants.ONE Q_KW#cypher.constants.QUOTE)
+          parameter_hash
+        )
+        (sha256 TWO#cypher.constants.TWO
+          environment_hash
+          (sha256 ONE#cypher.constants.ONE 0)  ; do not use cf.ZERO!
+        )
+      )
+    )
+  )
+
+  (defun-inline cypher.hashlib.tree-hash-of-apply
+    (function_hash environment_hash)
+    ;; Given the tree hash `environment_hash` of an environment tree E
+    ;; and the tree hash `function_hash` of a function tree F
+    ;; return the tree hash of the tree corresponding to `(a (q . F) E)`.
+    ;
+    ; Taken from chia/wallet/puzzles/curry-and-treehash.clinc.
+    ;
+    ; This is the hash of a new function that adopts the new environment E.
+    ; This is used to build of the tree hash of a curried function.
+    ;
+    ; Note that `(a (q . F) E)` = `(a . ((q . F)  . (E . 0)))`.
+
+    (sha256 TWO#cypher.constants.TWO
+      (sha256 ONE#cypher.constants.ONE A_KW#cypher.constants.APPLY)
+      (sha256 TWO#cypher.constants.TWO
+        (sha256 TWO#cypher.constants.TWO
+          (sha256 ONE#cypher.constants.ONE Q_KW#cypher.constants.QUOTE)
+          function_hash
+        )
+        (sha256 TWO#cypher.constants.TWO
+          environment_hash
+          (sha256 ONE#cypher.constants.ONE 0)  ; do not use cf.ZERO!
+        )
+      )
+    )
+  )
+
+  (defun-inline cypher.hashlib.build-curry-list (f . r)
+    (build-curry-list#cypher.hashlib.build-curry-list f . r))
+  (defun build-curry-list#cypher.hashlib.build-curry-list
+    (reversed_curry_parameter_hashes environment_hash)
+    ;; This function recursively calls `update-hash-for-parameter-hash`,
+    ;; updating `environment-hash` along the way.
+    ;
+    ; Taken from chia/wallet/puzzles/curry-and-treehash.clinc.
+
+    (if reversed_curry_parameter_hashes
+      (build-curry-list#cypher.hashlib.build-curry-list
+        (r reversed_curry_parameter_hashes)
+        (cypher.hashlib.update-hash-for-parameter-hash
+          (f reversed_curry_parameter_hashes)
+          environment_hash
+        )
+      )
+      environment_hash
+    )
+  )
+
+  (defun-inline cypher.hashlib.puzzle-hash-of-curried-function (f . r)
+    (puzzle-hash-of-curried-function#cypher.hashlib.puzzle-hash-of-curried-function f . r))
+  (defun puzzle-hash-of-curried-function#cypher.hashlib.puzzle-hash-of-curried-function
+    (function_hash . reversed_curry_parameter_hashes)
+    ;; Calculate of the tree hash of a curried function without actually
+    ;; doing the curry, and using other optimization tricks like unrolling
+    ;; `sha256tree`.
+    ;
+    ; Taken from chia/wallet/puzzles/curry-and-treehash.clinc.
+    ;
+    ; Note that from a user's perspective the hashes passed in here aren't
+    ; simply the hashes of the desired parameters, but their treehash
+    ; representation since that's the form we're assuming they take in the
+    ; acutal curried program.
+    ;
+    ; Args:
+    ;   function_hash: the hash of a puzzle function, ie. a `mod`
+    ;   reversed_curry_parameter_hashes: a list of pre-hashed trees
+    ;     representing parameters to be curried into the puzzle. Note that this
+    ;     must be applied in REVERSED order. This may seem strange, but it
+    ;     greatly simplifies the underlying code, since we calculate the tree
+    ;     hash from the bottom nodes up, and the last parameters curried must
+    ;     have their hashes calculated first.
+    ;
+    ; Returns:
+    ;   The hash of the curried expression.
+    ;     (a (q . function-hash) (c (cp1 (c cp2 (c ... 1)...))))
+
+    (cypher.hashlib.tree-hash-of-apply
+      function_hash
+      (build-curry-list#cypher.hashlib.build-curry-list
+        reversed_curry_parameter_hashes
+        (sha256 ONE#cypher.constants.ONE ONE#cypher.constants.ONE)
+      )
+    )
+  )
+
+  ;; Exports
+
+  (defun-inline cf.sha256one (f . r) (cypher.hashlib.sha256one f . r))
+  (defun-inline cf.sha256two (f . r) (cypher.hashlib.sha256two f . r))
+  (defun-inline cf.sha256tree (f . r) (cypher.hashlib.sha256tree f . r))
+  (defun-inline cf.puzzle-hash-of-curried-function (f . r)
+    (cypher.hashlib.puzzle-hash-of-curried-function f . r))
+)

@@ -1,0 +1,68 @@
+(
+  (defmacro cypher.macros.assert args
+    ;; Assert a series of statements.
+    ;
+    ; Usage: (assert cond1 cond2 ...)
+    ; Taken from chia/wallet/puzzles/cat.clvm.
+
+    (if (r args)
+      (qq
+        (if (unquote (f args))
+          (unquote (c cypher.macros.assert (r args)))
+          (x)
+        )
+      )
+      (f args)
+    )
+  )
+
+  (defmacro cypher.macros.and args
+    ;; And a series of statements.
+    ;
+    ; Usage: (and cond1 cond2 ...)
+    ; Taken from chia/wallet/puzzles/cat.clvm.
+
+    (if (r args)
+      (qq
+        (if (unquote (f args))
+          (unquote (c cypher.macros.and (r args)))
+          0
+        )
+      )
+      (f args)
+    )
+  )
+
+  (defmacro cypher.macros.cc args
+    (if (r args)
+      (qq
+        (c
+          (unquote (f args))
+          (unquote (c cypher.macros.cc (r args)))
+        )
+      )
+      (f args)
+    )
+  )
+
+  (defmacro cypher.macros.ii args
+    (if (r args)
+      (qq
+        (if (unquote (f args))
+          (unquote (f (r args)))
+          (unquote (c cypher.macros.ii (r (r args))))
+        )
+      )
+      (f args)
+    )
+  )
+
+  ;; Exports
+  ;
+  ; We export macros with all CAPITALs to indicate their macro roles.
+
+  (defmacro cf.ASSERT args (c cypher.macros.assert args))
+  (defmacro cf.AND args (c cypher.macros.and args))
+  (defmacro cf.CC args (c cypher.macros.cc args))
+  (defmacro cf.II args (c cypher.macros.ii args))
+)

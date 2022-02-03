@@ -1,0 +1,37 @@
+;; Chia Coins.
+
+(
+  (defun-inline cypher.standards.coin.Coin
+    (parent_id puzzle_hash amount)
+    (list parent_id puzzle_hash amount)
+  )
+  (defun-inline cypher.standards.coin.Coin.get-parent-id (coin)
+    (f coin)
+  )
+  (defun-inline cypher.standards.coin.Coin.get-puzzle-hash (coin)
+    (f (r coin))
+  )
+  (defun-inline cypher.standards.coin.Coin.get-amount (coin)
+    (f (r (r coin)))
+  )
+  (defun-inline cypher.standards.coin.Coin.id (coin)
+    (sha256
+      (cypher.standards.coin.Coin.get-parent-id coin)
+      (cypher.standards.coin.Coin.get-puzzle-hash coin)
+      (cypher.standards.coin.Coin.get-amount coin)
+    )
+  )
+
+  ; Exports
+
+  (defun-inline cf.Coin (f . r) 
+    (cypher.standards.coin.Coin f . r))
+  (defun-inline cf.Coin.get-parent-id (f . r) 
+    (cypher.standards.coin.Coin.get-parent-id f . r))
+  (defun-inline cf.Coin.get-puzzle-hash (f . r) 
+    (cypher.standards.coin.Coin.get-puzzle-hash f . r))
+  (defun-inline cf.Coin.get-amount (f . r) 
+    (cypher.standards.coin.Coin.get-amount f . r))
+  (defun-inline cf.Coin.id (f . r) 
+    (cypher.standards.coin.Coin.id f . r))
+)
