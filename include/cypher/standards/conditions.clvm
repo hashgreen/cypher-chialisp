@@ -44,6 +44,22 @@
   (defun-inline cypher.standards.conditions.AssertCoinAnnouncement (coin_id message)
     (list ASSERT_COIN_ANNOUNCEMENT (sha256 coin_id message)))
 
+  ; CreatePuzzleAnnouncement
+
+  (defun-inline cypher.standards.conditions.CreatePuzzleAnnouncement (message)
+    (cypher.standards.conditions.Condition CREATE_PUZZLE_ANNOUNCEMENT message))
+  (defun-inline cypher.standards.conditions.CreatePuzzleAnnouncement.is-condition (condition)
+    (cypher.standards.conditions.Condition.is-condition CREATE_PUZZLE_ANNOUNCEMENT condition))
+  (defun-inline cypher.standards.conditions.CreatePuzzleAnnouncement.get-message (condition)
+    (f (r condition)))
+  (defun-inline cypher.standards.conditions.CreatePuzzleAnnouncement.get-message-rest (condition)
+    (r (r condition)))
+
+  ; AssertPuzzleAnnouncement
+
+  (defun-inline cypher.standards.conditions.AssertPuzzleAnnouncement (puzzle_hash message)
+    (list ASSERT_PUZZLE_ANNOUNCEMENT (sha256 puzzle_hash message)))
+
   ;; Exports
 
   (defun-inline cf.Condition (f . r)
@@ -76,5 +92,14 @@
     (cypher.standards.conditions.CreateCoinAnnouncement.get-message-rest f . r))
   (defun-inline cf.AssertCoinAnnouncement (f . r)
     (cypher.standards.conditions.AssertCoinAnnouncement f . r))
-
+  (defun-inline cf.CreatePuzzleAnnouncement (f . r)
+    (cypher.standards.conditions.CreatePuzzleAnnouncement f . r))
+  (defun-inline cf.CreatePuzzleAnnouncement.is-condition (f . r)
+    (cypher.standards.conditions.CreatePuzzleAnnouncement.is-condition f . r))
+  (defun-inline cf.CreatePuzzleAnnouncement.get-message (f . r)
+    (cypher.standards.conditions.CreatePuzzleAnnouncement.get-message f . r))
+  (defun-inline cf.CreatePuzzleAnnouncement.get-message-rest (f . r)
+    (cypher.standards.conditions.CreatePuzzleAnnouncement.get-message-rest f . r))
+  (defun-inline cf.AssertPuzzleAnnouncement (f . r)
+    (cypher.standards.conditions.AssertPuzzleAnnouncement f . r))
 )
