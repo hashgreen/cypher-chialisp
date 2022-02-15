@@ -1,0 +1,16 @@
+(a (mod ()
+  (include cypher/macros.clvm)
+  (include cypher/math.clvm)
+
+  (cf.ASSERT
+    (= (cf.sqrt 0) 0)
+    (= (cf.sqrt 1) 1)
+    (= (cf.sqrt 2) 1)
+    (= (cf.sqrt 3) 1)
+    (= (cf.sqrt 4) 2)
+    (= (cf.sqrt 100) 10)
+    (= (cf.sqrt 420) 20)
+    (= (cf.sqrt 10000) 100)
+    (= (cf.sqrt 1000000000000) 1000000)
+  )
+) ())
