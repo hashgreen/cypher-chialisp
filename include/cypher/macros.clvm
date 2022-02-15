@@ -65,4 +65,5 @@
   (defmacro cf.AND args (c cypher.macros.and args))
   (defmacro cf.CC args (c cypher.macros.cc args))
   (defmacro cf.II args (c cypher.macros.ii args))
+  (defmacro cf.SWITCH args (c cypher.macros.ii args))
 )

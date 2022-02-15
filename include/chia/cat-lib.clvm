@@ -115,7 +115,7 @@
     )
   )
   (defun-inline CatMod.morph-condition (cat_mod inner_condition)
-    (cf.II
+    (cf.SWITCH
       (cf.CreateCoin.is-condition inner_condition)
       (cf.CC
         CREATE_COIN
@@ -134,7 +134,7 @@
   )
   (defun-inline CatMod.morph-conditions (cat_mod inner_conditions tail_truth)
     (find_and_strip_tail_info#CatMod.morph-conditions inner_conditions cat_mod tail_truth))
-  (defun find_and_strip_tail_info#CatMod.morph-conditions 
+  (defun find_and_strip_tail_info#CatMod.morph-conditions
     (inner_conditions cat_mod tail_truth)
 
     (if inner_conditions
@@ -162,8 +162,8 @@
 
   (defun sha256tree (tree)
     (if (l tree)
-      (sha256 2 
-        (sha256tree (f tree)) 
+      (sha256 2
+        (sha256tree (f tree))
         (sha256tree (r tree))
       )
       (cf.sha256one tree)
