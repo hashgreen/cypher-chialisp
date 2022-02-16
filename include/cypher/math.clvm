@@ -1,10 +1,23 @@
 (
   (defun-inline cypher.math.unsigned-sub (minuend subtrahend)
-    (if (> subtrahend minuend)
-      (x)
-      (- minuend subtrahend)
-    )
-  )
+    (if (> subtrahend minuend) (x) (- minuend subtrahend)))
+
+  (defun-inline cypher.math.round-down-to-even (var)
+    (if (logand var 1) (- var 1) var))
+  (defun-inline cypher.math.round-down-to-odd (var)
+    (if (logand var 1) var (- var 1)))
+  (defun-inline cypher.math.round-up-to-even (var)
+    (if (logand var 1) (+ var 1) var))
+  (defun-inline cypher.math.round-up-to-odd (var)
+    (if (logand var 1) var (+ var 1)))
+  (defmacro cypher.math.round-even-odd (var round_even round_down)
+    (if round_even
+      (if round_down
+        (qq (cypher.math.round-down-to-even (unquote var)))
+        (qq (cypher.math.round-up-to-even (unquote var))))
+      (if round_down
+        (qq (cypher.math.round-down-to-odd (unquote var)))
+        (qq (cypher.math.round-up-to-odd (unquote var))))))
 
   (defun-inline cypher.math.div (numerator denominator)
     ; The vanilla `/` operator has some unintended behavior, so we fall back to
@@ -18,9 +31,9 @@
     (cypher.math.div (* var numerator) denominator)
   )
 
-  (defun cypher.math.sqrt_newton_loop (var var1 var2)
+  (defun cypher.math.sqrt_loop_babylonian (var var1 var2)
     (if (> var1 var2)
-      (cypher.math.sqrt_newton_loop
+      (cypher.math.sqrt_loop_babylonian
         var
         var2
         (cypher.math.div (+ (cypher.math.div var var2) var2) 2)
@@ -32,7 +45,7 @@
   (defun cypher.math.sqrt (var)
     (cf.SWITCH
       (> var 3)  ; var > 3
-      (cypher.math.sqrt_newton_loop
+      (cypher.math.sqrt_loop_babylonian
         var
         var
         (+ (cypher.math.div var 2) 1)
@@ -48,6 +61,7 @@
   ;; Exports
 
   (defun-inline cf.unsigned-sub (f . r) (cypher.math.unsigned-sub f . r))
+  (defun-inline cf.round-even-odd (f . r) (cypher.math.round-even-odd f . r))
   (defun-inline cf.div (f . r) (cypher.math.div f . r))
   (defun-inline cf.mulfrac (f . r) (cypher.math.mulfrac f . r))
   (defun-inline cf.sqrt (f . r) (cypher.math.sqrt f . r))
