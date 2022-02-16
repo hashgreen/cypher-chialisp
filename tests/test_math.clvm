@@ -3,7 +3,7 @@
   (include cypher/macros.clvm)
   (include cypher/math.clvm)
 
-  (defun test_sqrt ()
+  (defun test-sqrt ()
     (cf.ASSERT
       (= (cf.sqrt 0) 0)
       (= (cf.sqrt 1) 1)
@@ -18,7 +18,7 @@
     )
   )
 
-  (defun test_round ()
+  (defun test-round ()
     (cf.ASSERT
       (= (cf.round-even-odd 0 0 0) 1)
       (= (cf.round-even-odd 1 0 0) 1)
