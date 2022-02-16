@@ -15,6 +15,7 @@
       (= (cf.sqrt 420) 20)
       (= (cf.sqrt 10000) 100)
       (= (cf.sqrt 1000000000000) 1000000)
+      "test-sqrt passed"
     )
   )
 
@@ -36,11 +37,12 @@
       (= (cf.round-even-odd 1 1 1) 0)
       (= (cf.round-even-odd 2 1 1) 2)
       (= (cf.round-even-odd 3 1 1) 2)
+      "test-round passed"
     )
   )
 
-  (cf.CONCAT
-    (test_sqrt)
-    (test_round)
+  (list
+    (test-sqrt)
+    (test-round)
   )
 ) ())
