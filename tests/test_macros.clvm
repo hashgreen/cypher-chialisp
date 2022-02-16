@@ -1,0 +1,45 @@
+(a (mod ()
+
+  (include cypher/macros.clvm)
+
+  (defun test-ii ()
+    (cf.ASSERT
+      (=
+        (cf.II 1 "hashgreen" "hashbrown")
+        "hashgreen"
+      )
+      (=
+        (cf.II 0 "hashgreen" 1 "hashbrown" "hashred")
+        "hashbrown"
+      )
+      (=
+        (cf.II 0 "hashgreen" 0 "hashbrown" "hashred")
+        "hashred"
+      )
+      "test-ii passed"
+    )
+  )
+
+  (defun test-switch ()
+    (cf.ASSERT
+      (=
+        (cf.SWITCH (1 . "hashgreen") "hashbrown")
+        "hashgreen"
+      )
+      (=
+        (cf.SWITCH (0 . "hashgreen") (1 . "hashbrown") "hashred")
+        "hashbrown"
+      )
+      (=
+        (cf.SWITCH (0 . "hashgreen") (0 . "hashbrown") "hashred")
+        "hashred"
+      )
+      "test-switch passed"
+    )
+  )
+
+  (list
+    (test-ii)
+    (test-switch)
+  )
+) ())
