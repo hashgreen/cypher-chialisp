@@ -4,7 +4,7 @@
   (include tests/utils.clvm)
 
   (defun test-ii ()
-    (cypher.macros.assert
+    (tests.utils.assert
       (tests.utils.expect-equal
         (cypher.macros.ii 1 "hashgreen" "hashbrown")
         "hashgreen")
@@ -17,8 +17,7 @@
       "test-ii passed"))
 
   (defun test-switch ()
-    (cypher.macros.assert
-      (tests.utils.expect-equal (+ 1 2) 2)
+    (tests.utils.assert
       (tests.utils.expect-equal
         (cypher.macros.switch (1 . "hashgreen") "hashbrown")
         "hashgreen")

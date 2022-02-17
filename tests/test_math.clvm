@@ -2,16 +2,17 @@
 
   (include cypher/macros.clvm)
   (include cypher/math.clvm)
+
   (include tests/utils.clvm)
 
   (defun test-unsigned-sub ()
-    (cypher.macros.assert
+    (tests.utils.assert
       (tests.utils.expect-failed (cypher.math.unsigned-sub 1 2))
       (tests.utils.expect-equal (cypher.math.unsigned-sub 2 2) 0)
       "test-unsigned-sub passed"))
 
   (defun test-round ()
-    (cypher.macros.assert
+    (tests.utils.assert
       (tests.utils.expect-equal (cypher.math.round-even-odd 0 0 0) 1)
       (tests.utils.expect-equal (cypher.math.round-even-odd 1 0 0) 1)
       (tests.utils.expect-equal (cypher.math.round-even-odd 2 0 0) 3)
@@ -31,7 +32,7 @@
       "test-round passed"))
 
   (defun test-sqrt ()
-    (cypher.macros.assert
+    (tests.utils.assert
       (tests.utils.expect-equal (cypher.math.sqrt 0) 0)
       (tests.utils.expect-equal (cypher.math.sqrt 0) 0)
       (tests.utils.expect-equal (cypher.math.sqrt 1) 1)
