@@ -47,7 +47,7 @@
   )
 
   (defun cypher.math.sqrt (var)
-    (cf.SWITCH
+    (cypher.macros.switch
       (> var 3)  ; var > 3
       (cypher.math.sqrt_loop_babylonian
         var
