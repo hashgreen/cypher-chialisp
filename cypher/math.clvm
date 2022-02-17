@@ -1,43 +1,53 @@
 (
-  (defun-inline cypher.math.unsigned-sub (minuend subtrahend)
-    ;; Unsigned subtraction.
-    ;
-    ; This function makes sure the result is at least zero.
+  ;; Unsigned subtraction.
+  ;
+  ; This function makes sure the result is at least zero.
 
+  (defun-inline %cypher.math.unsigned-sub (minuend subtrahend)
     (if (> subtrahend minuend) (x) (- minuend subtrahend)))
+  (defun cypher.math.unsigned-sub (minuend subtrahend)
+    (%cypher.math.unsigned-sub minuend subtrahend))
 
-  (defmacro cypher.math.round-even-odd (var round_even round_down)
-    ;; Rounding to even or odd.
+  ;; Rounding to even or odd.
 
-    (if round_even
-      (if round_down
-        (qq (cypher.math.round-down-to-even (unquote var)))
-        (qq (cypher.math.round-up-to-even (unquote var))))
-      (if round_down
-        (qq (cypher.math.round-down-to-odd (unquote var)))
-        (qq (cypher.math.round-up-to-odd (unquote var))))))
-
-  (defun-inline cypher.math.round-down-to-even (var)
+  (defun-inline %cypher.math.round-down-to-even (var)
     (if (logand var 1) (- var 1) var))
-  (defun-inline cypher.math.round-down-to-odd (var)
+  (defun cypher.math.round-down-to-even (var)
+    (%cypher.math.round-down-to-even var))
+
+  (defun-inline %cypher.math.round-down-to-odd (var)
     (if (logand var 1) var (- var 1)))
-  (defun-inline cypher.math.round-up-to-even (var)
+  (defun cypher.math.round-down-to-odd (var)
+    (%cypher.math.round-down-to-odd var))
+
+  (defun-inline %cypher.math.round-up-to-even (var)
     (if (logand var 1) (+ var 1) var))
-  (defun-inline cypher.math.round-up-to-odd (var)
+  (defun cypher.math.round-up-to-even (var)
+    (%cypher.math.round-up-to-even var))
+
+  (defun-inline %cypher.math.round-up-to-odd (var)
     (if (logand var 1) var (+ var 1)))
+  (defun cypher.math.round-up-to-odd (var)
+    (%cypher.math.round-up-to-odd var))
 
-  (defun-inline cypher.math.div (numerator denominator)
-    ;; Division.
-    ;
-    ; The vanilla `/` operator has some unintended behavior, so we fall back to
-    ; `divmod` operator.
+  ;; Division.
+  ;
+  ; The vanilla `/` operator has some unintended behavior, so we fall back to
+  ; `divmod` operator.
 
+  (defun-inline %cypher.math.div (numerator denominator)
     (f (divmod numerator denominator)))
+  (defun cypher.math.div (numerator denominator)
+    (%cypher.math.div numerator denominator))
 
-  (defun-inline cypher.math.mulfrac (var numerator denominator)
-    ;; Multiply var by the fraction (numerator / denominator).
+  ;; Multiply var by the fraction (numerator / denominator).
 
+  (defun-inline %cypher.math.mulfrac (var numerator denominator)
     (cypher.math.div (* var numerator) denominator))
+  (defun cypher.math.mulfrac (var numerator denominator)
+    (%cypher.math.mulfrac var numerator denominator))
+
+  ;; Square root.
 
   (defun cypher.math.sqrt-loop-babylonian (var var1 var2)
     ;; Babylonian method for square root.
@@ -63,14 +73,20 @@
 
   ;; Exports
 
+  (defun-inline %cf.unsigned-sub (f . r) (%cypher.math.unsigned-sub f . r))
   (defun-inline cf.unsigned-sub (f . r) (cypher.math.unsigned-sub f . r))
+  (defun-inline %cf.round-down-to-even (f . r) (%cypher.math.round-down-to-even f . r))
   (defun-inline cf.round-down-to-even (f . r) (cypher.math.round-down-to-even f . r))
+  (defun-inline %cf.round-down-to-odd (f . r) (%cypher.math.round-down-to-odd f . r))
   (defun-inline cf.round-down-to-odd (f . r) (cypher.math.round-down-to-odd f . r))
+  (defun-inline %cf.round-up-to-even (f . r) (%cypher.math.round-up-to-even f . r))
   (defun-inline cf.round-up-to-even (f . r) (cypher.math.round-up-to-even f . r))
+  (defun-inline %cf.round-up-to-odd (f . r) (%cypher.math.round-up-to-odd f . r))
   (defun-inline cf.round-up-to-odd (f . r) (cypher.math.round-up-to-odd f . r))
+  (defun-inline %cf.div (f . r) (%cypher.math.div f . r))
   (defun-inline cf.div (f . r) (cypher.math.div f . r))
+  (defun-inline %cf.mulfrac (f . r) (%cypher.math.mulfrac f . r))
   (defun-inline cf.mulfrac (f . r) (cypher.math.mulfrac f . r))
+  (defun-inline %cf.sqrt (f . r) (x "%cf.sqrt"))
   (defun-inline cf.sqrt (f . r) (cypher.math.sqrt f . r))
-
-  (defmacro @cf.round-even-odd args (c cypher.math.round-even-odd args))
 )
