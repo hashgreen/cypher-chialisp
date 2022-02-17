@@ -64,7 +64,6 @@
   ;; Exports
 
   (defun-inline cf.unsigned-sub (f . r) (cypher.math.unsigned-sub f . r))
-  (defun-inline cf.round-even-odd (f . r) (cypher.math.round-even-odd f . r))
   (defun-inline cf.round-down-to-even (f . r) (cypher.math.round-down-to-even f . r))
   (defun-inline cf.round-down-to-odd (f . r) (cypher.math.round-down-to-odd f . r))
   (defun-inline cf.round-up-to-even (f . r) (cypher.math.round-up-to-even f . r))
@@ -72,4 +71,6 @@
   (defun-inline cf.div (f . r) (cypher.math.div f . r))
   (defun-inline cf.mulfrac (f . r) (cypher.math.mulfrac f . r))
   (defun-inline cf.sqrt (f . r) (cypher.math.sqrt f . r))
+
+  (defmacro @cf.round-even-odd args (c cypher.math.round-even-odd args))
 )
