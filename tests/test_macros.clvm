@@ -18,6 +18,7 @@
 
   (defun test-switch ()
     (cypher.macros.assert
+      (tests.utils.expect-equal (+ 1 2) 2)
       (tests.utils.expect-equal
         (cypher.macros.switch (1 . "hashgreen") "hashbrown")
         "hashgreen")

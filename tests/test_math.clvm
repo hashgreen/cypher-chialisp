@@ -7,6 +7,7 @@
   (defun test-unsigned-sub ()
     (cypher.macros.assert
       (tests.utils.expect-failed (cf.unsigned-sub 1 2))
+      (tests.utils.expect-equal (cf.unsigned-sub 2 2) 0)
       "test-unsigned-sub passed"))
 
   (defun test-round ()
