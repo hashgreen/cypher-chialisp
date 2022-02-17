@@ -1,5 +1,5 @@
 (
-  (defmacro tests.utils.expect-failed (statement)
+  (defmacro tests.utils.assert-fails (statement)
     ;; Expect the statement to fail.
 
     (qq (if
@@ -9,7 +9,7 @@
     ))
   )
 
-  (defmacro tests.utils.expect-equal (statement result)
+  (defmacro tests.utils.assert-equal (statement result)
     ;; Expect the statement to evaluate to result.
 
     (qq (if
