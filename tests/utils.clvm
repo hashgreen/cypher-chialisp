@@ -1,5 +1,5 @@
 (
-  (defmacro @cf-tests.assert-fails (statement)
+  (defmacro @cypher.tests.assert-fails (statement)
     ;; Expect the statement to fail.
 
     (qq (if
@@ -9,7 +9,7 @@
     ))
   )
 
-  (defmacro @cf-tests.assert-equal (statement result)
+  (defmacro @cypher.tests.assert-equal (statement result)
     ;; Expect the statement to evaluate to result.
 
     (qq (if
@@ -19,17 +19,21 @@
     ))
   )
 
-  (defmacro @cf-tests.assert args
-    ;; Assert a series of statements.
+  (defmacro @cypher.tests.assert args
+    ;; Assert a series of statements, followed by test name.
     ;
-    ; Usage: (assert cond1 cond2 ...)
+    ; Usage: (assert cond1 cond2 ... name)
 
     (if (r args)
       (qq (if (unquote (f args))
-        (unquote (c @cf-tests.assert (r args)))
+        (unquote (c @cypher.tests.assert (r args)))
         (x (q . (unquote (f args))) "evalutes to false.")
       ))
-      (f args)
+      (qq (concat (unquote (f args)) " passed"))
     )
   )
+
+  (defmacro @assert-fails args (c @cypher.tests.assert-fails args))
+  (defmacro @assert-equal args (c @cypher.tests.assert-equal args))
+  (defmacro @assert args (c @cypher.tests.assert args))
 )
