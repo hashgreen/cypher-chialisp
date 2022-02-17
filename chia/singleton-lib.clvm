@@ -5,8 +5,8 @@
 
   (defun-inline SingletonTruth
     (id puzzle_hash inner_puzzle_hash amount lineage_proof singleton_mod)
-    (c 
-      (c id puzzle_hash) 
+    (c
+      (c id puzzle_hash)
       (c (c inner_puzzle_hash amount) (c lineage_proof singleton_mod))))
   (defun-inline SingletonTruth.get-id (singleton_truth)
     (f (f singleton_truth)))
@@ -40,7 +40,7 @@
     (cf.Coin.get-puzzle-hash lineage_proof))
   (defun-inline LineageProof.get-amount (lineage_proof)
     (cf.Coin.get-amount lineage_proof))
-  
+
   ;; Mod
 
   (defun-inline SingletonMod (mod_hash launcher_id launcher_puzzle_hash)
@@ -53,7 +53,7 @@
     (r (r singleton_mod)))
 
   (defun-inline SingletonMod.morph-puzzle-hash (singleton_mod inner_puzzle_hash)
-    (cf.puzzle-hash-of-curried-function 
+    (cf.puzzle-hash-of-curried-function
       (SingletonMod.get-mod-hash singleton_mod)
       inner_puzzle_hash
       (sha256tree singleton_mod)
@@ -64,12 +64,12 @@
 
     (cf.Coin.id (cf.Coin
       (cf.Coin.id (cf.Coin
-        parent_parent_id 
+        parent_parent_id
         (SingletonMod.morph-puzzle-hash
           singleton_mod
-          parent_inner_puzzle_hash 
+          parent_inner_puzzle_hash
         )
-        parent_amount 
+        parent_amount
       ))
       puzzle_hash
       amount
@@ -135,7 +135,7 @@
   (defun check_and_morph_conditions_for_singleton#SingletonMod.morph-conditions
     (singleton_mod conditions has_odd_output_been_found)
 
-    (if conditions 
+    (if conditions
       (SingletonMod.morph-conditions-stager
         singleton_mod
         conditions
@@ -150,7 +150,7 @@
       )
     )
   )
-  
+
   ;; Utils
 
   (defun sha256tree (tree)

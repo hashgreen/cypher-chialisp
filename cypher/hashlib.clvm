@@ -26,7 +26,7 @@
     ;   The tree hash of the input.
 
     (if (l tree)
-      (cypher.hashlib.sha256two 
+      (cypher.hashlib.sha256two
         (cypher.hashlib.sha256tree (f tree))
         (cypher.hashlib.sha256tree (r tree))
       )

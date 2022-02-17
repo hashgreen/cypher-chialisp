@@ -73,6 +73,12 @@
 
   ; CreateCoin
 
+  (defun-inline CatCreateCoin (tail_reveal tail_solution)
+    (cf.Condition CREATE_COIN () -113 tail_reveal tail_solution))
+  (defun-inline CatCreateCoin.from-tail-truth (tail_truth)
+    (CatCreateCoin
+      (TailTruth.get-program tail_truth)
+      (TailTruth.get-solution tail_truth)))
   (defun-inline CatCreateCoin.is-condition (condition)
     (= (cf.Condition.output-amount condition) -113))
   (defun-inline CatCreateCoin.get-tail-reveal (condition)
