@@ -53,11 +53,10 @@
 
   (defun cypher.math.sqrt (var)
     (cypher.macros.switch
-      (c
-        (> var 3)
+      ((> var 3) .
         (cypher.math.sqrt-loop-babylonian var var (+ (cypher.math.div var 2) 1)))
-      (c (> var 0) 1)
-      (c (= var 0) 0)
+      ((> var 0) . 1)
+      ((= var 0) . 0)
       (x)
     )
   )
