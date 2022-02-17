@@ -7,9 +7,9 @@
 
   (defun test-unsigned-sub ()
     (tests.utils.assert
-      (tests.utils.expect-failed (cypher.math.unsigned-sub 1 2))
       (tests.utils.expect-equal (cypher.math.unsigned-sub 2 2) 0)
-      "test-unsigned-sub passed"))
+      (tests.utils.expect-failed (cypher.math.unsigned-sub 1 2))
+      "test_math.test-unsigned-sub"))
 
   (defun test-round ()
     (tests.utils.assert
@@ -29,11 +29,10 @@
       (tests.utils.expect-equal (cypher.math.round-even-odd 1 1 1) 0)
       (tests.utils.expect-equal (cypher.math.round-even-odd 2 1 1) 2)
       (tests.utils.expect-equal (cypher.math.round-even-odd 3 1 1) 2)
-      "test-round passed"))
+      "test_math.test-round"))
 
   (defun test-sqrt ()
     (tests.utils.assert
-      (tests.utils.expect-equal (cypher.math.sqrt 0) 0)
       (tests.utils.expect-equal (cypher.math.sqrt 0) 0)
       (tests.utils.expect-equal (cypher.math.sqrt 1) 1)
       (tests.utils.expect-equal (cypher.math.sqrt 2) 1)
@@ -44,11 +43,15 @@
       (tests.utils.expect-equal (cypher.math.sqrt 420) 20)
       (tests.utils.expect-equal (cypher.math.sqrt 10000) 100)
       (tests.utils.expect-equal (cypher.math.sqrt 1000000000000) 1000000)
-      "test-sqrt passed"))
+      "test_math.test-sqrt"))
 
-  (list
-    (test-unsigned-sub)
-    (test-sqrt)
-    (test-round))
+  (defun test_math ()
+    (tests.utils.assert
+      (test-unsigned-sub)
+      (test-round)
+      (test-sqrt)
+      "test_math"))
+
+  (test_math)
 
 ) ())
