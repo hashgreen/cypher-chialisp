@@ -1,5 +1,9 @@
 (
   (defun-inline cypher.math.unsigned-sub (minuend subtrahend)
+    ;; Unsigned subtraction.
+    ;
+    ; This function makes sure the result is at least zero.
+
     (if (> subtrahend minuend) (x) (- minuend subtrahend)))
 
   (defun-inline cypher.math.round-down-to-even (var)
@@ -27,9 +31,9 @@
   )
 
   (defun-inline cypher.math.mulfrac (var numerator denominator)
-    ;; Multiply var by the fraction (numerator / denominator)
-    (cypher.math.div (* var numerator) denominator)
-  )
+    ;; Multiply var by the fraction (numerator / denominator).
+
+    (cypher.math.div (* var numerator) denominator))
 
   (defun cypher.math.sqrt_loop_babylonian (var var1 var2)
     (if (> var1 var2)
@@ -61,6 +65,10 @@
   ;; Exports
 
   (defun-inline cf.unsigned-sub (f . r) (cypher.math.unsigned-sub f . r))
+  (defun-inline cf.round-down-to-even (f . r) (cypher.math.round-down-to-even f . r))
+  (defun-inline cf.round-down-to-odd (f . r) (cypher.math.round-down-to-odd f . r))
+  (defun-inline cf.round-up-to-even (f . r) (cypher.math.round-up-to-even f . r))
+  (defun-inline cf.round-up-to-odd (f . r) (cypher.math.round-up-to-odd f . r))
   (defun-inline cf.round-even-odd (f . r) (cypher.math.round-even-odd f . r))
   (defun-inline cf.div (f . r) (cypher.math.div f . r))
   (defun-inline cf.mulfrac (f . r) (cypher.math.mulfrac f . r))
