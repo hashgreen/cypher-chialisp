@@ -39,6 +39,14 @@
       (@assert-equal (%cf.div 3 2) 1)
       "test-math.test-div"))
 
+  (defun-inline test-mulfrac ()
+    (@assert
+      (@assert-equal (%cf.mulfrac 2 300 100) 6)
+      (@assert-equal (%cf.mulfrac 123 457 100) 562)
+      (@assert-equal (%cf.mulfrac -387 -584 -198) -1142)
+      (@assert-fails (%cf.mulfrac 1 1 0))
+      "test-math.test-mulfrac"))
+
   (defun-inline test-sqrt ()
     (@assert
       (@assert-equal (cf.sqrt 0) 0)
@@ -58,6 +66,7 @@
       (test-unsigned-sub)
       (test-round)
       (test-div)
+      (test-mulfrac)
       (test-sqrt)
       "test-math"))
 

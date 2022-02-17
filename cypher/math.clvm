@@ -43,7 +43,7 @@
   ;; Multiply var by the fraction (numerator / denominator).
 
   (defun-inline %cypher.math.mulfrac (var numerator denominator)
-    (cypher.math.div (* var numerator) denominator))
+    (%cypher.math.div (* var numerator) denominator))
   (defun cypher.math.mulfrac (var numerator denominator)
     (%cypher.math.mulfrac var numerator denominator))
 
