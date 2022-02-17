@@ -6,15 +6,9 @@
 
     (if (> subtrahend minuend) (x) (- minuend subtrahend)))
 
-  (defun-inline cypher.math.round-down-to-even (var)
-    (if (logand var 1) (- var 1) var))
-  (defun-inline cypher.math.round-down-to-odd (var)
-    (if (logand var 1) var (- var 1)))
-  (defun-inline cypher.math.round-up-to-even (var)
-    (if (logand var 1) (+ var 1) var))
-  (defun-inline cypher.math.round-up-to-odd (var)
-    (if (logand var 1) var (+ var 1)))
   (defmacro cypher.math.round-even-odd (var round_even round_down)
+    ;; Rounding to even or odd.
+
     (if round_even
       (if round_down
         (qq (cypher.math.round-down-to-even (unquote var)))
@@ -23,41 +17,47 @@
         (qq (cypher.math.round-down-to-odd (unquote var)))
         (qq (cypher.math.round-up-to-odd (unquote var))))))
 
+  (defun-inline cypher.math.round-down-to-even (var)
+    (if (logand var 1) (- var 1) var))
+  (defun-inline cypher.math.round-down-to-odd (var)
+    (if (logand var 1) var (- var 1)))
+  (defun-inline cypher.math.round-up-to-even (var)
+    (if (logand var 1) (+ var 1) var))
+  (defun-inline cypher.math.round-up-to-odd (var)
+    (if (logand var 1) var (+ var 1)))
+
   (defun-inline cypher.math.div (numerator denominator)
+    ;; Division.
+    ;
     ; The vanilla `/` operator has some unintended behavior, so we fall back to
     ; `divmod` operator.
 
-    (f (divmod numerator denominator))
-  )
+    (f (divmod numerator denominator)))
 
   (defun-inline cypher.math.mulfrac (var numerator denominator)
     ;; Multiply var by the fraction (numerator / denominator).
 
     (cypher.math.div (* var numerator) denominator))
 
-  (defun cypher.math.sqrt_loop_babylonian (var var1 var2)
+  (defun cypher.math.sqrt-loop-babylonian (var var1 var2)
+    ;; Babylonian method for square root.
+    ;
+    ; See https://solidity-by-example.org/library/.
+
     (if (> var1 var2)
-      (cypher.math.sqrt_loop_babylonian
-        var
-        var2
-        (cypher.math.div (+ (cypher.math.div var var2) var2) 2)
-      )
-      var1  ; end of recursion
+      (cypher.math.sqrt-loop-babylonian
+        var var2 (cypher.math.div (+ (cypher.math.div var var2) var2) 2))
+      var1
     )
   )
 
   (defun cypher.math.sqrt (var)
     (cypher.macros.switch
-      (> var 3)  ; var > 3
-      (cypher.math.sqrt_loop_babylonian
-        var
-        var
-        (+ (cypher.math.div var 2) 1)
-      )
-      (> var 0)  ; 3 > var > 0
-      1
-      (= var 0)  ; var == 0
-      0
+      (c
+        (> var 3)
+        (cypher.math.sqrt-loop-babylonian var var (+ (cypher.math.div var 2) 1)))
+      (c (> var 0) 1)
+      (c (= var 0) 0)
       (x)
     )
   )
@@ -65,11 +65,11 @@
   ;; Exports
 
   (defun-inline cf.unsigned-sub (f . r) (cypher.math.unsigned-sub f . r))
+  (defun-inline cf.round-even-odd (f . r) (cypher.math.round-even-odd f . r))
   (defun-inline cf.round-down-to-even (f . r) (cypher.math.round-down-to-even f . r))
   (defun-inline cf.round-down-to-odd (f . r) (cypher.math.round-down-to-odd f . r))
   (defun-inline cf.round-up-to-even (f . r) (cypher.math.round-up-to-even f . r))
   (defun-inline cf.round-up-to-odd (f . r) (cypher.math.round-up-to-odd f . r))
-  (defun-inline cf.round-even-odd (f . r) (cypher.math.round-even-odd f . r))
   (defun-inline cf.div (f . r) (cypher.math.div f . r))
   (defun-inline cf.mulfrac (f . r) (cypher.math.mulfrac f . r))
   (defun-inline cf.sqrt (f . r) (cypher.math.sqrt f . r))
