@@ -29,10 +29,10 @@
     )
   )
 
-  (defmacro cypher.macros.cc args
+  (defmacro cypher.macros.concat args
     ;; Concatenate statements.
     ;
-    ; Usage: (cc stmt1 stmt2 ...)
+    ; Usage: (concat stmt1 stmt2 ...)
     ;
     ; Note that this is different from `list` as there is not a `()` in the end.
     ; This function is particularly useful when concatenating atoms to an existing list.
@@ -40,21 +40,21 @@
     (if (r args)
       (qq (c
           (unquote (f args))
-          (unquote (c cypher.macros.cc (r args)))
+          (unquote (c cypher.macros.concat (r args)))
       ))
       (f args)
     )
   )
 
-  (defmacro cypher.macros.ii args
+  (defmacro cypher.macros.if-elif args
     ;; Nested if-else statements.
     ;
-    ; Usage: (ii cond1 result1 cond2 result2 ... default)
+    ; Usage: (if-elif cond1 result1 cond2 result2 ... default)
 
     (if (r args)
       (qq (if (unquote (f args))
           (unquote (f (r args)))
-          (unquote (c cypher.macros.ii (r (r args))))
+          (unquote (c cypher.macros.if-elif (r (r args))))
       ))
       (f args)
     )
@@ -75,13 +75,10 @@
   )
 
   ;; Exports
-  ;
-  ; We export macros with all CAPITALs to indicate their macro roles.
 
-  (defmacro cf.ASSERT args (c cypher.macros.assert args))
-  (defmacro cf.AND args (c cypher.macros.and args))
-  (defmacro cf.CC args (c cypher.macros.cc args))
-  (defmacro cf.CONCAT args (c cypher.macros.cc args))
-  (defmacro cf.II args (c cypher.macros.ii args))
-  (defmacro cf.SWITCH args (c cypher.macros.switch args))
+  (defmacro @cf.assert args (c cypher.macros.assert args))
+  (defmacro @cf.and args (c cypher.macros.and args))
+  (defmacro @cf.concat args (c cypher.macros.concat args))
+  (defmacro @cf.if-elif args (c cypher.macros.if-elif args))
+  (defmacro @cf.switch args (c cypher.macros.switch args))
 )
