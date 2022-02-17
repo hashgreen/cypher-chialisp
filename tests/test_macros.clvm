@@ -1,45 +1,36 @@
 (a (mod ()
 
   (include cypher/macros.clvm)
+  (include tests/utils.clvm)
 
   (defun test-ii ()
-    (cf.ASSERT
-      (=
-        (cf.II 1 "hashgreen" "hashbrown")
-        "hashgreen"
-      )
-      (=
-        (cf.II 0 "hashgreen" 1 "hashbrown" "hashred")
-        "hashbrown"
-      )
-      (=
-        (cf.II 0 "hashgreen" 0 "hashbrown" "hashred")
-        "hashred"
-      )
-      "test-ii passed"
-    )
-  )
+    (cypher.macros.assert
+      (tests.utils.expect-equal
+        (cypher.macros.ii 1 "hashgreen" "hashbrown")
+        "hashgreen")
+      (tests.utils.expect-equal
+        (cypher.macros.ii 0 "hashgreen" 1 "hashbrown" "hashred")
+        "hashbrown")
+      (tests.utils.expect-equal
+        (cypher.macros.ii 0 "hashgreen" 0 "hashbrown" "hashred")
+        "hashred")
+      "test-ii passed"))
 
   (defun test-switch ()
-    (cf.ASSERT
-      (=
-        (cf.SWITCH (1 . "hashgreen") "hashbrown")
-        "hashgreen"
-      )
-      (=
-        (cf.SWITCH (0 . "hashgreen") (1 . "hashbrown") "hashred")
-        "hashbrown"
-      )
-      (=
-        (cf.SWITCH (0 . "hashgreen") (0 . "hashbrown") "hashred")
-        "hashred"
-      )
-      "test-switch passed"
-    )
-  )
+    (cypher.macros.assert
+      (tests.utils.expect-equal
+        (cypher.macros.switch (1 . "hashgreen") "hashbrown")
+        "hashgreen")
+      (tests.utils.expect-equal
+        (cypher.macros.switch (0 . "hashgreen") (1 . "hashbrown") "hashred")
+        "hashbrown")
+      (tests.utils.expect-equal
+        (cypher.macros.switch (0 . "hashgreen") (0 . "hashbrown") "hashred")
+        "hashred")
+      "test-switch passed"))
 
   (list
     (test-ii)
-    (test-switch)
-  )
+    (test-switch))
+
 ) ())

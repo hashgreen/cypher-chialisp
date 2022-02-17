@@ -1,0 +1,8 @@
+(
+  (defmacro tests.utils.expect-failed (statement)
+    (qq
+      (= (f (mod () (unquote statement))) (q . x))))
+
+  (defmacro tests.utils.expect-equal (statement result)
+    (qq (= (unquote statement) (unquote result))))
+)
