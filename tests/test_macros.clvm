@@ -1,7 +1,21 @@
 (a (mod ()
 
   (include cypher/macros.clvm)
+
   (include tests/utils.clvm)
+
+  (defun test-assert ()
+    (tests.utils.assert
+      (tests.utils.expect-equal (cypher.macros.assert 1 1 "successful") "successful")
+      (tests.utils.expect-failed (cypher.macros.assert 1 1 0 "failed"))
+      "test-assert passed"))
+
+  (defun test-and ()
+    (tests.utils.assert
+      (tests.utils.expect-equal (cypher.macros.and 0 0) 0)
+      (tests.utils.expect-equal (cypher.macros.and 0 1) 0)
+      (tests.utils.expect-equal (cypher.macros.and 1 1 1) 1)
+      "test-and passed"))
 
   (defun test-ii ()
     (tests.utils.assert
@@ -30,6 +44,8 @@
       "test-switch passed"))
 
   (list
+    (test-assert)
+    (test-and)
     (test-ii)
     (test-switch))
 
