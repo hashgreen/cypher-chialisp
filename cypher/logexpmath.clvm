@@ -1,0 +1,11 @@
+(
+  (defconstant cypher.constants.ONE_12 1000000000000)
+
+  (defun cypher.math.ln (var)
+    ;; Natural algorithm with 12 decimal places.
+    ;
+    ; E.g., cf.ln(2000000000000) = 693147180559
+
+    ()
+  )
+)
