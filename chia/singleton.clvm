@@ -11,7 +11,7 @@
   (include cypher.clvm)
   (include chia/singleton-lib.clvm)
 
-  (defun stager_three
+  (defun stager-three
     (
       singleton_mod
       lineage_proof
@@ -30,22 +30,15 @@
           inner_puzzle
           (c
             (SingletonTruth
-              id
-              puzzle_hash
-              inner_puzzle_hash
-              amount
-              lineage_proof
-              singleton_mod
-            )
-            inner_solution
-          )
+              singleton_mod lineage_proof id puzzle_hash amount inner_puzzle_hash)
+            inner_solution)
         )
         0
       )
     )
   )
 
-  (defun stager_two
+  (defun stager-two
     (
       singleton_mod
       lineage_proof
@@ -56,7 +49,7 @@
       inner_solution
     )
 
-    (stager_three
+    (stager-three
       singleton_mod
       lineage_proof
       (if (EveLineageProof.is-not lineage_proof)
@@ -89,7 +82,7 @@
     )
   )
 
-  (defun stager_one
+  (defun stager-one
     (
       singleton_mod
       lineage_proof
@@ -99,7 +92,7 @@
       inner_solution
     )
 
-    (stager_two
+    (stager-two
       singleton_mod
       lineage_proof
       (SingletonMod.morph-puzzle-hash singleton_mod inner_puzzle_hash)
@@ -120,10 +113,10 @@
     )
 
     (if (logand amount 1)
-      (stager_one
+      (stager-one
         singleton_mod
         lineage_proof
-        (sha256tree inner_puzzle)
+        (SingletonMod.sha256tree inner_puzzle)
         amount
         inner_puzzle
         inner_solution

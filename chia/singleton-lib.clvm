@@ -1,30 +1,26 @@
 (
-  ;; Truths
-
-  ; SingletonTruth
+  ;; SingletonTruth
 
   (defun-inline SingletonTruth
-    (id puzzle_hash inner_puzzle_hash amount lineage_proof singleton_mod)
-    (c
-      (c id puzzle_hash)
-      (c (c inner_puzzle_hash amount) (c lineage_proof singleton_mod))))
+    (singleton_mod lineage_proof id puzzle_hash amount inner_puzzle_hash)
+    (c (c id puzzle_hash) (c (c inner_puzzle_hash amount) (c lineage_proof singleton_mod))))
+  (defun-inline SingletonTruth.get-singleton-mod (singleton_truth)
+    (r (r (r singleton_truth))))
+  (defun-inline SingletonTruth.get-lineage-proof (singleton_truth)
+    (f (r (r singleton_truth))))
   (defun-inline SingletonTruth.get-id (singleton_truth)
     (f (f singleton_truth)))
   (defun-inline SingletonTruth.get-puzzle-hash (singleton_truth)
     (r (f singleton_truth)))
-  (defun-inline SingletonTruth.get-inner-puzzle-hash (singleton_truth)
-    (f (f (r singleton_truth))))
   (defun-inline SingletonTruth.get-amount (singleton_truth)
     (r (f (r singleton_truth))))
-  (defun-inline SingletonTruth.get-lineage-proof (singleton_truth)
-    (f (r (r singleton_truth))))
-  (defun-inline SingletonTruth.get-singleton-mod (singleton_truth)
-    (r (r (r singleton_truth))))
+  (defun-inline SingletonTruth.get-inner-puzzle-hash (singleton_truth)
+    (f (f (r singleton_truth))))
 
-  ; LineageProof
+  ;; LineageProof
 
   (defun-inline EveLineageProof (parent_id parent_amount)
-    (list parent_id parent_amount))
+    (c (parent_id (c parent_amount ()))))
   (defun-inline EveLineageProof.get-parent-id (lineage_proof)
     (f lineage_proof))
   (defun-inline EveLineageProof.get-amount (lineage_proof)
@@ -41,7 +37,7 @@
   (defun-inline LineageProof.get-amount (lineage_proof)
     (cf.Coin.get-amount lineage_proof))
 
-  ;; Mod
+  ;; SingletonMod
 
   (defun-inline SingletonMod (mod_hash launcher_id launcher_puzzle_hash)
     (c mod_hash (c launcher_id launcher_puzzle_hash)))
@@ -52,114 +48,90 @@
   (defun-inline SingletonMod.get-launcher-puzzle-hash (singleton_mod)
     (r (r singleton_mod)))
 
+  ; SingletonMod.morph-puzzle-hash
+
   (defun-inline SingletonMod.morph-puzzle-hash (singleton_mod inner_puzzle_hash)
     (cf.puzzle-hash-of-curried-function
       (SingletonMod.get-mod-hash singleton_mod)
       inner_puzzle_hash
-      (sha256tree singleton_mod)
-    )
-  )
-  (defun create_my_ID#SingletonMod.morph-coin-id
-    (singleton_mod puzzle_hash parent_parent_id parent_inner_puzzle_hash parent_amount amount)
+      (SingletonMod.sha256tree singleton_mod)))
 
-    (cf.Coin.id (cf.Coin
-      (cf.Coin.id (cf.Coin
-        parent_parent_id
-        (SingletonMod.morph-puzzle-hash
-          singleton_mod
-          parent_inner_puzzle_hash
-        )
-        parent_amount
-      ))
-      puzzle_hash
-      amount
-    ))
-  )
+  ; SingletonMod.morph-coin-id
+
   (defun-inline SingletonMod.morph-coin-id (singleton_mod coin lineage_proof)
-    (create_my_ID#SingletonMod.morph-coin-id
+    (create_my_ID#SingletonMod
       singleton_mod
       (cf.Coin.get-puzzle-hash coin)
       (LineageProof.get-parent-id lineage_proof)
       (LineageProof.get-inner-puzzle-hash lineage_proof)
       (LineageProof.get-amount lineage_proof)
-      (cf.Coin.get-amount coin)
-    )
-  )
+      (cf.Coin.get-amount coin)))
+  (defun create_my_ID#SingletonMod
+    (singleton_mod puzzle_hash parent_parent_id parent_inner_puzzle_hash parent_amount amount)
+    (cf.Coin.id (cf.Coin
+      (cf.Coin.id (cf.Coin
+        parent_parent_id
+        (SingletonMod.morph-puzzle-hash singleton_mod parent_inner_puzzle_hash)
+        parent_amount))
+      puzzle_hash
+      amount)))
+
+  ; SingletonMod.morph-condition
+
   (defun-inline SingletonMod.morph-condition (singleton_mod condition)
     (list
       (cf.Condition.get-condition-code condition)
       (SingletonMod.morph-puzzle-hash
-        singleton_mod
-        (cf.CreateCoin.get-puzzle-hash condition)
-      )
-      (cf.CreateCoin.get-amount condition)
-    )
-  )
-  (defun strip_first_condition_if (boolean condition_list)
-    (if boolean
-      (r condition_list)
-      condition_list
-    )
-  )
-  (defun odd_cons_m113 (output_amount)
-    (c
-      (= (logand output_amount 1) 1)
-      (= output_amount -113)
-    )
-  )
-  (defun morph_next_condition#SingletonMod.morph-conditions-stager
+        singleton_mod (cf.CreateCoin.get-puzzle-hash condition))
+      (cf.CreateCoin.get-amount condition)))
+
+  ; SingletonMod.morph-conditions
+
+  (defun-inline SingletonMod.morph-conditions-stager (f . r)
+    (morph_next_condition f . r))
+  (defun morph_next_condition
     (singleton_mod conditions has_odd_output_been_found (is_output_odd . is_output_m113))
 
-    (cf.ASSERT
+    (@cf.assert
       (not (all is_output_odd has_odd_output_been_found))
-      (strip_first_condition_if
+      (SingletonMod.strip-first-condition-if
         is_output_m113
         (c
           (if is_output_odd
             (SingletonMod.morph-condition singleton_mod (f conditions))
-            (f conditions)
-          )
-          (SingletonMod.morph-conditions
-            singleton_mod
+            (f conditions))
+          (SingletonMod.morph-conditions singleton_mod
             (r conditions)
-            (any is_output_odd has_odd_output_been_found)
-          )
-        )
-      )
-    )
-  )
-  (defun-inline SingletonMod.morph-conditions-stager (f . r)
-    (morph_next_condition#SingletonMod.morph-conditions-stager f . r))
+            (any is_output_odd has_odd_output_been_found))))))
+
   (defun-inline SingletonMod.morph-conditions (f . r)
-    (check_and_morph_conditions_for_singleton#SingletonMod.morph-conditions f . r))
-  (defun check_and_morph_conditions_for_singleton#SingletonMod.morph-conditions
+    (check_and_morph_conditions_for_singleton f . r))
+  (defun check_and_morph_conditions_for_singleton
     (singleton_mod conditions has_odd_output_been_found)
 
     (if conditions
-      (SingletonMod.morph-conditions-stager
-        singleton_mod
+      (SingletonMod.morph-conditions-stager singleton_mod
         conditions
         has_odd_output_been_found
-        (odd_cons_m113
-          (cf.Condition.output-amount (f conditions))
-        )
-      )
-      (if has_odd_output_been_found
-        0
-        (x)
-      )
-    )
-  )
+        (SingletonMod.amount-to-odd-m113 (cf.Condition.output-amount (f conditions))))
+      (if has_odd_output_been_found 0 (x))))
 
   ;; Utils
 
-  (defun sha256tree (tree)
+  (defun-inline SingletonMod.strip-first-condition-if (f . r)
+    (strip_first_condition_if f . r))
+  (defun strip_first_condition_if (boolean condition_list)
+    (if boolean (r condition_list) condition_list))
+
+  (defun-inline SingletonMod.amount-to-odd-m113 (f . r)
+    (odd_cons_m113 f . r))
+  (defun odd_cons_m113 (output_amount)
+    (c (= (logand output_amount 1) 1) (= output_amount -113)))
+
+  (defun-inline SingletonMod.sha256tree (tree)
+    (sha256tree#SingletonMod tree))
+  (defun sha256tree#SingletonMod (tree)
     (if (l tree)
-      (sha256 2
-        (sha256tree (f tree))
-        (sha256tree (r tree))
-      )
-      (sha256 1 tree)
-    )
-  )
+      (sha256 2 (sha256tree#SingletonMod (f tree)) (sha256tree#SingletonMod (r tree)))
+      (sha256 1 tree)))
 )

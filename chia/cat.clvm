@@ -5,7 +5,7 @@
     INNER_PUZZLE
 
     inner_solution
-    parent_coin
+    lineage_proof
     prev_coin_id
     this_coin
     next_inner_coin
@@ -21,34 +21,29 @@
       this_coin
       tail_truth
       parent_is_cat
-      parent_coin
+      lineage_proof
       cat_truth
       extra_delta
       inner_conditions
     )
+
     (if tail_truth
-      (cf.ASSERT
+      (@cf.assert
         (CatMod.verify-tail-program-hash (CatTruth.get-cat-mod cat_truth)
-          tail_truth
-        )
-        (merge-iterables
-          (TailTruth.apply-program tail_truth
+          tail_truth)
+        (merge_list
+          (CatTailTruth.apply-program tail_truth
             cat_truth
             parent_is_cat
-            parent_coin
+            lineage_proof
             extra_delta
-            inner_conditions
-          )
-          inner_conditions
-        )
-      )
-      (cf.ASSERT
+            inner_conditions)
+          inner_conditions))
+      (@cf.assert
         parent_is_cat
         (not extra_delta)
-        inner_conditions
-      )
+        inner_conditions))
     )
-  )
 
   (defun-inline generate-final-output-conditions
     (
@@ -59,20 +54,18 @@
       this_coin_id
       next_coin_id
     )
-    (cf.CC
-      (cf.CreateCoinAnnouncement
-        (CatMessage.ring prev_coin_id prev_subtotal))
-      (cf.AssertCoinAnnouncement next_coin_id
-        (CatMessage.ring this_coin_id this_subtotal))
-      cat_conditions
-    )
+
+    (@cf.concat
+      (cf.CreateCoinAnnouncement (CatMessage.ring prev_coin_id prev_subtotal))
+      (cf.AssertCoinAnnouncement next_coin_id (CatMessage.ring this_coin_id this_subtotal))
+      cat_conditions)
   )
 
   (defun stager-two
     (
       cat_truth
-      cat_conditions
-      parent_coin
+      morph_conditions_state
+      lineage_proof
       prev_coin_id
       this_coin
       next_coin_id
@@ -82,39 +75,34 @@
 
     (check-lineage-or-run-tail-program
       this_coin
-      (CatConditions.get-tail-truth cat_conditions)  ; tail_truth
-      (cf.AND                                        ; parent_is_cat
-        parent_coin
+      (CatMod.MorphConditions.State.get-tail-truth morph_conditions_state)
+      (@cf.and
+        lineage_proof
         (CatMod.is-coin-cat (CatTruth.get-cat-mod cat_truth)
-          parent_coin
-          (cf.Coin.get-parent-id (CatTruth.get-coin cat_truth))
-        )
-      )
-      parent_coin
+          lineage_proof
+          (cf.Coin.get-parent-id (CatTruth.get-coin cat_truth))))
+      lineage_proof
       cat_truth
       extra_delta
-      (generate-final-output-conditions              ; inner_conditions
+      (generate-final-output-conditions
         prev_subtotal
         (+
           prev_subtotal
           (-
             (cf.Coin.get-amount this_coin)
-            (CatConditions.get-output-amount cat_conditions))
-          extra_delta
-        )
-        (CatConditions.get-conditions cat_conditions)
+            (CatMod.MorphConditions.State.get-output-amount morph_conditions_state))
+          extra_delta)
+        (CatMod.MorphConditions.State.get-conditions morph_conditions_state)
         prev_coin_id
-        (CatTruth.get-coin-id cat_truth)
-        next_coin_id
-      )
-    )
+        (CatTruth.get-id cat_truth)
+        next_coin_id))
   )
 
   (defun stager
     (
       cat_mod
       inner_conditions
-      parent_coin
+      lineage_proof
       inner_puzzle_hash
       this_coin_id
       prev_coin_id
@@ -123,27 +111,26 @@
       prev_subtotal
       extra_delta
     )
-    (c
+
+    (@cf.concat
       (list ASSERT_MY_COIN_ID this_coin_id)
       (stager-two
-        (CatTruth inner_puzzle_hash cat_mod this_coin_id this_coin)  ; cat_truth
-        (CatMod.morph-conditions cat_mod inner_conditions ())        ; cat_conditions
-        parent_coin
+        (CatTruth cat_mod this_coin_id this_coin inner_puzzle_hash)
+        (CatMod.MorphConditions.do cat_mod inner_conditions ())
+        lineage_proof
         prev_coin_id
         this_coin
-        (CatMod.morph-coin-id cat_mod next_inner_coin)               ; next_coin_id
+        (CatMod.morph-coin-id cat_mod next_inner_coin)
         prev_subtotal
-        extra_delta
-      )
-    )
+        extra_delta))
   )
 
   (stager
-    (CatMod MOD_HASH TAIL_PROGRAM_HASH)  ; cat_mod
-    (a INNER_PUZZLE inner_solution)      ; inner_conditions
-    parent_coin
-    (sha256tree INNER_PUZZLE)            ; inner_puzzle_hash
-    (cf.Coin.id this_coin)               ; this_coin_id
+    (CatMod MOD_HASH TAIL_PROGRAM_HASH)
+    (a INNER_PUZZLE inner_solution)
+    lineage_proof
+    (sha256tree1 INNER_PUZZLE)
+    (cf.Coin.id this_coin)
     prev_coin_id
     this_coin
     next_inner_coin
