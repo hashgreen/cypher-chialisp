@@ -43,7 +43,7 @@
         parent_is_cat
         (not extra_delta)
         inner_conditions))
-    )
+  )
 
   (defun-inline generate-final-output-conditions
     (
