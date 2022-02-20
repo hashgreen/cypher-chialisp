@@ -9,9 +9,38 @@
   (defun-inline cypher.standards.conditions.Condition.get-condition-code (condition)
     (f condition))
   (defun-inline cypher.standards.conditions.Condition.output-amount (condition)
-    (if (= (cypher.standards.conditions.Condition.get-condition-code condition) CREATE_COIN)
-      (cypher.standards.conditions.CreateCoin.get-amount condition)
-      0))
+    (if (cypher.standards.conditions.CreateCoin.is-condition condition)
+      (cypher.standards.conditions.CreateCoin.get-amount condition) 0))
+
+  ; AggSigUnsafe
+
+  (defun-inline cypher.standards.conditions.AggSigUnsafe (pubkey message)
+    (cypher.standards.conditions.Condition AGG_SIG_UNSAFE pubkey message))
+  (defun-inline cypher.standards.conditions.AggSigUnsafe.is-condition (condition)
+    (cypher.standards.conditions.Condition.is-condition AGG_SIG_UNSAFE condition))
+  (defun-inline cypher.standards.conditions.AggSigUnsafe.get-pubkey (condition)
+    (f (r condition)))
+  (defun-inline cypher.standards.conditions.AggSigUnsafe.get-pubkey-rest (condition)
+    (r (r condition)))
+  (defun-inline cypher.standards.conditions.AggSigUnsafe.get-message (condition)
+    (f (r (r condition))))
+  (defun-inline cypher.standards.conditions.AggSigUnsafe.get-message-rest (condition)
+    (r (r (r condition))))
+
+  ; AggSigMe
+
+  (defun-inline cypher.standards.conditions.AggSigMe (pubkey message)
+    (cypher.standards.conditions.Condition AGG_SIG_ME pubkey message))
+  (defun-inline cypher.standards.conditions.AggSigMe.is-condition (condition)
+    (cypher.standards.conditions.Condition.is-condition AGG_SIG_ME condition))
+  (defun-inline cypher.standards.conditions.AggSigMe.get-pubkey (condition)
+    (f (r condition)))
+  (defun-inline cypher.standards.conditions.AggSigMe.get-pubkey-rest (condition)
+    (r (r condition)))
+  (defun-inline cypher.standards.conditions.AggSigMe.get-message (condition)
+    (f (r (r condition))))
+  (defun-inline cypher.standards.conditions.AggSigMe.get-message-rest (condition)
+    (r (r (r condition))))
 
   ; CreateCoin
 
@@ -28,6 +57,17 @@
   (defun-inline cypher.standards.conditions.CreateCoin.get-amount-rest (condition)
     (r (r (r condition))))
 
+  ; ReserveFee
+
+  (defun-inline cypher.standards.conditions.ReserveFee (amount)
+    (cypher.standards.conditions.Condition RESERVE_FEE amount))
+  (defun-inline cypher.standards.conditions.ReserveFee.is-condition (condition)
+    (cypher.standards.conditions.Condition.is-condition RESERVE_FEE condition))
+  (defun-inline cypher.standards.conditions.ReserveFee.get-amount (condition)
+    (f (r condition)))
+  (defun-inline cypher.standards.conditions.ReserveFee.get-amount-rest (condition)
+    (r (r condition)))
+
   ; CreateCoinAnnouncement
 
   (defun-inline cypher.standards.conditions.CreateCoinAnnouncement (message)
@@ -43,6 +83,8 @@
 
   (defun-inline cypher.standards.conditions.AssertCoinAnnouncement (coin_id message)
     (list ASSERT_COIN_ANNOUNCEMENT (sha256 coin_id message)))
+  (defun-inline cypher.standards.conditions.AssertCoinAnnouncement.is-condition (condition)
+    (cypher.standards.conditions.Condition.is-condition ASSERT_COIN_ANNOUNCEMENT condition))
 
   ; CreatePuzzleAnnouncement
 
@@ -59,6 +101,64 @@
 
   (defun-inline cypher.standards.conditions.AssertPuzzleAnnouncement (puzzle_hash message)
     (list ASSERT_PUZZLE_ANNOUNCEMENT (sha256 puzzle_hash message)))
+  (defun-inline cypher.standards.conditions.AssertPuzzleAnnouncement.is-condition (condition)
+    (cypher.standards.conditions.Condition.is-condition ASSERT_PUZZLE_ANNOUNCEMENT condition))
+
+  ; AssertMyCoinID
+
+  (defun-inline cypher.standards.conditions.AssertMyCoinID (coin_id)
+    (list ASSERT_MY_COIN_ID coin_id))
+  (defun-inline cypher.standards.conditions.AssertMyCoinID.is-condition (condition)
+    (cypher.standards.conditions.Condition.is-condition ASSERT_MY_COIN_ID condition))
+
+  ; AssertMyParentID
+
+  (defun-inline cypher.standards.conditions.AssertMyParentID (coin_id)
+    (list ASSERT_MY_PARENT_ID coin_id))
+  (defun-inline cypher.standards.conditions.AssertMyParentID.is-condition (condition)
+    (cypher.standards.conditions.Condition.is-condition ASSERT_MY_PARENT_ID condition))
+
+  ; AssertMyPuzzleHash
+
+  (defun-inline cypher.standards.conditions.AssertMyPuzzleHash (puzzle_hash)
+    (list ASSERT_MY_PUZZLEHASH puzzle_hash))
+  (defun-inline cypher.standards.conditions.AssertMyPuzzleHash.is-condition (condition)
+    (cypher.standards.conditions.Condition.is-condition ASSERT_MY_PUZZLEHASH condition))
+
+  ; AssertMyAmount
+
+  (defun-inline cypher.standards.conditions.AssertMyAmount (amount)
+    (list ASSERT_MY_AMOUNT amount))
+  (defun-inline cypher.standards.conditions.AssertMyAmount.is-condition (condition)
+    (cypher.standards.conditions.Condition.is-condition ASSERT_MY_AMOUNT condition))
+
+  ; AssertSecondsRelative
+
+  (defun-inline cypher.standards.conditions.AssertSecondsRelative (seconds)
+    (list ASSERT_SECONDS_RELATIVE seconds))
+  (defun-inline cypher.standards.conditions.AssertSecondsRelative.is-condition (condition)
+    (cypher.standards.conditions.Condition.is-condition ASSERT_SECONDS_RELATIVE condition))
+
+  ; AssertSecondsAbsolute
+
+  (defun-inline cypher.standards.conditions.AssertSecondsAbsolute (seconds)
+    (list ASSERT_SECONDS_ABSOLUTE seconds))
+  (defun-inline cypher.standards.conditions.AssertSecondsAbsolute.is-condition (condition)
+    (cypher.standards.conditions.Condition.is-condition ASSERT_SECONDS_ABSOLUTE condition))
+
+  ; AssertHeightRelative
+
+  (defun-inline cypher.standards.conditions.AssertHeightRelative (height)
+    (list ASSERT_HEIGHT_RELATIVE height))
+  (defun-inline cypher.standards.conditions.AssertHeightRelative.is-condition (condition)
+    (cypher.standards.conditions.Condition.is-condition ASSERT_HEIGHT_RELATIVE condition))
+
+  ; AssertHeightAbsolute
+
+  (defun-inline cypher.standards.conditions.AssertHeightAbsolute (height)
+    (list ASSERT_HEIGHT_ABSOLUTE height))
+  (defun-inline cypher.standards.conditions.AssertHeightAbsolute.is-condition (condition)
+    (cypher.standards.conditions.Condition.is-condition ASSERT_HEIGHT_ABSOLUTE condition))
 
   ;; Exports
 
@@ -70,6 +170,42 @@
     (cypher.standards.conditions.Condition.get-condition-code f . r))
   (defun-inline cf.Condition.output-amount (f . r)
     (cypher.standards.conditions.Condition.output-amount f . r))
+
+  (defun-inline cf.AggSigUnsafe (f . r)
+    (cypher.standards.conditions.AggSigUnsafe f . r))
+  (defun-inline cf.AggSigUnsafe.is-condition (f . r)
+    (cypher.standards.conditions.AggSigUnsafe.is-condition f . r))
+  (defun-inline cf.AggSigUnsafe.get-pubkey (f . r)
+    (cypher.standards.conditions.AggSigUnsafe.get-pubkey f . r))
+  (defun-inline cf.AggSigUnsafe.get-pubkey-rest (f . r)
+    (cypher.standards.conditions.AggSigUnsafe.get-pubkey-rest f . r))
+  (defun-inline cf.AggSigUnsafe.get-message (f . r)
+    (cypher.standards.conditions.AggSigUnsafe.get-message f . r))
+  (defun-inline cf.AggSigUnsafe.get-message-rest (f . r)
+    (cypher.standards.conditions.AggSigUnsafe.get-message-rest f . r))
+
+  (defun-inline cf.AggSigMe (f . r)
+    (cypher.standards.conditions.AggSigMe f . r))
+  (defun-inline cf.AggSigMe.is-condition (f . r)
+    (cypher.standards.conditions.AggSigMe.is-condition f . r))
+  (defun-inline cf.AggSigMe.get-pubkey (f . r)
+    (cypher.standards.conditions.AggSigMe.get-pubkey f . r))
+  (defun-inline cf.AggSigMe.get-pubkey-rest (f . r)
+    (cypher.standards.conditions.AggSigMe.get-pubkey-rest f . r))
+  (defun-inline cf.AggSigMe.get-message (f . r)
+    (cypher.standards.conditions.AggSigMe.get-message f . r))
+  (defun-inline cf.AggSigMe.get-message-rest (f . r)
+    (cypher.standards.conditions.AggSigMe.get-message-rest f . r))
+
+  (defun-inline cf.ReserveFee (f . r)
+    (cypher.standards.conditions.ReserveFee f . r))
+  (defun-inline cf.ReserveFee.is-condition (f . r)
+    (cypher.standards.conditions.ReserveFee.is-condition f . r))
+  (defun-inline cf.ReserveFee.get-amount (f . r)
+    (cypher.standards.conditions.ReserveFee.get-amount f . r))
+  (defun-inline cf.ReserveFee.get-amount-rest (f . r)
+    (cypher.standards.conditions.ReserveFee.get-amount-rest f . r))
+
   (defun-inline cf.CreateCoin (f . r)
     (cypher.standards.conditions.CreateCoin f . r))
   (defun-inline cf.CreateCoin.is-condition (f . r)
@@ -82,6 +218,7 @@
     (cypher.standards.conditions.CreateCoin.get-amount f . r))
   (defun-inline cf.CreateCoin.get-amount-rest (f . r)
     (cypher.standards.conditions.CreateCoin.get-amount-rest f . r))
+
   (defun-inline cf.CreateCoinAnnouncement (f . r)
     (cypher.standards.conditions.CreateCoinAnnouncement f . r))
   (defun-inline cf.CreateCoinAnnouncement.is-condition (f . r)
@@ -90,8 +227,12 @@
     (cypher.standards.conditions.CreateCoinAnnouncement.get-message f . r))
   (defun-inline cf.CreateCoinAnnouncement.get-message-rest (f . r)
     (cypher.standards.conditions.CreateCoinAnnouncement.get-message-rest f . r))
+
   (defun-inline cf.AssertCoinAnnouncement (f . r)
     (cypher.standards.conditions.AssertCoinAnnouncement f . r))
+  (defun-inline cf.AssertCoinAnnouncement.is-condition (f . r)
+    (cypher.standards.conditions.AssertCoinAnnouncement.is-condition f . r))
+
   (defun-inline cf.CreatePuzzleAnnouncement (f . r)
     (cypher.standards.conditions.CreatePuzzleAnnouncement f . r))
   (defun-inline cf.CreatePuzzleAnnouncement.is-condition (f . r)
@@ -100,6 +241,49 @@
     (cypher.standards.conditions.CreatePuzzleAnnouncement.get-message f . r))
   (defun-inline cf.CreatePuzzleAnnouncement.get-message-rest (f . r)
     (cypher.standards.conditions.CreatePuzzleAnnouncement.get-message-rest f . r))
+
   (defun-inline cf.AssertPuzzleAnnouncement (f . r)
     (cypher.standards.conditions.AssertPuzzleAnnouncement f . r))
+  (defun-inline cf.AssertPuzzleAnnouncement.is-condition (f . r)
+    (cypher.standards.conditions.AssertPuzzleAnnouncement.is-condition f . r))
+
+  (defun-inline cf.AssertMyCoinID (f . r)
+    (cypher.standards.conditions.AssertMyCoinID f . r))
+  (defun-inline cf.AssertMyCoinID.is-condition (f . r)
+    (cypher.standards.conditions.AssertMyCoinID.is-condition f . r))
+
+  (defun-inline cf.AssertMyParentID (f . r)
+    (cypher.standards.conditions.AssertMyParentID f . r))
+  (defun-inline cf.AssertMyParentID.is-condition (f . r)
+    (cypher.standards.conditions.AssertMyParentID.is-condition f . r))
+
+  (defun-inline cf.AssertMyPuzzleHash (f . r)
+    (cypher.standards.conditions.AssertMyPuzzleHash f . r))
+  (defun-inline cf.AssertMyPuzzleHash.is-condition (f . r)
+    (cypher.standards.conditions.AssertMyPuzzleHash.is-condition f . r))
+
+  (defun-inline cf.AssertMyAmount (f . r)
+    (cypher.standards.conditions.AssertMyAmount f . r))
+  (defun-inline cf.AssertMyAmount.is-condition (f . r)
+    (cypher.standards.conditions.AssertMyAmount.is-condition f . r))
+
+  (defun-inline cf.AssertSecondsRelative (f . r)
+    (cypher.standards.conditions.AssertSecondsRelative f . r))
+  (defun-inline cf.AssertSecondsRelative.is-condition (f . r)
+    (cypher.standards.conditions.AssertSecondsRelative.is-condition f . r))
+
+  (defun-inline cf.AssertSecondsAbsolute (f . r)
+    (cypher.standards.conditions.AssertSecondsAbsolute f . r))
+  (defun-inline cf.AssertSecondsAbsolute.is-condition (f . r)
+    (cypher.standards.conditions.AssertSecondsAbsolute.is-condition f . r))
+
+  (defun-inline cf.AssertHeightRelative (f . r)
+    (cypher.standards.conditions.AssertHeightRelative f . r))
+  (defun-inline cf.AssertHeightRelative.is-condition (f . r)
+    (cypher.standards.conditions.AssertHeightRelative.is-condition f . r))
+
+  (defun-inline cf.AssertHeightAbsolute (f . r)
+    (cypher.standards.conditions.AssertHeightAbsolute f . r))
+  (defun-inline cf.AssertHeightAbsolute.is-condition (f . r)
+    (cypher.standards.conditions.AssertHeightAbsolute.is-condition f . r))
 )

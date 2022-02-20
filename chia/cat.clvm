@@ -31,7 +31,7 @@
       (@cf.assert
         (CatMod.verify-tail-program-hash (CatTruth.get-cat-mod cat_truth)
           tail_truth)
-        (merge_list
+        (merge-iterables
           (CatTailTruth.apply-program tail_truth
             cat_truth
             parent_is_cat
@@ -129,7 +129,7 @@
     (CatMod MOD_HASH TAIL_PROGRAM_HASH)
     (a INNER_PUZZLE inner_solution)
     lineage_proof
-    (sha256tree1 INNER_PUZZLE)
+    (sha256tree INNER_PUZZLE)
     (cf.Coin.id this_coin)
     prev_coin_id
     this_coin

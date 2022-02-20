@@ -35,14 +35,9 @@
         parent_coin
         extra_delta
         conditions
-        (CatTailTruth.get-solution tail_truth)
-      )
-    )
-  )
+        (CatTailTruth.get-solution tail_truth))))
 
-  ;; Morphs
-
-  ; Messages
+  ;; CatMessage
 
   (defconstant ANNOUNCEMENT_MORPH_BYTE 0xca)
   (defconstant RING_MORPH_BYTE 0xcb)
@@ -55,7 +50,7 @@
   ;; CatCreateCoin
 
   (defun-inline CatCreateCoin (tail_reveal tail_solution)
-    (cf.CreateCoin () -113 tail_reveal tail_solution))
+    (cf.Condition CREATE_COIN () -113 tail_reveal tail_solution))
   (defun-inline CatCreateCoin.from-tail-truth (tail_truth)
     (CatCreateCoin
       (CatTailTruth.get-program tail_truth)
@@ -63,9 +58,9 @@
   (defun-inline CatCreateCoin.is-condition (condition)
     (= (cf.Condition.output-amount condition) -113))
   (defun-inline CatCreateCoin.get-tail-reveal (condition)
-    (f (cf.CreateCoin.get-amount-rest condition)))
+    (f (r (r (r condition)))))
   (defun-inline CatCreateCoin.get-tail-solution (condition)
-    (f (r (cf.CreateCoin.get-amount-rest condition))))
+    (f (r (r (r (r condition))))))
 
   ;; CatMod
 
@@ -81,10 +76,10 @@
     (= coin_id (CatMod.morph-coin-id cat_mod coin)))
   (defun-inline CatMod.verify-tail-program-hash (cat_mod tail_truth)
     (=
-      (sha256tree1 (CatTailTruth.get-program tail_truth))
+      (sha256tree (CatTailTruth.get-program tail_truth))
       (CatMod.get-tail-program-hash cat_mod)))
 
-  ; CatMod.morph-puzzle-hash
+  ;; CatMod.morph-puzzle-hash
 
   (defun-inline CatMod.morph-puzzle-hash (cat_mod inner_puzzle_hash)
     (cf.puzzle-hash-of-curried-function
@@ -193,19 +188,19 @@
 
   ;; Utils
 
-  ; (defun-inline sha256tree (f . r)
-  ;   (sha256tree1 f . r))
+  (defun-inline sha256tree (f . r)
+    (sha256tree1 f . r))
   (defun sha256tree1 (tree)
     (if (l tree)
-      (sha256 2 (sha256tree1 (f tree)) (sha256tree1 (r tree)))
+      (sha256 2 (sha256tree (f tree)) (sha256tree (r tree)))
       (cf.sha256one tree)))
 
-  ; (defun-inline merge-iterables (f . r)
-  ;   (merge_list f . r))
+  (defun-inline merge-iterables (f . r)
+    (merge_list f . r))
   (defun merge_list (iterable_a iterable_b)
     (if iterable_a
       (c
         (f iterable_a)
-        (merge_list (r iterable_a) iterable_b))
+        (merge-iterables (r iterable_a) iterable_b))
       iterable_b))
 )
