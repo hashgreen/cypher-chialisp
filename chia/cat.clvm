@@ -16,6 +16,26 @@
   (include cypher.clvm)
   (include chia/cat-lib.clvm)
 
+  (defun-inline concat-ring-announcements
+    (
+      inner_conditions
+      prev_coin_id
+      this_coin_id
+      next_coin_id
+      prev_subtotal
+      this_subtotal
+    )
+
+    (@cf.concat
+      (cf.CreateCoinAnnouncement
+        (CatMod.RingMessage prev_coin_id prev_subtotal))
+      (cf.AssertCoinAnnouncement
+        next_coin_id
+        (CatMod.RingMessage this_coin_id this_subtotal))
+      inner_conditions)
+  )
+
+  (defun-inline stager-three (f . r) (check-lineage-or-run-tail-program f . r))
   (defun check-lineage-or-run-tail-program
     (
       this_coin
@@ -45,23 +65,8 @@
         inner_conditions))
   )
 
-  (defun-inline generate-final-output-conditions
-    (
-      prev_subtotal
-      this_subtotal
-      cat_conditions
-      prev_coin_id
-      this_coin_id
-      next_coin_id
-    )
-
-    (@cf.concat
-      (cf.CreateCoinAnnouncement (CatMessage.ring prev_coin_id prev_subtotal))
-      (cf.AssertCoinAnnouncement next_coin_id (CatMessage.ring this_coin_id this_subtotal))
-      cat_conditions)
-  )
-
-  (defun stager-two
+  (defun-inline stager-two (f . r) (stager_two f . r))
+  (defun stager_two
     (
       cat_truth
       morph_conditions_state
@@ -73,7 +78,7 @@
       extra_delta
     )
 
-    (check-lineage-or-run-tail-program
+    (stager-three
       this_coin
       (CatMod.MorphConditions.State.get-tail-truth morph_conditions_state)
       (@cf.and
@@ -84,20 +89,21 @@
       lineage_proof
       cat_truth
       extra_delta
-      (generate-final-output-conditions
+      (concat-ring-announcements
+        (CatMod.MorphConditions.State.get-conditions morph_conditions_state)
+        prev_coin_id
+        (CatTruth.get-id cat_truth)
+        next_coin_id
         prev_subtotal
         (+
           prev_subtotal
           (-
             (cf.Coin.get-amount this_coin)
             (CatMod.MorphConditions.State.get-output-amount morph_conditions_state))
-          extra_delta)
-        (CatMod.MorphConditions.State.get-conditions morph_conditions_state)
-        prev_coin_id
-        (CatTruth.get-id cat_truth)
-        next_coin_id))
+          extra_delta)))
   )
 
+  (defun-inline stager-one (f . r) (stager f . r))
   (defun stager
     (
       cat_mod
@@ -113,7 +119,7 @@
     )
 
     (@cf.concat
-      (list ASSERT_MY_COIN_ID this_coin_id)
+      (cf.AssertMyCoinID this_coin_id)
       (stager-two
         (CatTruth cat_mod this_coin_id this_coin inner_puzzle_hash)
         (CatMod.MorphConditions.do cat_mod inner_conditions ())
@@ -125,7 +131,7 @@
         extra_delta))
   )
 
-  (stager
+  (stager-one
     (CatMod MOD_HASH TAIL_PROGRAM_HASH)
     (a INNER_PUZZLE inner_solution)
     lineage_proof

@@ -19,8 +19,8 @@
     (c tail_program tail_solution))
   (defun-inline CatTailTruth.from-cat-create-coin (cat_create_coin)
     (c
-      (CatCreateCoin.get-tail-reveal cat_create_coin)
-      (CatCreateCoin.get-tail-solution cat_create_coin)))
+      (CatMod.CreateCoin.get-tail-reveal cat_create_coin)
+      (CatMod.CreateCoin.get-tail-solution cat_create_coin)))
   (defun-inline CatTailTruth.get-program (tail_truth)
     (f tail_truth))
   (defun-inline CatTailTruth.get-solution (tail_truth)
@@ -36,31 +36,6 @@
         extra_delta
         conditions
         (CatTailTruth.get-solution tail_truth))))
-
-  ;; CatMessage
-
-  (defconstant ANNOUNCEMENT_MORPH_BYTE 0xca)
-  (defconstant RING_MORPH_BYTE 0xcb)
-
-  (defun-inline CatMessage.morph (message)
-    (sha256 ANNOUNCEMENT_MORPH_BYTE message))
-  (defun-inline CatMessage.ring (coin_id subtotal)
-    (sha256 RING_MORPH_BYTE coin_id subtotal))
-
-  ;; CatCreateCoin
-
-  (defun-inline CatCreateCoin (tail_reveal tail_solution)
-    (cf.Condition CREATE_COIN () -113 tail_reveal tail_solution))
-  (defun-inline CatCreateCoin.from-tail-truth (tail_truth)
-    (CatCreateCoin
-      (CatTailTruth.get-program tail_truth)
-      (CatTailTruth.get-solution tail_truth)))
-  (defun-inline CatCreateCoin.is-condition (condition)
-    (= (cf.Condition.output-amount condition) -113))
-  (defun-inline CatCreateCoin.get-tail-reveal (condition)
-    (f (r (r (r condition)))))
-  (defun-inline CatCreateCoin.get-tail-solution (condition)
-    (f (r (r (r (r condition))))))
 
   ;; CatMod
 
@@ -95,12 +70,35 @@
         (CatMod.morph-puzzle-hash cat_mod (cf.Coin.get-puzzle-hash coin))
         (cf.Coin.get-amount coin))))
 
+  ;; CatMessage
+
+  (defconstant ANNOUNCEMENT_MORPH_BYTE 0xca)
+  (defconstant RING_MORPH_BYTE 0xcb)
+
+  (defun-inline CatMod.MorphMessage (message)
+    (sha256 ANNOUNCEMENT_MORPH_BYTE message))
+  (defun-inline CatMod.RingMessage (coin_id subtotal)
+    (sha256 RING_MORPH_BYTE coin_id subtotal))
+
+  ;; CatMod.CreateCoin
+
+  (defun-inline CatMod.CreateCoin (tail_reveal tail_solution)
+    (cf.Condition CREATE_COIN () -113 tail_reveal tail_solution))
+  (defun-inline CatMod.CreateCoin.from-tail-truth (tail_truth)
+    (CatMod.CreateCoin
+      (CatTailTruth.get-program tail_truth)
+      (CatTailTruth.get-solution tail_truth)))
+  (defun-inline CatMod.CreateCoin.is-condition (condition)
+    (= (cf.Condition.output-amount condition) -113))
+  (defun-inline CatMod.CreateCoin.get-tail-reveal (condition)
+    (f (r (r (r condition)))))
+  (defun-inline CatMod.CreateCoin.get-tail-solution (condition)
+    (f (r (r (r (r condition))))))
+
   ;; CatMod.MorphConditions.State
 
   (defun-inline CatMod.MorphConditions.State (conditions output_amount tail_truth)
     (@cf.concat conditions output_amount tail_truth))
-  (defun-inline CatMod.MorphConditions.State.initializer (tail_truth)
-    (CatMod.MorphConditions.State () 0 tail_truth))
   (defun-inline CatMod.MorphConditions.State.get-conditions (state)
     (f state))
   (defun-inline CatMod.MorphConditions.State.get-output-amount (state)
@@ -139,10 +137,22 @@
           (cf.CreateCoinAnnouncement.is-condition condition) .
           (@cf.concat
             CREATE_COIN_ANNOUNCEMENT
-            (CatMessage.morph (cf.CreateCoinAnnouncement.get-message condition))
+            (CatMod.MorphMessage (cf.CreateCoinAnnouncement.get-message condition))
             (cf.CreateCoinAnnouncement.get-message-rest condition)))
         condition)
       (cf.Condition.output-amount condition)))
+
+  ;; CatMod.MorphConditions.initialize
+  ;
+  ; Args:
+  ;   _unused_cat_mod (CatMod)
+  ;   tail_truth (CatTailTruth)
+  ;
+  ; Returns:
+  ;   CatMod.MorphConditions.State
+
+  (defun-inline CatMod.MorphConditions.initialize (cat_mod tail_truth)
+    (CatMod.MorphConditions.State () 0 tail_truth))
 
   ;; CatMod.MorphConditions.reduce
   ;
@@ -177,14 +187,14 @@
     (find_and_strip_tail_info conditions cat_mod tail_truth))
   (defun find_and_strip_tail_info (conditions cat_mod tail_truth)
     (if conditions
-      (if (CatCreateCoin.is-condition (f conditions))
+      (if (CatMod.CreateCoin.is-condition (f conditions))
         (CatMod.MorphConditions.do cat_mod
           (r conditions)
           (CatTailTruth.from-cat-create-coin (f conditions)))
         (CatMod.MorphConditions.reduce cat_mod
           (CatMod.MorphConditions.map cat_mod (f conditions))
           (CatMod.MorphConditions.do cat_mod (r conditions) tail_truth)))
-      (CatMod.MorphConditions.State.initializer tail_truth)))
+      (CatMod.MorphConditions.initialize cat_mod tail_truth)))
 
   ;; Utils
 
