@@ -25,13 +25,14 @@
 
     (c
       (list ASSERT_MY_COIN_ID id)
-      (SingletonMod.morph-conditions singleton_mod
+      (SingletonMod.morph-conditions.do singleton_mod
         (a
           inner_puzzle
           (c
             (SingletonTruth
               singleton_mod lineage_proof id puzzle_hash amount inner_puzzle_hash)
-            inner_solution)
+            inner_solution
+          )
         )
         0
       )
@@ -116,7 +117,7 @@
       (stager-one
         singleton_mod
         lineage_proof
-        (SingletonMod.sha256tree inner_puzzle)
+        (sha256tree inner_puzzle)
         amount
         inner_puzzle
         inner_solution

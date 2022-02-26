@@ -54,7 +54,7 @@
     (cf.puzzle-hash-of-curried-function
       (SingletonMod.get-mod-hash singleton_mod)
       inner_puzzle_hash
-      (SingletonMod.sha256tree singleton_mod)))
+      (sha256tree singleton_mod)))
 
   ; SingletonMod.morph-coin-id
 
@@ -76,62 +76,150 @@
       puzzle_hash
       amount)))
 
-  ; SingletonMod.morph-condition
+  ;; SingletonMod.morph-conditions.Hint
+  ;
+  ; Args:
+  ;   has_odd_output (boolean)
+  ;
+  ; Properties:
+  ;   has_odd_output (boolean)
 
-  (defun-inline SingletonMod.morph-condition (singleton_mod condition)
-    (list
-      (cf.Condition.get-condition-code condition)
-      (SingletonMod.morph-puzzle-hash
-        singleton_mod (cf.CreateCoin.get-puzzle-hash condition))
-      (cf.CreateCoin.get-amount condition)))
+  (defun-inline SingletonMod.morph-conditions.Hint (has_odd_output)
+    (has_odd_output))
+  (defun-inline SingletonMod.morph-conditions.Hint.get-has-odd-output (hint)
+    (hint))
+  (defun-inline SingletonMod.morph-conditions.Hint.reduce (hint hint_delta)
+    (any
+      (SingletonMod.morph-conditions.HintDelta.get-is-output-odd hint_delta)
+      (SingletonMod.morph-conditions.Hint.get-has-odd-output hint)))
 
-  ; SingletonMod.morph-conditions
+  ;; SingletonMod.morph-conditions.HintDelta
+  ;
+  ; Args:
+  ;   condition (cf.Condition)
+  ;
+  ; Properties:
+  ;   is_output_odd (boolean)
+  ;   is_output_m113 (boolean)
 
-  (defun-inline SingletonMod.morph-conditions-stager (f . r)
-    (morph_next_condition f . r))
+  (defun-inline SingletonMod.morph-conditions.HintDelta (condition)
+    (odd_cons_m113 (cf.Condition.output-amount condition)))
+  (defun odd_cons_m113 (output_amount)
+    (@cf.concat (= (logand output_amount 1) 1) (= output_amount -113)))
+  (defun-inline SingletonMod.morph-conditions.HintDelta.get-is-output-odd (hint_delta)
+    (f hint_delta))
+  (defun-inline SingletonMod.morph-conditions.HintDelta.get-is-output-m113 (hint_delta)
+    (r hint_delta))
+
+  ;; SingletonMod.morph-conditions.initialize
+  ;
+  ; Args:
+  ;   has_odd_output (boolean)
+  ;
+  ; Returns:
+  ;   empty list of cf.Condition
+  ;
+  ; Raises:
+  ;   when no odd output has been found
+
+  (defun-inline SingletonMod.morph-conditions.initialize (singleton_mod has_odd_output)
+    (if has_odd_output () (x)))
+
+  ;; SingletonMod.morph-conditions.map
+  ;
+  ; Args:
+  ;   condition (cf.Condition)
+  ;   is_output_odd (boolean)
+  ;
+  ; Returns:
+  ;   cf.Condition
+
+  (defun-inline SingletonMod.morph-conditions.map (singleton_mod condition is_output_odd)
+    (if is_output_odd
+      (list
+        (cf.Condition.get-condition-code condition)
+        (SingletonMod.morph-puzzle-hash singleton_mod
+          (cf.CreateCoin.get-puzzle-hash condition))
+        (cf.CreateCoin.get-amount condition))
+      condition))
+
+  ;; SingletonMod.morph-conditions.reduce
+  ;
+  ; Args:
+  ;   condition (cf.Condition)
+  ;   conditions (list of cf.Condition)
+  ;
+  ; Returns:
+  ;   list of cf.Condition
+
+  (defun-inline SingletonMod.morph-conditions.reduce (singleton_mod condition conditions)
+    (@cf.concat condition conditions))
+
+  ;; SingletonMod.morph-conditions.do.stager-2
+  ;
+  ; Args:
+  ;   is_m113 (boolean)
+  ;   conditions (list of cf.Condition)
+  ;
+  ; Returns:
+  ;   list of cf.Condition
+
+  (defun-inline SingletonMod.morph-conditions.do.stager-2 (f . r)
+    (strip_first_condition_if f . r))
+  (defun strip_first_condition_if (is_m113 condition_list)
+    (if is_m113 (r condition_list) condition_list))
+
+  ;; SingletonMod.morph-conditions.do.stager-1
+  ;
+  ; Args:
+  ;   has_odd_output (boolean)
+  ;   output_amount_props ((is_odd . is_m113))
+  ;   conditions (list of cf.Condition)
+  ;
+  ; Returns:
+  ;   list of cf.Condition
+
+  (defun-inline SingletonMod.morph-conditions.do.stager-1
+    (singleton_mod has_odd_output hint_delta conditions)
+    (morph_next_condition singleton_mod conditions has_odd_output hint_delta))
   (defun morph_next_condition
-    (singleton_mod conditions has_odd_output_been_found (is_output_odd . is_output_m113))
+    (singleton_mod conditions has_odd_output (is_output_odd . is_output_m113))
 
     (@cf.assert
-      (not (all is_output_odd has_odd_output_been_found))
-      (SingletonMod.strip-first-condition-if
+      (not (all is_output_odd has_odd_output))
+      (SingletonMod.morph-conditions.do.stager-2
         is_output_m113
-        (c
-          (if is_output_odd
-            (SingletonMod.morph-condition singleton_mod (f conditions))
-            (f conditions))
-          (SingletonMod.morph-conditions singleton_mod
+        (SingletonMod.morph-conditions.reduce singleton_mod
+          (SingletonMod.morph-conditions.map singleton_mod
+            (f conditions) is_output_odd)
+          (SingletonMod.morph-conditions.do singleton_mod
             (r conditions)
-            (any is_output_odd has_odd_output_been_found))))))
+            (any is_output_odd has_odd_output))))))
 
-  (defun-inline SingletonMod.morph-conditions (f . r)
+  ;; SingletonMod.morph-conditions.do
+  ;
+  ; Args:
+  ;   conditions (list of cf.Condition)
+  ;   has_odd_output (boolean)
+  ;
+  ; Returns:
+  ;   list of cf.Condition
+
+  (defun-inline SingletonMod.morph-conditions.do (f . r)
     (check_and_morph_conditions_for_singleton f . r))
-  (defun check_and_morph_conditions_for_singleton
-    (singleton_mod conditions has_odd_output_been_found)
-
+  (defun check_and_morph_conditions_for_singleton (singleton_mod conditions has_odd_output)
     (if conditions
-      (SingletonMod.morph-conditions-stager singleton_mod
-        conditions
-        has_odd_output_been_found
-        (SingletonMod.amount-to-odd-m113 (cf.Condition.output-amount (f conditions))))
-      (if has_odd_output_been_found 0 (x))))
+      (SingletonMod.morph-conditions.do.stager-1 singleton_mod
+        has_odd_output
+        (SingletonMod.morph-conditions.HintDelta (f conditions))
+        (SingletonMod.morph-conditions.HintDelta (f conditions))
+        conditions)
+      (SingletonMod.morph-conditions.initialize singleton_mod has_odd_output)))
 
   ;; Utils
 
-  (defun-inline SingletonMod.strip-first-condition-if (f . r)
-    (strip_first_condition_if f . r))
-  (defun strip_first_condition_if (boolean condition_list)
-    (if boolean (r condition_list) condition_list))
-
-  (defun-inline SingletonMod.amount-to-odd-m113 (f . r)
-    (odd_cons_m113 f . r))
-  (defun odd_cons_m113 (output_amount)
-    (c (= (logand output_amount 1) 1) (= output_amount -113)))
-
-  (defun-inline SingletonMod.sha256tree (tree)
-    (sha256tree#SingletonMod tree))
-  (defun sha256tree#SingletonMod (tree)
+  (defun sha256tree (tree)
     (if (l tree)
-      (sha256 2 (sha256tree#SingletonMod (f tree)) (sha256tree#SingletonMod (r tree)))
+      (sha256 2 (sha256tree (f tree)) (sha256tree (r tree)))
       (sha256 1 tree)))
 )
