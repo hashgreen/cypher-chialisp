@@ -12,43 +12,21 @@
   (include chia/singleton-lib.clvm)
 
   (defun stager-three
-    (
-      singleton_mod
-      lineage_proof
-      id
-      puzzle_hash
-      inner_puzzle_hash
-      amount
-      inner_puzzle
-      inner_solution
-    )
+    (singleton_mod lineage_proof id puzzle_hash inner_puzzle_hash amount inner_puzzle inner_solution)
 
-    (c
-      (list ASSERT_MY_COIN_ID id)
+    (@cf.concat
+      (cf.AssertMyCoinID id)
       (SingletonMod.morph-conditions.do singleton_mod
         (a
           inner_puzzle
-          (c
+          (@cf.concat
             (SingletonTruth
               singleton_mod lineage_proof id puzzle_hash amount inner_puzzle_hash)
-            inner_solution
-          )
-        )
-        0
-      )
-    )
-  )
+            inner_solution))
+        0)))
 
   (defun stager-two
-    (
-      singleton_mod
-      lineage_proof
-      puzzle_hash
-      inner_puzzle_hash
-      amount
-      inner_puzzle
-      inner_solution
-    )
+    (singleton_mod lineage_proof puzzle_hash inner_puzzle_hash amount inner_puzzle inner_solution)
 
     (stager-three
       singleton_mod
@@ -79,19 +57,10 @@
       inner_puzzle_hash
       amount
       inner_puzzle
-      inner_solution
-    )
-  )
+      inner_solution))
 
   (defun stager-one
-    (
-      singleton_mod
-      lineage_proof
-      inner_puzzle_hash
-      amount
-      inner_puzzle
-      inner_solution
-    )
+    (singleton_mod lineage_proof inner_puzzle_hash amount inner_puzzle inner_solution)
 
     (stager-two
       singleton_mod
@@ -100,37 +69,15 @@
       inner_puzzle_hash
       amount
       inner_puzzle
-      inner_solution
-    )
-  )
+      inner_solution))
 
   (defun-inline main
-    (
-      singleton_mod
-      inner_puzzle
-      lineage_proof
-      amount
-      inner_solution
-    )
+    (singleton_mod inner_puzzle lineage_proof amount inner_solution)
 
     (if (logand amount 1)
       (stager-one
-        singleton_mod
-        lineage_proof
-        (sha256tree inner_puzzle)
-        amount
-        inner_puzzle
-        inner_solution
-      )
-      (x)
-    )
-  )
+        singleton_mod lineage_proof (sha256tree#singleton-lib inner_puzzle) amount inner_puzzle inner_solution)
+      (x)))
 
-  (main
-    SINGLETON_MOD
-    INNER_PUZZLE
-    lineage_proof
-    amount
-    inner_solution
-  )
+  (main SINGLETON_MOD INNER_PUZZLE lineage_proof amount inner_solution)
 )

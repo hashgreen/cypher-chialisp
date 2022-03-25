@@ -54,7 +54,7 @@
     (cf.puzzle-hash-of-curried-function
       (SingletonMod.get-mod-hash singleton_mod)
       inner_puzzle_hash
-      (sha256tree singleton_mod)))
+      (sha256tree#singleton-lib singleton_mod)))
 
   ; SingletonMod.morph-coin-id
 
@@ -212,14 +212,13 @@
       (SingletonMod.morph-conditions.do.stager-1 singleton_mod
         has_odd_output
         (SingletonMod.morph-conditions.HintDelta (f conditions))
-        (SingletonMod.morph-conditions.HintDelta (f conditions))
         conditions)
       (SingletonMod.morph-conditions.initialize singleton_mod has_odd_output)))
 
   ;; Utils
 
-  (defun sha256tree (tree)
+  (defun sha256tree#singleton-lib (tree)
     (if (l tree)
-      (sha256 2 (sha256tree (f tree)) (sha256tree (r tree)))
+      (sha256 2 (sha256tree#singleton-lib (f tree)) (sha256tree#singleton-lib (r tree)))
       (sha256 1 tree)))
 )
