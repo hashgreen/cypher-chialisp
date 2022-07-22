@@ -135,7 +135,7 @@
     (CatMod MOD_HASH TAIL_PROGRAM_HASH)
     (a INNER_PUZZLE inner_solution)
     lineage_proof
-    (sha256tree INNER_PUZZLE)
+    (sha256tree1#cat-lib INNER_PUZZLE)
     (cf.Coin.id this_coin)
     prev_coin_id
     this_coin

@@ -51,7 +51,7 @@
     (= coin_id (CatMod.morph-coin-id cat_mod coin)))
   (defun-inline CatMod.verify-tail-program-hash (cat_mod tail_truth)
     (=
-      (sha256tree (CatTailTruth.get-program tail_truth))
+      (sha256tree1#cat-lib (CatTailTruth.get-program tail_truth))
       (CatMod.get-tail-program-hash cat_mod)))
 
   ;; CatMod.morph-puzzle-hash
@@ -145,7 +145,6 @@
   ;; CatMod.MorphConditions.initialize
   ;
   ; Args:
-  ;   _unused_cat_mod (CatMod)
   ;   tail_truth (CatTailTruth)
   ;
   ; Returns:
@@ -198,11 +197,9 @@
 
   ;; Utils
 
-  (defun-inline sha256tree (f . r)
-    (sha256tree1 f . r))
-  (defun sha256tree1 (tree)
+  (defun sha256tree1#cat-lib (tree)
     (if (l tree)
-      (sha256 2 (sha256tree (f tree)) (sha256tree (r tree)))
+      (sha256 2 (sha256tree1#cat-lib (f tree)) (sha256tree1#cat-lib (r tree)))
       (cf.sha256one tree)))
 
   (defun-inline merge-iterables (f . r)
