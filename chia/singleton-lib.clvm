@@ -65,6 +65,18 @@
         (LineageProof.get-amount lineage_proof)
         (EveLineageProof.get-amount lineage_proof))))
 
+  ;; SingletonMod.verify-lineage-proof
+
+  (defun-inline SingletonMod.verify-lineage-proof
+    (singleton_mod parent_coin_id is_not_launcher)
+    (verify_lineage_proof singleton_mod parent_coin_id is_not_launcher))
+  (defun verify_lineage_proof
+    (singleton_mod parent_coin_id is_not_launcher)
+
+    (@cf.assert
+      (any is_not_launcher (= parent_coin_id (SingletonMod.get-launcher-id singleton_mod)))
+      (cf.AssertMyParentID parent_coin_id)))
+
   ; SingletonMod.morph-puzzle-hash
 
   (defun-inline SingletonMod.morph-puzzle-hash (singleton_mod inner_puzzle_hash)
@@ -233,6 +245,13 @@
       (SingletonMod.morph-conditions.initialize singleton_mod has_odd_output)))
 
   ;; Utils
+
+  (defun is_odd_create_coin (condition)
+    (@cf.and@v2
+      (cf.Condition.is-condition CREATE_COIN condition)
+      (logand (cf.CreateCoin.get-amount condition) 1)
+    )
+  )
 
   (defun sha256tree#singleton-lib (tree)
     (if (l tree)
