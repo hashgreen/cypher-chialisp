@@ -8,6 +8,7 @@
   (defconstant A_KW#cypher.constants.APPLY a)
   (defconstant Q_KW#cypher.constants.QUOTE q)
   (defconstant C_KW#cypher.constants.CONS c)
+  (defconstant b32#cypher.constants.BYTES32 32)
 
   (defun-inline cypher.hashlib.sha256one (tree)
     (sha256 ONE#cypher.constants.ONE tree))
@@ -146,6 +147,36 @@
     )
   )
 
+  (defun-inline cypher.hashlib.calculate-coin-id (f . r)
+    (calculate_coin_id#cypher.hashlib.calculate-coin-id f . r))
+  (defun calculate_coin_id#cypher.hashlib.calculate-coin-id
+    (parent_coin_info puzzle_hash amount)
+    ;; Calculate coin id, conditioned on all parameters being valid.
+    ;
+    ; Taken from chia/wallet/puzzles/curry-and-treehash.clinc.
+    ;
+    ; Args:
+    ;   parent_coin_info: parent_coin_info of a coin.
+    ;   puzzle_hash: puzzle_hash of a coin.
+    ;   amount: amount of a coin.
+    ;
+    ; Returns:
+    ;   Coin ID.
+    ;
+    ; Raises:
+    ;   When inputs are not of size bytes32 or amount is negative.
+
+    (if
+      (all
+        (= (strlen parent_coin_info) b32#cypher.constants.BYTES32)
+        (= (strlen puzzle_hash) b32#cypher.constants.BYTES32)
+        (> amount -1)
+      )
+      (sha256 parent_coin_info puzzle_hash amount)
+      (x)
+    )
+  )
+
   ;; Exports
 
   (defun-inline cf.sha256one (f . r) (cypher.hashlib.sha256one f . r))
@@ -153,4 +184,5 @@
   (defun-inline cf.sha256tree (f . r) (cypher.hashlib.sha256tree f . r))
   (defun-inline cf.puzzle-hash-of-curried-function (f . r)
     (cypher.hashlib.puzzle-hash-of-curried-function f . r))
+  (defun-inline cf.calculate-coin-id (f . r) (cypher.hashlib.calculate-coin-id f . r))
 )
