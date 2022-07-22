@@ -29,6 +29,21 @@
     )
   )
 
+  (defmacro cypher.macros.and@v2 args
+    ;; And a series of statements. Alternatative implementation.
+    ;
+    ; Usage: (and cond1 cond2 ...)
+    ; Taken from chia/wallet/puzzles/utility_macros.clib.
+
+    (if args
+      (qq (if (unquote (f args))
+        (unquote (c cypher.macros.and@v2 (r args)))
+        ()
+      ))
+      1
+    )
+   )
+
   (defmacro cypher.macros.concat args
     ;; Concatenate statements.
     ;
@@ -78,6 +93,7 @@
 
   (defmacro @cf.assert args (c cypher.macros.assert args))
   (defmacro @cf.and args (c cypher.macros.and args))
+  (defmacro @cf.and@v2 args (c cypher.macros.and@v2 args))
   (defmacro @cf.concat args (c cypher.macros.concat args))
   (defmacro @cf.if-elif args (c cypher.macros.if-elif args))
   (defmacro @cf.switch args (c cypher.macros.switch args))
