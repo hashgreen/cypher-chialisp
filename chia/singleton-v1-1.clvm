@@ -1,0 +1,56 @@
+(mod
+  (
+    SINGLETON_MOD
+    INNER_PUZZLE
+
+    lineage_proof
+    amount
+    inner_solution
+  )
+
+  (include cypher.clvm)
+
+  (include chia/singleton-lib-v1-1.clvm)
+
+  (defun is_odd_create_coin (condition)
+    (@cf.and@v2
+      (cf.Condition.is-condition CREATE_COIN condition)
+      (logand (cf.CreateCoin.get-amount condition) 1)
+    )
+  )
+
+  (defun verify_lineage_proof
+    (singleton_mod parent_coin_id is_not_launcher)
+
+    (@cf.assert
+      (any is_not_launcher (= parent_coin_id (SingletonMod.get-launcher-id singleton_mod)))
+      (cf.AssertMyParentID parent_id)
+    )
+  )
+
+  (defun-inline main
+    (singleton_mod inner_puzzle lineage_proof amount inner_solution)
+
+    (@cf.assert
+      (logand amount ONE#cypher.constants.ONE)
+      (@cf.concat
+        (cf.AssertMyAmount amount)
+        (@cf.concat
+          (verify_lineage_proof
+            singleton_mod
+            (cf.Coin.verified-id
+              (SingletonMod.lineage-proof-to-parent-coin singleton_mod
+                lineage_proof))
+            (EveLineageProof.is-not lineage_proof)
+          )
+          (SingletonMod.morph-conditions.do@v1-1 singleton_mod
+            (a inner_puzzle inner_solution)
+            0
+          )
+        )
+      )
+    )
+  )
+
+  (main SINGLETON_MOD INNER_PUZZLE lineage_proof amount inner_solution)
+)

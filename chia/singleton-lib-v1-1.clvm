@@ -1,0 +1,60 @@
+(
+  ;; SingletonMod.morph-conditions.map
+  ;
+  ; Args:
+  ;   condition (cf.Condition)
+  ;   is_output_odd (boolean)
+  ;
+  ; Returns:
+  ;   cf.Condition
+
+  (defun-inline SingletonMod.morph-conditions.map@v1-1
+    (singleton_mod condition is_output_odd)
+
+    (@cf.concat
+      (cf.Condition.get-condition-code condition)
+      (SingletonMod.morph-puzzle-hash singleton_mod
+        (cf.CreateCoin.get-puzzle-hash condition))
+      (cf.CreateCoin.get-puzzle-hash-rest condition)))
+
+  ;; SingletonMod.morph-conditions.do@v1-1
+  ;
+  ; Args:
+  ;   conditions (list of cf.Condition)
+  ;   has_odd_output (boolean)
+  ;
+  ; Returns:
+  ;   list of cf.Condition
+
+  (defun-inline SingletonMod.morph-conditions.do@v1-1 (f . r)
+    (check_and_morph_conditions_for_singleton#singleton-lib@v1-1 f . r))
+  (defun check_and_morph_conditions_for_singleton#singleton-lib@v1-1
+    (singleton_mod conditions has_odd_output)
+
+    (if conditions
+      (if (is_odd_create_coin (f conditions))
+        (@cf.assert (not has_odd_output)
+          (if
+            (= (cf.CreateCoin.get-amount (f conditions)) -113)
+            (SingletonMod.morph-conditions.do@v1-1
+              singleton_mod (r conditions) ONE#cypher.constants.ONE
+            )
+            (@cf.concat
+              (SingletonMod.morph-conditions.map@v1-1 singleton_mod (f conditions))
+              (SingletonMod.morph-conditions.do@v1-1
+                singleton_mod (r conditions) ONE#cypher.constants.ONE
+              )
+            )
+          )
+        )
+        (@cf.concat
+          (f conditions)
+          (SingletonMod.morph-conditions.do@v1-1
+            singleton_mod (r conditions) has_odd_output
+          )
+        )
+      )
+      (@cf.assert has_odd_output ())
+    )
+  )
+)

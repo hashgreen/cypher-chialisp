@@ -48,6 +48,23 @@
   (defun-inline SingletonMod.get-launcher-puzzle-hash (singleton_mod)
     (r (r singleton_mod)))
 
+  ; SingletonMod.lineage-proof-to-parent-coin
+
+  (defun-inline SingletonMod.lineage-proof-to-parent-coin
+    (singleton_mod lineage_proof)
+
+    (cf.Coin
+      (LineageProof.get-parent-id lineage_proof)
+      (if (EveLineageProof.is-not lineage_proof)
+        (SingletonMod.morph-puzzle-hash
+          singleton_mod
+          (LineageProof.get-inner-puzzle-hash lineage_proof)
+        )
+        (SingletonMod.get-launcher-puzzle-hash singleton_mod))
+      (if (EveLineageProof.is-not lineage_proof)
+        (LineageProof.get-amount lineage_proof)
+        (EveLineageProof.get-amount lineage_proof))))
+
   ; SingletonMod.morph-puzzle-hash
 
   (defun-inline SingletonMod.morph-puzzle-hash (singleton_mod inner_puzzle_hash)

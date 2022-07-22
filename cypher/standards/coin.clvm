@@ -19,6 +19,11 @@
       (cypher.standards.coin.Coin.get-parent-id coin)
       (cypher.standards.coin.Coin.get-puzzle-hash coin)
       (cypher.standards.coin.Coin.get-amount coin)))
+  (defun-inline cypher.standards.coin.Coin.verified-id (coin)
+    (cypher.hashlib.calculate-coin-id
+      (cypher.standards.coin.Coin.get-parent-id coin)
+      (cypher.standards.coin.Coin.get-puzzle-hash coin)
+      (cypher.standards.coin.Coin.get-amount coin)))
 
   ; Exports
 
@@ -36,4 +41,6 @@
     (cypher.standards.coin.Coin.get-amount f . r))
   (defun-inline cf.Coin.id (f . r)
     (cypher.standards.coin.Coin.id f . r))
+  (defun-inline cf.Coin.verified-id (f . r)
+    (cypher.standards.coin.Coin.verified-id f . r))
 )
