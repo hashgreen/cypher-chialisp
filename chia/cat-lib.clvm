@@ -48,7 +48,7 @@
   (defun-inline CatMod.get-tail-program-hash (cat_mod)
     (f (r (r cat_mod))))
   (defun-inline CatMod.is-coin-cat (cat_mod coin coin_id)
-    (= coin_id (CatMod.morph-coin-id cat_mod coin)))
+    (= coin_id (cf.Coin.id (CatMod.morph-coin cat_mod coin))))
   (defun-inline CatMod.verify-tail-program-hash (cat_mod tail_truth)
     (=
       (sha256tree1#cat-lib (CatTailTruth.get-program tail_truth))
@@ -63,12 +63,11 @@
       (cf.sha256one (CatMod.get-tail-program-hash cat_mod))
       (CatMod.get-mod-hash-hash cat_mod)))
 
-  (defun-inline CatMod.morph-coin-id (cat_mod coin)
-    (cf.Coin.id
-      (cf.Coin
-        (cf.Coin.get-parent-id coin)
-        (CatMod.morph-puzzle-hash cat_mod (cf.Coin.get-puzzle-hash coin))
-        (cf.Coin.get-amount coin))))
+  (defun-inline CatMod.morph-coin (cat_mod coin)
+    (cf.Coin
+      (cf.Coin.get-parent-id coin)
+      (CatMod.morph-puzzle-hash cat_mod (cf.Coin.get-puzzle-hash coin))
+      (cf.Coin.get-amount coin)))
 
   ;; CatMessage
 

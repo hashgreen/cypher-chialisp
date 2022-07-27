@@ -126,7 +126,7 @@
         lineage_proof
         prev_coin_id
         this_coin
-        (CatMod.morph-coin-id cat_mod next_inner_coin)
+        (cf.Coin.id (CatMod.morph-coin cat_mod next_inner_coin))
         prev_subtotal
         extra_delta))
   )
