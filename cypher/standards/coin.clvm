@@ -40,6 +40,8 @@
   (defun-inline cf.Coin.get-amount (f . r)
     (cypher.standards.coin.Coin.get-amount f . r))
   (defun-inline cf.Coin.id (f . r)
+    (x))
+  (defun-inline cf.Coin.unsafe-id (f . r)
     (cypher.standards.coin.Coin.id f . r))
   (defun-inline cf.Coin.verified-id (f . r)
     (cypher.standards.coin.Coin.verified-id f . r))
