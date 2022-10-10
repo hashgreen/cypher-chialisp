@@ -58,11 +58,15 @@
             lineage_proof
             extra_delta
             inner_conditions)
-          inner_conditions))
+          inner_conditions
+        )
+      )
       (@cf.assert
         parent_is_cat
         (not extra_delta)
-        inner_conditions))
+        inner_conditions
+      )
+    )
   )
 
   (defun-inline stager-two (f . r) (stager_two f . r))
@@ -85,7 +89,9 @@
         lineage_proof
         (CatMod.is-coin-cat (CatTruth.get-cat-mod cat_truth)
           lineage_proof
-          (cf.Coin.get-parent-id (CatTruth.get-coin cat_truth))))
+          (cf.Coin.get-parent-id (CatTruth.get-coin cat_truth))
+        )
+      )
       lineage_proof
       cat_truth
       extra_delta
@@ -100,7 +106,10 @@
           (-
             (cf.Coin.get-amount this_coin)
             (CatMod.MorphConditions.State.get-output-amount morph_conditions_state))
-          extra_delta)))
+          extra_delta
+        )
+      )
+    )
   )
 
   (defun-inline stager-one (f . r) (stager f . r))
@@ -128,7 +137,9 @@
         this_coin
         (cf.Coin.id (CatMod.morph-coin cat_mod next_inner_coin))
         prev_subtotal
-        extra_delta))
+        extra_delta
+      )
+    )
   )
 
   (stager-one
