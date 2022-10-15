@@ -26,6 +26,23 @@
   (defun cypher.fracmath.Frac.get-denominator (frac)
     (%cypher.fracmath.Frac.get-denominator frac))
 
+  (defun-inline %cypher.fracmath.Frac.from-ash-frac (ash_frac denom)
+    ;; Convert from an ash fraction.
+
+    (%cypher.fracmath.Frac
+      (ash
+        (*
+          (%cypher.fracmath.AshFrac.get-numerator ash_frac)
+          denom
+        )
+        (- 0 (%cypher.fracmath.AshFrac.get-denominator-ash ash_frac))
+      )
+      denom
+    )
+  )
+  (defun cypher.fracmath.Frac.from-ash-frac (ash_frac denom)
+    (cypher.fracmath.Frac.from-ash-frac ash_frac denom))
+
   (defun-inline %cypher.fracmath.Frac.eq (frac other)
     ;; `Equal to` against another `Frac`.
 
@@ -53,6 +70,17 @@
   )
   (defun cypher.fracmath.Frac.gt (frac var)
     (%cypher.fracmath.Frac.gt frac var))
+
+  (defun-inline %cypher.fracmath.Frac.gt-zero (frac)
+    ;; `Greater than` against zero.
+
+    (>
+      (%cypher.fracmath.Frac.get-numerator frac)
+      0
+    )
+  )
+  (defun cypher.fracmath.Frac.gt-zero (frac var)
+    (%cypher.fracmath.Frac.gt-zero frac var))
 
   (defun-inline %cypher.fracmath.Frac.gt-one (frac)
     ;; `Greater than` against one.
@@ -90,7 +118,10 @@
     ;
     ; This represent (numer / 2^denom_ash) in value.
 
-    (c numer denom_ash)
+    (cypher.macros.assert
+      (> denom_ash 0)
+      (c numer denom_ash)
+    )
   )
   (defun cypher.fracmath.AshFrac (numer denom_ash)
     (%cypher.fracmath.AshFrac numer denom_ash))
@@ -140,40 +171,12 @@
   (defun cypher.fracmath.AshFrac.get-denominator-ash (ash_frac)
     (%cypher.fracmath.AshFrac.get-denominator-ash ash_frac))
 
-  ;; Member functions.
-
-  (defun-inline %cypher.fracmath.AshFrac.eq (ash_frac other)
-    ;; `Equal to` against another `AshFrac`.
-
-    (cypher.macros.and
-      (=
-        (%cypher.fracmath.AshFrac.get-numerator ash_frac)
-        (%cypher.fracmath.AshFrac.get-numerator other)
-      )
-      (=
-        (%cypher.fracmath.AshFrac.get-denominator-ash ash_frac)
-        (%cypher.fracmath.AshFrac.get-denominator-ash other)
-      )
-    )
-  )
-  (defun cypher.fracmath.AshFrac.eq (ash_frac other)
-    (%cypher.fracmath.AshFrac.eq ash_frac other))
-
-  (defun-inline %cypher.fracmath.AshFrac.gt (frac var)
-    ;; `Greater than` against an integer.
-
-    (>
-      (%cypher.fracmath.AshFrac.get-numerator frac)
-      (ash var (%cypher.fracmath.AshFrac.get-denominator-ash frac))
-    )
-  )
-  (defun cypher.fracmath.AshFrac.gt (frac var)
-    (%cypher.fracmath.AshFrac.gt frac var))
+  ;; Unary arithmetic functions.
 
   (defun-inline %cypher.fracmath.AshFrac.gt-one (frac)
     ;; `Greater than` against one.
 
-    (%cypher.fracmath.AshFrac.gt frac 1)
+    (%cypher.fracmath.AshFrac.gt-int frac 1)
   )
   (defun cypher.fracmath.AshFrac.gt-one (frac var)
     (%cypher.fracmath.AshFrac.gt-one frac var))
@@ -205,13 +208,106 @@
           (%cypher.fracmath.AshFrac.get-numerator ash_frac)
           (%cypher.fracmath.AshFrac.get-numerator ash_frac)
         )
-        (- 0 (%cypher.fracmath.AshFrac.get-denom-ash ash_frac))
+        (- 0 (%cypher.fracmath.AshFrac.get-denominator-ash ash_frac))
       )
-      (%cypher.fracmath.AshFrac.get-denom-ash ash_frac)
+      (%cypher.fracmath.AshFrac.get-denominator-ash ash_frac)
     )
   )
   (defun cypher.fracmath.AshFrac.square (ash_frac)
     (%cypher.fracmath.AshFrac.square ash_frac))
+
+  ;; Binary arithmetic functions.
+
+  (defun-inline %cypher.fracmath.AshFrac.gt-int (frac var)
+    ;; Greater than an integer.
+
+    (>
+      (%cypher.fracmath.AshFrac.get-numerator frac)
+      (ash var (%cypher.fracmath.AshFrac.get-denominator-ash frac))
+    )
+  )
+  (defun cypher.fracmath.AshFrac.gt-int (frac var)
+    (%cypher.fracmath.AshFrac.gt-int frac var))
+
+  (defun-inline %cypher.fracmath.AshFrac.add-int (frac var)
+    ;; Adding an integer.
+
+    (%cypher.fracmath.AshFrac
+      (+
+        (%cypher.fracmath.AshFrac.get-numerator frac)
+        (ash 1 (%cypher.fracmath.AshFrac.get-denominator-ash frac))
+      )
+      (%cypher.fracmath.AshFrac.get-denominator-ash frac)
+    )
+  )
+  (defun cypher.fracmath.AshFrac.add-int (frac var)
+    (%cypher.fracmath.AshFrac.add-int frac var))
+
+  (defun-inline %cypher.fracmath.AshFrac.sub-int (frac var)
+    ;; Subtracting an integer.
+
+    (%cypher.fracmath.AshFrac
+      (-
+        (%cypher.fracmath.AshFrac.get-numerator frac)
+        (ash 1 (%cypher.fracmath.AshFrac.get-denominator-ash frac))
+      )
+      (%cypher.fracmath.AshFrac.get-denominator-ash frac)
+    )
+  )
+  (defun cypher.fracmath.AshFrac.sub-int (frac var)
+    (%cypher.fracmath.AshFrac.sub-int frac var))
+
+  (defun-inline %cypher.fracmath.AshFrac.eq (ash_frac other)
+    ;; `Equal to` against another `AshFrac`.
+
+    (cypher.macros.and
+      (=
+        (%cypher.fracmath.AshFrac.get-numerator ash_frac)
+        (%cypher.fracmath.AshFrac.get-numerator other)
+      )
+      (=
+        (%cypher.fracmath.AshFrac.get-denominator-ash ash_frac)
+        (%cypher.fracmath.AshFrac.get-denominator-ash other)
+      )
+    )
+  )
+  (defun cypher.fracmath.AshFrac.eq (ash_frac other)
+    (%cypher.fracmath.AshFrac.eq ash_frac other))
+
+  (defun-inline %cypher.fracmath.AshFrac.mul (frac other)
+    ;; Multiplication.
+
+    (%cypher.fracmath.AshFrac
+      (ash
+        (*
+          (%cypher.fracmath.AshFrac.get-numerator frac)
+          (%cypher.fracmath.AshFrac.get-numerator other)
+        )
+        (- 0 (%cypher.fracmath.AshFrac.get-denominator-ash other))
+      )
+      (%cypher.fracmath.AshFrac.get-denominator-ash frac)
+    )
+  )
+  (defun cypher.fracmath.AshFrac.mul (frac other)
+    (%cypher.fracmath.AshFrac.mul frac other))
+
+  (defun-inline %cypher.fracmath.AshFrac.div (frac other)
+    ;; Division.
+
+    (%cypher.fracmath.AshFrac
+      (%cypher.math.div
+        (ash
+          (%cypher.fracmath.AshFrac.get-numerator frac)
+          (%cypher.fracmath.AshFrac.get-denominator-ash other)
+        )
+        (%cypher.fracmath.AshFrac.get-numerator other)
+      )
+      (%cypher.fracmath.AshFrac.get-denominator-ash frac)
+    )
+  )
+  (defun cypher.fracmath.AshFrac.div (frac other)
+    (cypher.fracmath.AshFrac.div frac other))
+
 
   ;; Exports
 
@@ -221,14 +317,19 @@
   (defun-inline cf.Frac.get-numerator (f . r) (cypher.fracmath.Frac.get-numerator f . r))
   (defun-inline %cf.Frac.get-denominator (f . r) (%cypher.fracmath.Frac.get-denominator f . r))
   (defun-inline cf.Frac.get-denominator (f . r) (cypher.fracmath.Frac.get-denominator f . r))
+  (defun-inline %cf.Frac.from-ash-frac (f . r) (%cypher.fracmath.Frac.from-ash-frac f . r))
+  (defun-inline cf.Frac.from-ash-frac (f . r) (cypher.fracmath.Frac.from-ash-frac f . r))
   (defun-inline %cf.Frac.eq (f . r) (%cypher.fracmath.Frac.eq f . r))
   (defun-inline cf.Frac.eq (f . r) (cypher.fracmath.Frac.eq f . r))
   (defun-inline %cf.Frac.gt (f . r) (%cypher.fracmath.Frac.gt f . r))
   (defun-inline cf.Frac.gt (f . r) (cypher.fracmath.Frac.gt f . r))
+  (defun-inline %cf.Frac.gt-zero (f . r) (%cypher.fracmath.Frac.gt-zero f . r))
+  (defun-inline cf.Frac.gt-zero (f . r) (cypher.fracmath.Frac.gt-zero f . r))
   (defun-inline %cf.Frac.gt-one (f . r) (%cypher.fracmath.Frac.gt-one f . r))
   (defun-inline cf.Frac.gt-one (f . r) (cypher.fracmath.Frac.gt-one f . r))
   (defun-inline %cf.Frac.inv (f . r) (%cypher.fracmath.Frac.inv f . r))
   (defun-inline cf.Frac.inv (f . r) (cypher.fracmath.Frac.inv f . r))
+
   (defun-inline %cf.AshFrac (f . r) (%cypher.fracmath.AshFrac f . r))
   (defun-inline cf.AshFrac (f . r) (cypher.fracmath.AshFrac f . r))
   (defun-inline %cf.AshFrac.get-numerator (f . r) (%cypher.fracmath.AshFrac.get-numerator f . r))
@@ -239,14 +340,20 @@
   (defun-inline cf.AshFrac.from-frac (f . r) (cypher.fracmath.AshFrac.from-frac f . r))
   (defun-inline %cf.AshFrac.from-ash-frac (f . r) (%cypher.fracmath.AshFrac.from-ash-frac f . r))
   (defun-inline cf.AshFrac.from-ash-frac (f . r) (cypher.fracmath.AshFrac.from-ash-frac f . r))
-  (defun-inline %cf.AshFrac.eq (f . r) (%cypher.fracmath.AshFrac.eq f . r))
-  (defun-inline cf.AshFrac.eq (f . r) (cypher.fracmath.AshFrac.eq f . r))
-  (defun-inline %cf.AshFrac.gt (f . r) (%cypher.fracmath.AshFrac.gt f . r))
-  (defun-inline cf.AshFrac.gt (f . r) (cypher.fracmath.AshFrac.gt f . r))
   (defun-inline %cf.AshFrac.gt-one (f . r) (%cypher.fracmath.AshFrac.gt-one f . r))
   (defun-inline cf.AshFrac.gt-one (f . r) (cypher.fracmath.AshFrac.gt-one f . r))
   (defun-inline %cf.AshFrac.inv (f . r) (%cypher.fracmath.AshFrac.inv f . r))
   (defun-inline cf.AshFrac.inv (f . r) (cypher.fracmath.AshFrac.inv f . r))
   (defun-inline %cf.AshFrac.square (f . r) (%cypher.fracmath.AshFrac.square f . r))
   (defun-inline cf.AshFrac.square (f . r) (cypher.fracmath.AshFrac.square f . r))
+  (defun-inline %cf.AshFrac.eq (f . r) (%cypher.fracmath.AshFrac.eq f . r))
+  (defun-inline cf.AshFrac.eq (f . r) (cypher.fracmath.AshFrac.eq f . r))
+  (defun-inline %cf.AshFrac.gt-int (f . r) (%cypher.fracmath.AshFrac.gt-int f . r))
+  (defun-inline cf.AshFrac.gt-int (f . r) (cypher.fracmath.AshFrac.gt-int f . r))
+  (defun-inline %cf.AshFrac.add-int (f . r) (%cypher.fracmath.AshFrac.add-int f . r))
+  (defun-inline cf.AshFrac.add-int (f . r) (cypher.fracmath.AshFrac.add-int f . r))
+  (defun-inline %cf.AshFrac.sub-int (f . r) (%cypher.fracmath.AshFrac.sub-int f . r))
+  (defun-inline cf.AshFrac.sub-int (f . r) (cypher.fracmath.AshFrac.sub-int f . r))
+  (defun-inline %cf.AshFrac.div (f . r) (%cypher.fracmath.AshFrac.div f . r))
+  (defun-inline cf.AshFrac.div (f . r) (cypher.fracmath.AshFrac.div f . r))
 )

@@ -1,0 +1,55 @@
+(a (mod ()
+
+  (include cypher/fracmath.clvm)
+  (include cypher/logexpmath.clvm)
+  (include cypher/macros.clvm)
+  (include cypher/math.clvm)
+
+  (include tests/utils.clvm)
+
+  (defun-inline @assert-frac-approx (ash_frac frac)
+    (@assert-approx
+      (%cf.Frac.get-numerator
+        (%cf.Frac.from-ash-frac
+          ash_frac
+          (%cf.Frac.get-denominator frac)
+        )
+      )
+      (%cf.Frac.get-numerator frac)
+      10
+    )
+  )
+
+  (defun-inline test-ln ()
+    (@assert
+      (@assert-frac-approx
+        (%cf.ln (%cf.Frac 1234 1000)) (%cf.Frac 210260 1000000))
+      (@assert-frac-approx
+        (%cf.ln (%cf.Frac 651981916131 1)) (%cf.Frac 27203282 1000000))
+      (@assert-frac-approx
+        (%cf.ln (%cf.Frac 10 1000)) (%cf.Frac -4605170 1000000))
+      (@assert-frac-approx
+        (%cf.ln (%cf.Frac 1 1000000)) (%cf.Frac -13815510 1000000))
+      (@assert-frac-approx
+        (%cf.ln (%cf.Frac 1 1)) (%cf.Frac 0 1))
+      (@assert-frac-approx
+        (%cf.ln (%cf.Frac 1 1000000000000)) (%cf.Frac -27631021 1000000))
+      "test-logexpmath.test-ln"))
+
+  (defun-inline test-log ()
+    (@assert
+      (@assert-frac-approx
+        (%cf.log (%cf.Frac 314159 100000) (%cf.Frac 123456 100000)) (%cf.Frac 543260 100000))
+      (@assert-frac-approx
+        (%cf.log (%cf.Frac 1000000000 1) (%cf.Frac 10 1)) (%cf.Frac 10 1))
+      "test-logexpmath.test-log"))
+
+  (defun-inline test-logexpmath ()
+    (@assert
+      (test-ln)
+      (test-log)
+      "test-logexpmath"))
+
+  (test-logexpmath)
+
+) ())

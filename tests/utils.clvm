@@ -19,6 +19,29 @@
     ))
   )
 
+  (defmacro @cypher.tests.assert-approx (statement result epsilon)
+    ;; Expect the statement to evaluate approximately to result.
+
+    (qq (if
+      (all
+        (>
+          (unquote epsilon)
+          (- (unquote statement) (unquote result))
+        )
+        (>
+          (unquote epsilon)
+          (- (unquote result) (unquote statement))
+        )
+      )
+      1
+      (x
+        (q . (unquote statement))
+        "does not evaluate approximately to"
+        (q . (unquote result))
+      )
+    ))
+  )
+
   (defmacro @cypher.tests.assert args
     ;; Assert a series of statements, followed by test name.
     ;
@@ -35,5 +58,6 @@
 
   (defmacro @assert-fails args (c @cypher.tests.assert-fails args))
   (defmacro @assert-equal args (c @cypher.tests.assert-equal args))
+  (defmacro @assert-approx args (c @cypher.tests.assert-approx args))
   (defmacro @assert args (c @cypher.tests.assert args))
 )
