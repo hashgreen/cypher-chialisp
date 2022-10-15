@@ -5,40 +5,40 @@
   (include tests/utils.clvm)
 
   (defun-inline test-assert ()
-    (@cf-tests.assert
-      (@cf-tests.assert-equal (@cf.assert 1 1 "successful") "successful")
-      (@cf-tests.assert-fails (@cf.assert 1 1 0 "failed"))
+    (@assert
+      (@assert-equal (@cf.assert 1 1 "successful") "successful")
+      (@assert-fails (@cf.assert 1 1 0 "failed"))
       "test-macros.test-assert"))
 
   (defun-inline test-and ()
-    (@cf-tests.assert
-      (@cf-tests.assert-equal (@cf.and 0 0) 0)
-      (@cf-tests.assert-equal (@cf.and 0 1) 0)
-      (@cf-tests.assert-equal (@cf.and 1 1 1) 1)
+    (@assert
+      (@assert-equal (@cf.and 0 0) 0)
+      (@assert-equal (@cf.and 0 1) 0)
+      (@assert-equal (@cf.and 1 1 1) 1)
       "test-macros.test-and"))
 
   (defun-inline test-if-elif ()
-    (@cf-tests.assert
-      (@cf-tests.assert-equal
+    (@assert
+      (@assert-equal
         (@cf.if-elif 1 "hashgreen" "hashbrown") "hashgreen")
-      (@cf-tests.assert-equal
+      (@assert-equal
         (@cf.if-elif 0 "hashgreen" 1 "hashbrown" "hashred") "hashbrown")
-      (@cf-tests.assert-equal
+      (@assert-equal
         (@cf.if-elif 0 "hashgreen" 0 "hashbrown" "hashred") "hashred")
       "test-macros.test-if-elif"))
 
   (defun-inline test-switch ()
-    (@cf-tests.assert
-      (@cf-tests.assert-equal
+    (@assert
+      (@assert-equal
         (@cf.switch (1 . "hashgreen") "hashbrown") "hashgreen")
-      (@cf-tests.assert-equal
+      (@assert-equal
         (@cf.switch (0 . "hashgreen") (1 . "hashbrown") "hashred") "hashbrown")
-      (@cf-tests.assert-equal
+      (@assert-equal
         (@cf.switch (0 . "hashgreen") (0 . "hashbrown") "hashred") "hashred")
       "test-macros.test-switch"))
 
   (defun-inline test-macros ()
-    (@cf-tests.assert
+    (@assert
       (test-assert)
       (test-and)
       (test-if-elif)
