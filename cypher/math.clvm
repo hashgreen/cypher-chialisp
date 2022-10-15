@@ -35,17 +35,24 @@
   ; The vanilla `/` operator has some unintended behavior, so we fall back to
   ; `divmod` operator.
 
-  (defun-inline %cypher.math.div (numerator denominator)
-    (f (divmod numerator denominator)))
-  (defun cypher.math.div (numerator denominator)
-    (%cypher.math.div numerator denominator))
+  (defun-inline %cypher.math.div (numer denom)
+    (f (divmod numer denom)))
+  (defun cypher.math.div (numer denom)
+    (%cypher.math.div numer denom))
 
-  ;; Multiply var by the fraction (numerator / denominator).
+  ;; Multiply var by fraction (numer / denom).
 
-  (defun-inline %cypher.math.mulfrac (var numerator denominator)
-    (%cypher.math.div (* var numerator) denominator))
-  (defun cypher.math.mulfrac (var numerator denominator)
-    (%cypher.math.mulfrac var numerator denominator))
+  (defun-inline %cypher.math.mul-frac (var frac)
+    (%cypher.math.div
+      (*
+        var
+        (cypher.fracmath.Frac.get-numerator frac)
+      )
+      (cypher.fracmath.Frac.get-denominator frac)
+    )
+  )
+  (defun cypher.math.mul-frac (var frac)
+    (%cypher.math.mul-frac var frac))
 
   ;; Square root.
 
@@ -85,8 +92,8 @@
   (defun-inline cf.round-up-to-odd (f . r) (cypher.math.round-up-to-odd f . r))
   (defun-inline %cf.div (f . r) (%cypher.math.div f . r))
   (defun-inline cf.div (f . r) (cypher.math.div f . r))
-  (defun-inline %cf.mulfrac (f . r) (%cypher.math.mulfrac f . r))
-  (defun-inline cf.mulfrac (f . r) (cypher.math.mulfrac f . r))
+  (defun-inline %cf.mul-frac (f . r) (%cypher.math.mul-frac f . r))
+  (defun-inline cf.mul-frac (f . r) (cypher.math.mul-frac f . r))
   (defun-inline %cf.sqrt (f . r) (x "%cf.sqrt"))
   (defun-inline cf.sqrt (f . r) (cypher.math.sqrt f . r))
 )

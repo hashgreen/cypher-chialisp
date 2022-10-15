@@ -1,5 +1,6 @@
 (a (mod ()
 
+  (include cypher/fracmath.clvm)
   (include cypher/macros.clvm)
   (include cypher/math.clvm)
 
@@ -39,12 +40,12 @@
       (@assert-equal (%cf.div 3 2) 1)
       "test-math.test-div"))
 
-  (defun-inline test-mulfrac ()
+  (defun-inline test-mul-frac ()
     (@assert
-      (@assert-equal (%cf.mulfrac 2 300 100) 6)
-      (@assert-equal (%cf.mulfrac 123 457 100) 562)
-      (@assert-equal (%cf.mulfrac -387 -584 -198) -1142)
-      (@assert-fails (%cf.mulfrac 1 1 0))
+      (@assert-equal (%cf.mul-frac 2 (%cf.Frac 300 100)) 6)
+      (@assert-equal (%cf.mul-frac 123 (%cf.Frac 457 100)) 562)
+      (@assert-fails (%cf.mul-frac -387 (%cf.Frac -584 -198)) -1142)
+      (@assert-fails (%cf.mul-frac 1 (%cf.Frac 1 0)))
       "test-math.test-mulfrac"))
 
   (defun-inline test-sqrt ()

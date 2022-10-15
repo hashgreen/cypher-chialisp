@@ -3,6 +3,7 @@
   (include cypher/constants.clvm)
   (include cypher/macros.clvm)
   (include cypher/math.clvm)
+  (include cypher/fracmath.clvm)
   (include cypher/itertools.clvm)
   (include cypher/hashlib.clvm)
 
