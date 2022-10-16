@@ -147,7 +147,7 @@
     )
   )
 
-  (defun-inline --cypher.logexpmath.ln-64 (var_af64)
+  (defun --cypher.logexpmath.ln-64 (var_af64)
     (%cypher.fracmath.AshFrac
       (if (%cypher.fracmath.AshFrac.gt-one var_af64)
         (--cypher.logexpmath.ln-64.stager var_af64)
@@ -162,7 +162,7 @@
     )
   )
 
-  (defun-inline --cypher.logexpmath.ln-128 (var_af128)
+  (defun --cypher.logexpmath.ln-128 (var_af128)
     (%cypher.fracmath.AshFrac
       (--cypher.logexpmath.ln-128-maclaurin var_af128)
       cypher.logexpmath.constants.FRAC_128
@@ -217,6 +217,7 @@
   (defun-inline %cypher.logexpmath.ln (var_frac)
     (cypher.macros.assert
       (%cypher.fracmath.Frac.gt-zero var_frac)
+
       (--cypher.logexpmath.ln-to-af64
         (%cypher.fracmath.AshFrac.from-frac
           var_frac
