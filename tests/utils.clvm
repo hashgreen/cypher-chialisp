@@ -5,7 +5,12 @@
     (qq (if
       (= (f (mod () (unquote statement))) (q . x))
       1
-      (x (q . (unquote statement)) "should fail!" "Instead it evaluates to" (mod () (unquote statement)))
+      (x
+        (q . (unquote statement))
+        "should fail!"
+        "Instead it evaluates to"
+        (mod () (unquote statement))
+      )
     ))
   )
 
@@ -15,7 +20,13 @@
     (qq (if
       (= (unquote statement) (unquote result))
       1
-      (x (q . (unquote statement)) "does not evaluate to" (q . (unquote result)))
+      (x
+        (q . (unquote statement))
+        "does not evaluate to"
+        (q . (unquote result))
+        "Instead it evaluates to"
+        (mod () (unquote statement))
+      )
     ))
   )
 
@@ -38,6 +49,8 @@
         (q . (unquote statement))
         "does not evaluate approximately to"
         (q . (unquote result))
+        "Instead it evaluates to"
+        (mod () (unquote statement))
       )
     ))
   )

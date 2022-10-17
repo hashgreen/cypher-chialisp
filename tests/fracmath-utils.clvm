@@ -1,0 +1,46 @@
+(
+  (defun-inline @cypher.tests.assert-frac-approx (statement result)
+    ;; Asserts the `Frac` is approximately to a `Frac` within `result`'s smallest unit.
+    ;
+    ; Concretely, | statement - result | <= 1 / result.denom
+    ;
+    ; Args:
+    ;   statement: a `cypher.fracmath.Frac`
+    ;   result: a `cypher.fracmath.Frac`
+
+    (@cypher.tests.assert-approx
+      (%cypher.fracmath.Frac.get-numerator
+        (%cypher.fracmath.Frac.from-frac
+          statement
+          (%cypher.fracmath.Frac.get-denominator result)
+        )
+      )
+      (%cypher.fracmath.Frac.get-numerator result)
+      2
+    )
+  )
+
+  (defun-inline @cypher.tests.assert-ash-frac-approx (statement result)
+    ;; Asserts the `AshFrac` is approximately to a `Frac` within `result`'s smallest unit.
+    ;
+    ; Concretely, | statement - result | <= 1 / result.denom_ash
+    ;
+    ; Args:
+    ;   statement: a `cypher.fracmath.AshFrac`
+    ;   result: a `cypher.fracmath.AshFrac`
+
+    (@cypher.tests.assert-approx
+      (%cypher.fracmath.AshFrac.get-numerator
+        (%cypher.fracmath.AshFrac.from-ash-frac
+          statement
+          (%cypher.fracmath.AshFrac.get-denominator-ash result)
+        )
+      )
+      (%cypher.fracmath.AshFrac.get-numerator result)
+      2
+    )
+  )
+
+  (defun-inline @assert-ash-frac-approx (f . r) (@cypher.tests.assert-ash-frac-approx f . r))
+  (defun-inline @assert-frac-approx (f . r) (@cypher.tests.assert-frac-approx f . r))
+)
