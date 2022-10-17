@@ -16,6 +16,14 @@
   (defun cypher.fracmath.Frac (numer denom)
     (%cypher.fracmath.Frac numer denom))
 
+  (defun-inline %cypher.fracmath.Frac@unsafe (numer denom)
+    ;; Fraction representation, does not check demoninator.
+
+    (c numer denom)
+  )
+  (defun cypher.fracmath.Frac@unsafe (numer denom)
+    (%cypher.fracmath.Frac@unsafe numer denom))
+
   ;; Factory functions.
 
   (defun-inline %cypher.fracmath.Frac.from-frac (frac denom)
@@ -93,7 +101,7 @@
     ;
     ; Note this inversion produces a fraction of the same denominator.
 
-    (%cypher.fracmath.Frac
+    (%cypher.fracmath.Frac@unsafe
       (%cypher.math.div
         (*
           (%cypher.fracmath.Frac.get-denominator frac)
