@@ -46,9 +46,9 @@
     (%cypher.math.div
       (*
         var
-        (cypher.fracmath.Frac.get-numerator frac)
+        (%cypher.fracmath.Frac.get-numerator frac)
       )
-      (cypher.fracmath.Frac.get-denominator frac)
+      (%cypher.fracmath.Frac.get-denominator frac)
     )
   )
   (defun cypher.math.mul-frac (var frac)
@@ -56,27 +56,37 @@
 
   ;; Square root.
 
-  (defun cypher.math.sqrt-loop-babylonian (var var1 var2)
+  (defun --cypher.math.sqrt-loop-babylonian (var var1 var2)
     ;; Babylonian method for square root.
     ;
     ; See https://solidity-by-example.org/library/.
 
     (if (> var1 var2)
-      (cypher.math.sqrt-loop-babylonian
-        var var2 (cypher.math.div (+ (cypher.math.div var var2) var2) 2))
+      (--cypher.math.sqrt-loop-babylonian
+        var
+        var2
+        (ash (+ (%cypher.math.div var var2) var2) -1)
+      )
       var1
     )
   )
 
-  (defun cypher.math.sqrt (var)
+  (defun-inline %cypher.math.sqrt (var)
     (cypher.macros.switch
-      ((> var 3) .
-        (cypher.math.sqrt-loop-babylonian var var (+ (cypher.math.div var 2) 1)))
+      (
+        (> var 3) .
+        (--cypher.math.sqrt-loop-babylonian
+          var
+          var
+          (+ (ash var -1) 1))
+      )
       ((> var 0) . 1)
       ((= var 0) . 0)
       (x)
     )
   )
+  (defun cypher.math.sqrt (var)
+    (%cypher.math.sqrt var))
 
   ;; Exports
 
@@ -94,6 +104,6 @@
   (defun-inline cf.div (f . r) (cypher.math.div f . r))
   (defun-inline %cf.mul-frac (f . r) (%cypher.math.mul-frac f . r))
   (defun-inline cf.mul-frac (f . r) (cypher.math.mul-frac f . r))
-  (defun-inline %cf.sqrt (f . r) (x "%cf.sqrt"))
+  (defun-inline %cf.sqrt (f . r) (%cypher.math.sqrt f . r))
   (defun-inline cf.sqrt (f . r) (cypher.math.sqrt f . r))
 )
