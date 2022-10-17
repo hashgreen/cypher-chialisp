@@ -5,7 +5,7 @@
     (qq (if
       (= (f (mod () (unquote statement))) (q . x))
       1
-      (x (q . (unquote statement)) "should fail!")
+      (x (q . (unquote statement)) "should fail!" "Instead it evaluates to" (mod () (unquote statement)))
     ))
   )
 
