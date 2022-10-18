@@ -50,6 +50,13 @@
       (@assert (%cf.Frac.gt (%cf.Frac 123 100) (%cf.Frac 12 10)))
       "test-fracmath.test-Frac-gt"))
 
+  (defun-inline test-Frac-mul ()
+    (@assert
+      (@assert (%cf.Frac.eq
+        (%cf.Frac.mul (%cf.Frac 123 456) (%cf.Frac 789 12345))
+        (%cf.Frac 97047 5629320)))
+      "test-fracmath.test-Frac-mul"))
+
   (defun-inline test-Frac ()
     (@assert
       ; (@assert-fails (%cf.Frac 10 0))
@@ -60,6 +67,7 @@
       (test-Frac-eq)
       (test-Frac-gt-int)
       (test-Frac-gt)
+      (test-Frac-mul)
       "test-fracmath.test-Frac"))
 
   (defun-inline test-AshFrac-from-frac ()
