@@ -388,6 +388,8 @@
 
   (defun-inline %cf.Frac (f . r) (%cypher.fracmath.Frac f . r))
   (defun-inline cf.Frac (f . r) (cypher.fracmath.Frac f . r))
+  (defun-inline %cf.Frac@unsafe (f . r) (%cypher.fracmath.Frac@unsafe f . r))
+  (defun-inline cf.Frac@unsafe (f . r) (cypher.fracmath.Frac@unsafe f . r))
   (defun-inline %cf.Frac.get-numerator (f . r) (%cypher.fracmath.Frac.get-numerator f . r))
   (defun-inline cf.Frac.get-numerator (f . r) (cypher.fracmath.Frac.get-numerator f . r))
   (defun-inline %cf.Frac.get-denominator (f . r) (%cypher.fracmath.Frac.get-denominator f . r))
