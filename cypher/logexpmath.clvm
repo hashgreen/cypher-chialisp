@@ -116,7 +116,7 @@
           (r precalcs)
         )
       )
-      (cypher.macros.assert
+      (@cypher.macros.assert
         (>
           cypher.logexpmath.constants.LN_72_EXPONENT_UPPER_BOUND
           logarithm_int
@@ -178,7 +178,7 @@
   )
 
   (defun-inline --cypher.logexpmath.use-ln-128 (var_f)
-    (cypher.macros.and
+    (@cypher.macros.and
       (%cypher.fracmath.Frac.gt
         (cypher.logexpmath.constants.USE_LN_128_UPPER_BOUND)
         var_f
@@ -213,7 +213,7 @@
   ;; Logarithms.
 
   (defun-inline %cypher.logexpmath.ln (var_f)
-    (cypher.macros.assert
+    (@cypher.macros.assert
       (%cypher.fracmath.Frac.gt-zero var_f)
 
       ; Use `defun` form due to complex return value
@@ -227,7 +227,7 @@
     (%cypher.logexpmath.ln var_f))
 
   (defun-inline %cypher.logexpmath.log (var_f base_f)
-    (cypher.macros.assert
+    (@cypher.macros.assert
       (%cypher.fracmath.Frac.gt-zero var_f)
       (%cypher.fracmath.Frac.gt-zero base_f)
 

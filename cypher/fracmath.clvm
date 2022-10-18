@@ -8,7 +8,7 @@
     ; We assert the denominator to be greater than zero to avoid surprises in some
     ; comparisons.
 
-    (cypher.macros.assert
+    (@cypher.macros.assert
       (> denom 0)
       (c numer denom)
     )
@@ -119,7 +119,7 @@
   (defun-inline %cypher.fracmath.Frac.eq (frac other)
     ;; `Equal to` against another `Frac`.
 
-    (cypher.macros.and
+    (@cypher.macros.and
       (=
         (%cypher.fracmath.Frac.get-numerator frac)
         (%cypher.fracmath.Frac.get-numerator other)
@@ -168,7 +168,7 @@
     ;
     ; This represent (numer / 2^denom_ash) in value.
 
-    (cypher.macros.assert
+    (@cypher.macros.assert
       (> denom_ash 0)
       (c numer denom_ash)
     )
@@ -336,7 +336,7 @@
   (defun-inline %cypher.fracmath.AshFrac.eq (ash_frac other)
     ;; `Equal to` against another `AshFrac`.
 
-    (cypher.macros.and
+    (@cypher.macros.and
       (=
         (%cypher.fracmath.AshFrac.get-numerator ash_frac)
         (%cypher.fracmath.AshFrac.get-numerator other)

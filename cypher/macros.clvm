@@ -1,5 +1,5 @@
 (
-  (defmacro cypher.macros.assert args
+  (defmacro @cypher.macros.assert args
     ;; Assert a series of statements.
     ;
     ; Usage: (assert cond1 cond2 ...)
@@ -7,14 +7,14 @@
 
     (if (r args)
       (qq (if (unquote (f args))
-        (unquote (c cypher.macros.assert (r args)))
+        (unquote (c @cypher.macros.assert (r args)))
         (x)
       ))
       (f args)
     )
   )
 
-  (defmacro cypher.macros.and args
+  (defmacro @cypher.macros.and args
     ;; And a series of statements.
     ;
     ; Usage: (and cond1 cond2 ...)
@@ -22,14 +22,14 @@
 
     (if (r args)
       (qq (if (unquote (f args))
-        (unquote (c cypher.macros.and (r args)))
+        (unquote (c @cypher.macros.and (r args)))
         0
       ))
       (f args)
     )
   )
 
-  (defmacro cypher.macros.and@v2 args
+  (defmacro @cypher.macros.and@v2 args
     ;; And a series of statements. Alternatative implementation.
     ;
     ; Usage: (and cond1 cond2 ...)
@@ -37,14 +37,14 @@
 
     (if args
       (qq (if (unquote (f args))
-        (unquote (c cypher.macros.and@v2 (r args)))
+        (unquote (c @cypher.macros.and@v2 (r args)))
         ()
       ))
       1
     )
    )
 
-  (defmacro cypher.macros.concat args
+  (defmacro @cypher.macros.concat args
     ;; Concatenate statements.
     ;
     ; Usage: (concat stmt1 stmt2 ...)
@@ -55,13 +55,13 @@
     (if (r args)
       (qq (c
           (unquote (f args))
-          (unquote (c cypher.macros.concat (r args)))
+          (unquote (c @cypher.macros.concat (r args)))
       ))
       (f args)
     )
   )
 
-  (defmacro cypher.macros.if-elif args
+  (defmacro @cypher.macros.if-elif args
     ;; Nested if-else statements.
     ;
     ; Usage: (if-elif cond1 result1 cond2 result2 ... default)
@@ -69,13 +69,13 @@
     (if (r args)
       (qq (if (unquote (f args))
           (unquote (f (r args)))
-          (unquote (c cypher.macros.if-elif (r (r args))))
+          (unquote (c @cypher.macros.if-elif (r (r args))))
       ))
       (f args)
     )
   )
 
-  (defmacro cypher.macros.switch args
+  (defmacro @cypher.macros.switch args
     ;; Nested if-else statements with con'ed statements.
     ;
     ; Usage: (switch (cond1 . result1) (cond2 . result2) ... default)
@@ -83,7 +83,7 @@
     (if (r args)
       (qq (if (unquote (f (f args)))
         (unquote (r (f args)))
-        (unquote (c cypher.macros.switch (r args)))
+        (unquote (c @cypher.macros.switch (r args)))
       ))
       (f args)
     )
@@ -91,10 +91,10 @@
 
   ;; Exports
 
-  (defmacro @cf.assert args (c cypher.macros.assert args))
-  (defmacro @cf.and args (c cypher.macros.and args))
-  (defmacro @cf.and@v2 args (c cypher.macros.and@v2 args))
-  (defmacro @cf.concat args (c cypher.macros.concat args))
-  (defmacro @cf.if-elif args (c cypher.macros.if-elif args))
-  (defmacro @cf.switch args (c cypher.macros.switch args))
+  (defmacro @cf.assert args (c @cypher.macros.assert args))
+  (defmacro @cf.and args (c @cypher.macros.and args))
+  (defmacro @cf.and@v2 args (c @cypher.macros.and@v2 args))
+  (defmacro @cf.concat args (c @cypher.macros.concat args))
+  (defmacro @cf.if-elif args (c @cypher.macros.if-elif args))
+  (defmacro @cf.switch args (c @cypher.macros.switch args))
 )

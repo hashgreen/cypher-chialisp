@@ -72,7 +72,7 @@
   )
 
   (defun-inline %cypher.math.sqrt (var)
-    (cypher.macros.switch
+    (@cypher.macros.switch
       (
         (> var 3) .
         (--cypher.math.sqrt-loop-babylonian
