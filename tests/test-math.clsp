@@ -1,10 +1,10 @@
 (a (mod ()
 
-  (include cypher/fracmath.clvm)
-  (include cypher/macros.clvm)
-  (include cypher/math.clvm)
+  (include cypher/fracmath.clsp)
+  (include cypher/macros.clsp)
+  (include cypher/math.clsp)
 
-  (include tests/utils.clvm)
+  (include tests/utils.clsp)
 
   (defun-inline test-unsigned-sub ()
     (@assert

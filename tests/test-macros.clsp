@@ -1,8 +1,8 @@
 (a (mod ()
 
-  (include cypher/macros.clvm)
+  (include cypher/macros.clsp)
 
-  (include tests/utils.clvm)
+  (include tests/utils.clsp)
 
   (defun-inline test-assert ()
     (@assert

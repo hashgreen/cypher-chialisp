@@ -1,12 +1,12 @@
 (a (mod ()
 
-  (include cypher/fracmath.clvm)
-  (include cypher/logexpmath.clvm)
-  (include cypher/macros.clvm)
-  (include cypher/math.clvm)
+  (include cypher/fracmath.clsp)
+  (include cypher/logexpmath.clsp)
+  (include cypher/macros.clsp)
+  (include cypher/math.clsp)
 
-  (include tests/utils.clvm)
-  (include tests/fracmath-utils.clvm)
+  (include tests/utils.clsp)
+  (include tests/fracmath-utils.clsp)
 
   (defun-inline test-ln ()
     (@assert
