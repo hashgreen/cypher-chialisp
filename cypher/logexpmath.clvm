@@ -3,13 +3,6 @@
   (defconstant cypher.logexpmath.constants.FRAC_72 72)
   (defconstant cypher.logexpmath.constants.FRAC_128 128)
 
-  ; (defconstant cypher.logexpmath.constants.USE_LN_128_UPPER_BOUND 5194603131156610154496)
-  ; (defconstant cypher.logexpmath.constants.USE_LN_128_LOWER_BOUND 4250129834582680797184)
-  (defun-inline cypher.logexpmath.constants.USE_LN_128_UPPER_BOUND () (%cypher.fracmath.Frac@unsafe 11 10))
-  (defun-inline cypher.logexpmath.constants.USE_LN_128_LOWER_BOUND () (%cypher.fracmath.Frac@unsafe 9 10))
-
-  (defconstant cypher.logexpmath.constants.LN_72_EXPONENT_UPPER_BOUND 2417556491324078996586496)
-
   (defconstant cypher.logexpmath.constants.LN_72_A7 183591838716394507441929582827196479720296077407287175546725255668661662036302)
   (defconstant cypher.logexpmath.constants.LN_72_A6 29444659034920256478884744064437645965741631810494)
   (defconstant cypher.logexpmath.constants.LN_72_A5 372892036554861672118798300772074960)
@@ -23,6 +16,10 @@
   (defconstant cypher.logexpmath.constants.LN_72_AN3 5351142274878367833325)
   (defconstant cypher.logexpmath.constants.LN_72_AN4 5026932953994157872561)
 
+  (defconstant cypher.logexpmath.constants.LN_72_EXPONENT_UPPER_BOUND 2417556491324078996586496)
+
+  (defun-inline cypher.logexpmath.constants.USE_LN_128_UPPER_BOUND () (%cypher.fracmath.Frac@unsafe 11 10))
+  (defun-inline cypher.logexpmath.constants.USE_LN_128_LOWER_BOUND () (%cypher.fracmath.Frac@unsafe 9 10))
 
   ;; Private
 
