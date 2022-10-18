@@ -144,6 +144,23 @@
   (defun cypher.fracmath.Frac.gt-int (frac var)
     (%cypher.fracmath.Frac.gt-int frac var))
 
+  (defun-inline %cypher.fracmath.Frac.gt (frac other)
+    ;; `Greater than` against an `Frac`.
+
+    (>
+      (*
+        (%cypher.fracmath.Frac.get-numerator frac)
+        (%cypher.fracmath.Frac.get-denominator other)
+      )
+      (*
+        (%cypher.fracmath.Frac.get-numerator other)
+        (%cypher.fracmath.Frac.get-denominator frac)
+      )
+    )
+  )
+  (defun cypher.fracmath.Frac.gt (frac other)
+    (%cypher.fracmath.Frac.gt frac other))
+
   ;; Fractions with arithmetic bit-shifting ("ash fractions").
 
   (defun-inline %cypher.fracmath.AshFrac (numer denom_ash)
@@ -389,6 +406,8 @@
   (defun-inline cf.Frac.eq (f . r) (cypher.fracmath.Frac.eq f . r))
   (defun-inline %cf.Frac.gt-int (f . r) (%cypher.fracmath.Frac.gt-int f . r))
   (defun-inline cf.Frac.gt-int (f . r) (cypher.fracmath.Frac.gt-int f . r))
+  (defun-inline %cf.Frac.gt (f . r) (%cypher.fracmath.Frac.gt f . r))
+  (defun-inline cf.Frac.gt (f . r) (cypher.fracmath.Frac.gt f . r))
 
   (defun-inline %cf.AshFrac (f . r) (%cypher.fracmath.AshFrac f . r))
   (defun-inline cf.AshFrac (f . r) (cypher.fracmath.AshFrac f . r))

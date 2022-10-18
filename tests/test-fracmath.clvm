@@ -45,6 +45,11 @@
       (@assert (%cf.Frac.gt-int (%cf.Frac -2 1) -3))
       "test-fracmath.test-Frac-gt-int"))
 
+  (defun-inline test-Frac-gt ()
+    (@assert
+      (@assert (%cf.Frac.gt (%cf.Frac 123 100) (%cf.Frac 12 10)))
+      "test-fracmath.test-Frac-gt"))
+
   (defun-inline test-Frac ()
     (@assert
       ; (@assert-fails (%cf.Frac 10 0))
@@ -54,6 +59,7 @@
       (test-Frac-inv)
       (test-Frac-eq)
       (test-Frac-gt-int)
+      (test-Frac-gt)
       "test-fracmath.test-Frac"))
 
   (defun-inline test-AshFrac-from-frac ()
