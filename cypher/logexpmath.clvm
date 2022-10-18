@@ -1,25 +1,28 @@
 (
   (defconstant cypher.logexpmath.constants.FRAC_64 64)
-  (defconstant cypher.logexpmath.constants.FRAC_64_BASE 18446744073709551616)
+  (defconstant cypher.logexpmath.constants.FRAC_72 72)
   (defconstant cypher.logexpmath.constants.FRAC_128 128)
-  (defconstant cypher.logexpmath.constants.FRAC_128_BASE 340282366920938463463374607431768211456)
 
-  (defconstant cypher.logexpmath.constants.LN_128_UPPER_BOUND 20291418481080508416)
-  (defconstant cypher.logexpmath.constants.LN_128_LOWER_BOUND 16602069666338596864)
+  ; (defconstant cypher.logexpmath.constants.USE_LN_128_UPPER_BOUND 5194603131156610154496)
+  ; (defconstant cypher.logexpmath.constants.USE_LN_128_LOWER_BOUND 4250129834582680797184)
+  (defun-inline cypher.logexpmath.constants.USE_LN_128_UPPER_BOUND () (%cypher.fracmath.Frac@unsafe 11 10))
+  (defun-inline cypher.logexpmath.constants.USE_LN_128_LOWER_BOUND () (%cypher.fracmath.Frac@unsafe 9 10))
 
-  (defconstant cypher.logexpmath.constants.LN_64_EXPONENT_UPPER_BOUND 4721213561365038366720)
-  (defconstant cypher.logexpmath.constants.LN_64_A7 717155619985916044695037432918736248907406552372215529479395529955709617329)
-  (defconstant cypher.logexpmath.constants.LN_64_A6 115018199355157251870643531501709554553678249259)
-  (defconstant cypher.logexpmath.constants.LN_64_A5 1456609517792428406714055862390917)
-  (defconstant cypher.logexpmath.constants.LN_64_A4 163919806582506698591828152)
-  (defconstant cypher.logexpmath.constants.LN_64_A3 54988969081439155412736)
-  (defconstant cypher.logexpmath.constants.LN_64_A2 1007158100559408451354)
-  (defconstant cypher.logexpmath.constants.LN_64_A1 136304026803256390412)
-  (defconstant cypher.logexpmath.constants.LN_64_A0 50143449209799256682)
-  (defconstant cypher.logexpmath.constants.LN_64_AN1 30413539329486470295)
-  (defconstant cypher.logexpmath.constants.LN_64_AN2 23686088245777032822)
-  (defconstant cypher.logexpmath.constants.LN_64_AN3 20902899511243624348)
-  (defconstant cypher.logexpmath.constants.LN_64_AN4 19636456851539679189)
+  (defconstant cypher.logexpmath.constants.LN_72_EXPONENT_UPPER_BOUND 2417556491324078996586496)
+
+  (defconstant cypher.logexpmath.constants.LN_72_A7 183591838716394507441929582827196479720296077407287175546725255668661662036302)
+  (defconstant cypher.logexpmath.constants.LN_72_A6 29444659034920256478884744064437645965741631810494)
+  (defconstant cypher.logexpmath.constants.LN_72_A5 372892036554861672118798300772074960)
+  (defconstant cypher.logexpmath.constants.LN_72_A4 41963470485121714839508006980)
+  (defconstant cypher.logexpmath.constants.LN_72_A3 14077176084848423785660528)
+  (defconstant cypher.logexpmath.constants.LN_72_A2 257832473743208563546842)
+  (defconstant cypher.logexpmath.constants.LN_72_A1 34893830861633635945704)
+  (defconstant cypher.logexpmath.constants.LN_72_A0 12836722997708609710783)
+  (defconstant cypher.logexpmath.constants.LN_72_AN1 7785866068348536395565)
+  (defconstant cypher.logexpmath.constants.LN_72_AN2 6063638590918920402555)
+  (defconstant cypher.logexpmath.constants.LN_72_AN3 5351142274878367833325)
+  (defconstant cypher.logexpmath.constants.LN_72_AN4 5026932953994157872561)
+
 
   ;; Private
 
@@ -70,10 +73,10 @@
     )
   )
 
-  (defun-inline --cypher.logexpmath.ln-64-maclaurin (var_af64)
+  (defun-inline --cypher.logexpmath.ln-72-maclaurin (var_af72)
     (--cypher.logexpmath.ln-maclaurin
-      var_af64
-      (list 1 3 5 7 9 11)
+      var_af72
+      (list 1 3 5 7 9 11 13)
     )
   )
 
@@ -84,33 +87,33 @@
     )
   )
 
-  (defun --cypher.logexpmath.ln-64.do
-    (var_af64 logarithm_int precalcs)
+  (defun --cypher.logexpmath.ln-72.do
+    (var_af72 logarithm_int precalcs)
 
     (if precalcs
       (if
         (>
           (r (f precalcs))
-          (%cypher.fracmath.AshFrac.get-numerator var_af64)
+          (%cypher.fracmath.AshFrac.get-numerator var_af72)
         )
-        (--cypher.logexpmath.ln-64.do
-          var_af64
+        (--cypher.logexpmath.ln-72.do
+          var_af72
           logarithm_int
           (r precalcs)
         )
-        (--cypher.logexpmath.ln-64.do
+        (--cypher.logexpmath.ln-72.do
           (%cypher.fracmath.AshFrac.div
-            var_af64
+            var_af72
             (%cypher.fracmath.AshFrac
               (r (f precalcs))
-              cypher.logexpmath.constants.FRAC_64
+              cypher.logexpmath.constants.FRAC_72
             )
           )
           (+
             logarithm_int
             (ash
               1
-              (+ cypher.logexpmath.constants.FRAC_64 (f (f precalcs)))
+              (+ cypher.logexpmath.constants.FRAC_72 (f (f precalcs)))
             )
           )
           (r precalcs)
@@ -118,95 +121,93 @@
       )
       (cypher.macros.assert
         (>
-          cypher.logexpmath.constants.LN_64_EXPONENT_UPPER_BOUND
+          cypher.logexpmath.constants.LN_72_EXPONENT_UPPER_BOUND
           logarithm_int
         )
-        (+ logarithm_int (--cypher.logexpmath.ln-64-maclaurin var_af64))
+        (+ logarithm_int (--cypher.logexpmath.ln-72-maclaurin var_af72))
       )
     )
   )
 
-  (defun-inline --cypher.logexpmath.ln-64.stager (var_af64)
-    (--cypher.logexpmath.ln-64.do
-      var_af64
+  (defun-inline --cypher.logexpmath.ln-72.stager (var_f)
+    (--cypher.logexpmath.ln-72.do
+      (%cypher.fracmath.AshFrac.from-frac
+        var_f
+        cypher.logexpmath.constants.FRAC_72
+      )
       0
       (list
-        (c 7 cypher.logexpmath.constants.LN_64_A7)
-        (c 6 cypher.logexpmath.constants.LN_64_A6)
-        (c 5 cypher.logexpmath.constants.LN_64_A5)
-        (c 4 cypher.logexpmath.constants.LN_64_A4)
-        (c 3 cypher.logexpmath.constants.LN_64_A3)
-        (c 2 cypher.logexpmath.constants.LN_64_A2)
-        (c 1 cypher.logexpmath.constants.LN_64_A1)
-        (c 0 cypher.logexpmath.constants.LN_64_A0)
-        (c -1 cypher.logexpmath.constants.LN_64_AN1)
-        (c -2 cypher.logexpmath.constants.LN_64_AN2)
-        (c -3 cypher.logexpmath.constants.LN_64_AN3)
-        (c -4 cypher.logexpmath.constants.LN_64_AN4)
+        (c 7 cypher.logexpmath.constants.LN_72_A7)
+        (c 6 cypher.logexpmath.constants.LN_72_A6)
+        (c 5 cypher.logexpmath.constants.LN_72_A5)
+        (c 4 cypher.logexpmath.constants.LN_72_A4)
+        (c 3 cypher.logexpmath.constants.LN_72_A3)
+        (c 2 cypher.logexpmath.constants.LN_72_A2)
+        (c 1 cypher.logexpmath.constants.LN_72_A1)
+        (c 0 cypher.logexpmath.constants.LN_72_A0)
+        (c -1 cypher.logexpmath.constants.LN_72_AN1)
+        (c -2 cypher.logexpmath.constants.LN_72_AN2)
+        (c -3 cypher.logexpmath.constants.LN_72_AN3)
+        (c -4 cypher.logexpmath.constants.LN_72_AN4)
       )
     )
   )
 
-  (defun --cypher.logexpmath.ln-64 (var_af64)
+  (defun --cypher.logexpmath.ln-72 (var_f)
     (%cypher.fracmath.AshFrac
-      (if (%cypher.fracmath.AshFrac.gt-one var_af64)
-        (--cypher.logexpmath.ln-64.stager var_af64)
+      (if (%cypher.fracmath.Frac.gt-one var_f)
+        (--cypher.logexpmath.ln-72.stager var_f)
         (-
           0
-          (--cypher.logexpmath.ln-64.stager
-            (%cypher.fracmath.AshFrac.inv var_af64)
+          (--cypher.logexpmath.ln-72.stager
+            (%cypher.fracmath.Frac.inv var_f)
           )
         )
       )
-      cypher.logexpmath.constants.FRAC_64
+      cypher.logexpmath.constants.FRAC_72
     )
   )
 
-  (defun --cypher.logexpmath.ln-128 (var_af128)
+  (defun --cypher.logexpmath.ln-128 (var_f)
     (%cypher.fracmath.AshFrac
-      (--cypher.logexpmath.ln-128-maclaurin var_af128)
+      (--cypher.logexpmath.ln-128-maclaurin
+        (%cypher.fracmath.AshFrac.from-frac
+          var_f
+          cypher.logexpmath.constants.FRAC_128
+        )
+      )
       cypher.logexpmath.constants.FRAC_128
     )
   )
 
-  (defun-inline --cypher.logexpmath.use-ln-128 (var_af64)
+  (defun-inline --cypher.logexpmath.use-ln-128 (var_f)
     (cypher.macros.and
-      (>
-        cypher.logexpmath.constants.LN_128_UPPER_BOUND
-        (%cypher.fracmath.AshFrac.get-numerator var_af64)
+      (%cypher.fracmath.Frac.gt
+        (cypher.logexpmath.constants.USE_LN_128_UPPER_BOUND)
+        var_f
       )
-      (>
-        (%cypher.fracmath.AshFrac.get-numerator var_af64)
-        cypher.logexpmath.constants.LN_128_LOWER_BOUND
+      (%cypher.fracmath.Frac.gt
+        var_f
+        (cypher.logexpmath.constants.USE_LN_128_LOWER_BOUND)
       )
     )
   )
 
-  (defun --cypher.logexpmath.ln-to-af64 (var_af64)
-    (if (--cypher.logexpmath.use-ln-128 var_af64)
+  (defun --cypher.logexpmath.ln-to-af72 (var_f)
+    (if (--cypher.logexpmath.use-ln-128 var_f)
       (%cypher.fracmath.AshFrac.from-ash-frac
-        (--cypher.logexpmath.ln-128
-          (%cypher.fracmath.AshFrac.from-ash-frac
-            var_af64
-            cypher.logexpmath.constants.FRAC_128
-          )
-        )
-        cypher.logexpmath.constants.FRAC_64
+        (--cypher.logexpmath.ln-128 var_f)
+        cypher.logexpmath.constants.FRAC_72
       )
-      (--cypher.logexpmath.ln-64 var_af64)
+      (--cypher.logexpmath.ln-72 var_f)
     )
   )
 
-  (defun --cypher.logexpmath.ln-to-af128 (var_af64)
-    (if (--cypher.logexpmath.use-ln-128 var_af64)
-      (--cypher.logexpmath.ln-128
-        (%cypher.fracmath.AshFrac.from-ash-frac
-          var_af64
-          cypher.logexpmath.constants.FRAC_128
-        )
-      )
+  (defun --cypher.logexpmath.ln-to-af128 (var_f)
+    (if (--cypher.logexpmath.use-ln-128 var_f)
+      (--cypher.logexpmath.ln-128 var_f)
       (%cypher.fracmath.AshFrac.from-ash-frac
-        (--cypher.logexpmath.ln-64 var_af64)
+        (--cypher.logexpmath.ln-72 var_f)
         cypher.logexpmath.constants.FRAC_128
       )
     )
@@ -214,47 +215,37 @@
 
   ;; Logarithms.
 
-  (defun-inline %cypher.logexpmath.ln (var_frac)
+  (defun-inline %cypher.logexpmath.ln (var_f)
     (cypher.macros.assert
-      (%cypher.fracmath.Frac.gt-zero var_frac)
+      (%cypher.fracmath.Frac.gt-zero var_f)
 
-      (--cypher.logexpmath.ln-to-af64
-        (%cypher.fracmath.AshFrac.from-frac
-          var_frac
-          cypher.logexpmath.constants.FRAC_64
-        )
+      ; Use `defun` form due to complex return value
+      (cypher.fracmath.AshFrac.from-ash-frac
+        (--cypher.logexpmath.ln-to-af72 var_f)
+        cypher.logexpmath.constants.FRAC_64
       )
     )
   )
-  (defun cypher.logexpmath.ln (var_frac)
-    (%cypher.logexpmath.ln var_frac))
+  (defun cypher.logexpmath.ln (var_f)
+    (%cypher.logexpmath.ln var_f))
 
-  (defun-inline %cypher.logexpmath.log (var_frac base_frac)
+  (defun-inline %cypher.logexpmath.log (var_f base_f)
     (cypher.macros.assert
-      (%cypher.fracmath.Frac.gt-zero var_frac)
-      (%cypher.fracmath.Frac.gt-zero base_frac)
+      (%cypher.fracmath.Frac.gt-zero var_f)
+      (%cypher.fracmath.Frac.gt-zero base_f)
 
-      (%cypher.fracmath.AshFrac.from-ash-frac
-        (%cypher.fracmath.AshFrac.div
-          (--cypher.logexpmath.ln-to-af128
-            (%cypher.fracmath.AshFrac.from-frac
-              var_frac
-              cypher.logexpmath.constants.FRAC_64
-            )
-          )
-          (--cypher.logexpmath.ln-to-af128
-            (%cypher.fracmath.AshFrac.from-frac
-              base_frac
-              cypher.logexpmath.constants.FRAC_64
-            )
-          )
+      ; Use `defun` form due to complex return value
+      (cypher.fracmath.AshFrac.from-ash-frac
+        (cypher.fracmath.AshFrac.div
+          (--cypher.logexpmath.ln-to-af128 var_f)
+          (--cypher.logexpmath.ln-to-af128 base_f)
         )
         cypher.logexpmath.constants.FRAC_64
       )
     )
   )
-  (defun cypher.logexpmath.log (var_frac base_frac)
-    (%cypher.logexpmath.log var_frac base_frac))
+  (defun cypher.logexpmath.log (var_f base_f)
+    (%cypher.logexpmath.log var_f base_f))
 
   ;; Exports
 
