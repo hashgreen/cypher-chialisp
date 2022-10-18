@@ -382,7 +382,7 @@
     )
   )
   (defun cypher.fracmath.AshFrac.div (frac other)
-    (cypher.fracmath.AshFrac.div frac other))
+    (%cypher.fracmath.AshFrac.div frac other))
 
   ;; Exports
 
