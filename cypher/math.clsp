@@ -40,6 +40,14 @@
   (defun cypher.math.div (numer denom)
     (%cypher.math.div numer denom))
 
+  ;; Absolute value.
+
+  (defun-inline %cypher.math.abs (var)
+    (if (> var 0) var (- 0 var))
+  )
+  (defun cypher.math.abs (var)
+    (%cypher.math.abs var))
+
   ;; Multiply var by fraction (numer / denom).
 
   (defun-inline %cypher.math.mul-frac (var frac)
@@ -102,6 +110,8 @@
   (defun-inline cf.round-up-to-odd (f . r) (cypher.math.round-up-to-odd f . r))
   (defun-inline %cf.div (f . r) (%cypher.math.div f . r))
   (defun-inline cf.div (f . r) (cypher.math.div f . r))
+  (defun-inline %cf.abs (f . r) (%cypher.math.abs f . r))
+  (defun-inline cf.abs (f . r) (cypher.math.abs f . r))
   (defun-inline %cf.mul-frac (f . r) (%cypher.math.mul-frac f . r))
   (defun-inline cf.mul-frac (f . r) (cypher.math.mul-frac f . r))
   (defun-inline %cf.sqrt (f . r) (%cypher.math.sqrt f . r))

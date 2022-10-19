@@ -40,6 +40,12 @@
       (@assert-equal (%cf.div 3 2) 1)
       "test-math.test-div"))
 
+  (defun-inline test-abs ()
+    (@assert
+      (@assert-equal (%cf.abs -10) 10)
+      (@assert-equal (%cf.abs 123) 123)
+      "test-math.test-abs"))
+
   (defun-inline test-mul-frac ()
     (@assert
       (@assert-equal (%cf.mul-frac 2 (%cf.Frac 300 100)) 6)
@@ -68,6 +74,7 @@
       (test-unsigned-sub)
       (test-round)
       (test-div)
+      (test-abs)
       (test-mul-frac)
       (test-sqrt)
       "test-math"))
