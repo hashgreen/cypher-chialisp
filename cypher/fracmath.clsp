@@ -82,8 +82,8 @@
       0
     )
   )
-  (defun cypher.fracmath.Frac.gt-zero (frac var)
-    (%cypher.fracmath.Frac.gt-zero frac var))
+  (defun cypher.fracmath.Frac.gt-zero (frac)
+    (%cypher.fracmath.Frac.gt-zero frac))
 
   (defun-inline %cypher.fracmath.Frac.gt-one (frac)
     ;; `Greater than` against one.
@@ -95,6 +95,17 @@
   )
   (defun cypher.fracmath.Frac.gt-one (frac var)
     (%cypher.fracmath.Frac.gt-one frac var))
+
+  (defun-inline %cypher.fracmath.Frac.abs (frac)
+    ;; Absolute value.
+
+    (%cypher.fracmath.Frac@unsafe
+      (%cypher.math.abs (%cypher.fracmath.Frac.get-denominator frac))
+      (%cypher.fracmath.Frac.get-numerator frac)
+    )
+  )
+  (defun cypher.fracmath.Frac.abs (frac)
+    (%cypher.fracmath.Frac.abs frac))
 
   (defun-inline %cypher.fracmath.Frac.inv (frac)
     ;; Numerical inversion.
@@ -258,6 +269,17 @@
   (defun cypher.fracmath.AshFrac.gt-one (frac var)
     (%cypher.fracmath.AshFrac.gt-one frac var))
 
+  (defun-inline %cypher.fracmath.AshFrac.abs (frac)
+    ;; Absolute value.
+
+    (%cypher.fracmath.AshFrac@unsafe
+      (%cypher.math.abs (%cypher.fracmath.AshFrac.get-denominator frac))
+      (%cypher.fracmath.AshFrac.get-numerator-ash frac)
+    )
+  )
+  (defun cypher.fracmath.AshFrac.abs (frac)
+    (%cypher.fracmath.AshFrac.abs frac))
+
   (defun-inline %cypher.fracmath.AshFrac.inv (frac)
     ;; Numerical inversion.
     ;
@@ -419,6 +441,8 @@
   (defun-inline cf.Frac.gt-zero (f . r) (cypher.fracmath.Frac.gt-zero f . r))
   (defun-inline %cf.Frac.gt-one (f . r) (%cypher.fracmath.Frac.gt-one f . r))
   (defun-inline cf.Frac.gt-one (f . r) (cypher.fracmath.Frac.gt-one f . r))
+  (defun-inline %cf.Frac.abs (f . r) (%cypher.fracmath.Frac.inv f . r))
+  (defun-inline cf.Frac.abs (f . r) (cypher.fracmath.Frac.inv f . r))
   (defun-inline %cf.Frac.inv (f . r) (%cypher.fracmath.Frac.inv f . r))
   (defun-inline cf.Frac.inv (f . r) (cypher.fracmath.Frac.inv f . r))
   (defun-inline %cf.Frac.eq (f . r) (%cypher.fracmath.Frac.eq f . r))
@@ -444,6 +468,8 @@
   (defun-inline cf.AshFrac.from-ash-frac (f . r) (cypher.fracmath.AshFrac.from-ash-frac f . r))
   (defun-inline %cf.AshFrac.gt-one (f . r) (%cypher.fracmath.AshFrac.gt-one f . r))
   (defun-inline cf.AshFrac.gt-one (f . r) (cypher.fracmath.AshFrac.gt-one f . r))
+  (defun-inline %cf.AshFrac.abs (f . r) (%cypher.fracmath.AshFrac.inv f . r))
+  (defun-inline cf.AshFrac.abs (f . r) (cypher.fracmath.AshFrac.inv f . r))
   (defun-inline %cf.AshFrac.inv (f . r) (%cypher.fracmath.AshFrac.inv f . r))
   (defun-inline cf.AshFrac.inv (f . r) (cypher.fracmath.AshFrac.inv f . r))
   (defun-inline %cf.AshFrac.square (f . r) (%cypher.fracmath.AshFrac.square f . r))

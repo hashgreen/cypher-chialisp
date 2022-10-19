@@ -88,6 +88,12 @@
       (@assert (not (%cf.AshFrac.gt-one (%cf.AshFrac 1234 11))))
       "test-fracmath.test-AshFrac-gt-one"))
 
+  (defun-inline test-AshFrac-abs ()
+    (@assert
+      (@assert (%cf.AshFrac.eq
+        (%cf.AshFrac.abs (%cf.AshFrac -123 10)) (%cf.AshFrac 123 10)))
+      "test-fracmath.test-AshFrac-abs"))
+
   (defun-inline test-AshFrac-inv ()
     (@assert
       (@assert (%cf.AshFrac.eq
@@ -122,6 +128,7 @@
       (test-AshFrac-from-frac)
       (test-AshFrac-from-ash-frac)
       (test-AshFrac-gt-one)
+      (test-AshFrac-abs)
       (test-AshFrac-inv)
       (test-AshFrac-square)
       (test-AshFrac-eq)
