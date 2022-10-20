@@ -372,6 +372,20 @@
   (defun cypher.fracmath.AshFrac.sub-int (frac var)
     (%cypher.fracmath.AshFrac.sub-int frac var))
 
+  (defun-inline %cypher.fracmath.AshFrac.div-int (frac var)
+    ;; Dividing an integer.
+
+    (%cypher.fracmath.AshFrac@unsafe
+      (%cypher.math.div
+        (%cypher.fracmath.AshFrac.get-numerator frac)
+        var
+      )
+      (%cypher.fracmath.AshFrac.get-denominator-ash frac)
+    )
+  )
+  (defun cypher.fracmath.AshFrac.div-int (frac var)
+    (%cypher.fracmath.AshFrac.div-int frac var))
+
   (defun-inline %cypher.fracmath.AshFrac.eq (ash_frac other)
     ;; `Equal to` against another `AshFrac`.
 
@@ -405,6 +419,15 @@
   )
   (defun cypher.fracmath.AshFrac.mul (frac other)
     (%cypher.fracmath.AshFrac.mul frac other))
+  (defun cypher.fracmath.AshFrac.mul@reduce (fracs)
+    (if (r fracs)
+      (%cypher.fracmath.AshFrac.mul
+        (f fracs)
+        (cypher.fracmath.AshFrac.mul@reduce (r fracs))
+      )
+      (f fracs)
+    )
+  )
 
   (defun-inline %cypher.fracmath.AshFrac.div (frac other)
     ;; Division.
@@ -482,8 +505,13 @@
   (defun-inline cf.AshFrac.add-int (f . r) (cypher.fracmath.AshFrac.add-int f . r))
   (defun-inline %cf.AshFrac.sub-int (f . r) (%cypher.fracmath.AshFrac.sub-int f . r))
   (defun-inline cf.AshFrac.sub-int (f . r) (cypher.fracmath.AshFrac.sub-int f . r))
+  (defun-inline %cf.AshFrac.div-int (f . r) (%cypher.fracmath.AshFrac.div-int f . r))
+  (defun-inline cf.AshFrac.div-int (f . r) (cypher.fracmath.AshFrac.div-int f . r))
   (defun-inline %cf.AshFrac.eq (f . r) (%cypher.fracmath.AshFrac.eq f . r))
   (defun-inline cf.AshFrac.eq (f . r) (cypher.fracmath.AshFrac.eq f . r))
+  (defun-inline %cf.AshFrac.mul (f . r) (%cypher.fracmath.AshFrac.mul f . r))
+  (defun-inline cf.AshFrac.mul (f . r) (cypher.fracmath.AshFrac.mul f . r))
+  (defun-inline cf.AshFrac.mul@reduce (f . r) (cypher.fracmath.AshFrac.mul@reduce f . r))
   (defun-inline %cf.AshFrac.div (f . r) (%cypher.fracmath.AshFrac.div f . r))
   (defun-inline cf.AshFrac.div (f . r) (cypher.fracmath.AshFrac.div f . r))
 )

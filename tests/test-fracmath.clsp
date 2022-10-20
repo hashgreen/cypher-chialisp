@@ -110,18 +110,27 @@
         (%cf.AshFrac 182062066495652834596 (q . 64)))
       "test-fracmath.test-AshFrac-square"))
 
-  (defun-inline test-AshFrac-eq ()
-    (@assert
-      (@assert (%cf.AshFrac.eq
-        (%cf.AshFrac 1234567 10) (%cf.AshFrac 1234567 10)))
-      "test-fracmath.test-AshFrac-eq"))
-
   (defun-inline test-AshFrac-gt-int ()
     (@assert
       (@assert (%cf.AshFrac.gt-int (%cf.AshFrac 314159 10) 300))
       (@assert (%cf.AshFrac.gt-int (%cf.AshFrac -1234567 8) -5000))
       (@assert (%cf.AshFrac.gt-int (%cf.AshFrac 10 1) 1))
       "test-fracmath.test-AshFrac-gt-int"))
+
+  (defun-inline test-AshFrac-eq ()
+    (@assert
+      (@assert (%cf.AshFrac.eq
+        (%cf.AshFrac 1234567 10) (%cf.AshFrac 1234567 10)))
+      "test-fracmath.test-AshFrac-eq"))
+
+  (defun-inline test-AshFrac-mul ()
+    (@assert
+      (@assert (%cf.AshFrac.eq
+        (%cf.AshFrac.mul (%cf.AshFrac 100 4) (%cf.AshFrac 123 5)) (%cf.AshFrac 384 4)))
+      (@assert (%cf.AshFrac.eq
+        (cf.AshFrac.mul@reduce (list (%cf.AshFrac 123456 10) (%cf.AshFrac 123 4) (%cf.AshFrac 456 6)))
+        (%cf.AshFrac 6759216 10)))
+      "test-fracmath.test-AshFrac-mul"))
 
   (defun-inline test-AshFrac ()
     (@assert
@@ -131,8 +140,9 @@
       (test-AshFrac-abs)
       (test-AshFrac-inv)
       (test-AshFrac-square)
-      (test-AshFrac-eq)
       (test-AshFrac-gt-int)
+      (test-AshFrac-eq)
+      (test-AshFrac-mul)
       "test-fracmath.test-AshFrac"))
 
   (defun-inline test-fracmath ()
