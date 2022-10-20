@@ -127,9 +127,6 @@
     (@assert
       (@assert (%cf.AshFrac.eq
         (%cf.AshFrac.mul (%cf.AshFrac 100 4) (%cf.AshFrac 123 5)) (%cf.AshFrac 384 4)))
-      (@assert (%cf.AshFrac.eq
-        (cf.AshFrac.mul@reduce (list (%cf.AshFrac 123456 10) (%cf.AshFrac 123 4) (%cf.AshFrac 456 6)))
-        (%cf.AshFrac 6759216 10)))
       "test-fracmath.test-AshFrac-mul"))
 
   (defun-inline test-AshFrac ()

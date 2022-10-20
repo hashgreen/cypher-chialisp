@@ -281,9 +281,13 @@
     (%cypher.fracmath.AshFrac.abs frac))
 
   (defun-inline %cypher.fracmath.AshFrac.inv (frac)
-    ;; Numerical inversion.
+    ;; Inversion.
     ;
-    ; Note this inversion produces a fraction of the same `denominator_ash`.
+    ; Args:
+    ;   frac: a `AshFrac`.
+    ;
+    ; Returns:
+    ;   A `AshFrac` with the same `denominator_ash` as `frac`.
 
     (%cypher.fracmath.AshFrac@unsafe
       (%cypher.math.div
@@ -298,25 +302,57 @@
   (defun cypher.fracmath.AshFrac.inv (frac)
     (%cypher.fracmath.AshFrac.inv frac))
 
-  (defun-inline %cypher.fracmath.AshFrac.square (ash_frac)
-    ;; Quick squaring of an ash fraction.
+  (defun-inline %cypher.fracmath.AshFrac.square (frac)
+    ;; Squaring.
+    ;
+    ; Args:
+    ;   frac: a `AshFrac`.
+    ;
+    ; Returns:
+    ;   A `AshFrac` with the same `denominator_ash` as `frac`.
 
     (%cypher.fracmath.AshFrac@unsafe
       (ash
         (*
-          (%cypher.fracmath.AshFrac.get-numerator ash_frac)
-          (%cypher.fracmath.AshFrac.get-numerator ash_frac)
+          (%cypher.fracmath.AshFrac.get-numerator frac)
+          (%cypher.fracmath.AshFrac.get-numerator frac)
         )
-        (- 0 (%cypher.fracmath.AshFrac.get-denominator-ash ash_frac))
+        (- 0 (%cypher.fracmath.AshFrac.get-denominator-ash frac))
       )
-      (%cypher.fracmath.AshFrac.get-denominator-ash ash_frac)
+      (%cypher.fracmath.AshFrac.get-denominator-ash frac)
     )
   )
-  (defun cypher.fracmath.AshFrac.square (ash_frac)
-    (%cypher.fracmath.AshFrac.square ash_frac))
+  (defun cypher.fracmath.AshFrac.square (frac)
+    (%cypher.fracmath.AshFrac.square frac))
+
+  (defun-inline %cypher.fracmath.AshFrac.square@precise (frac)
+    ;; Squaring, retaining sufficient precision.
+    ;
+    ; Args:
+    ;   frac: a `AshFrac`.
+    ;
+    ; Returns:
+    ;   A `AshFrac` with a sufficiently precise `denominator_ash`.
+
+    (%cypher.fracmath.AshFrac@unsafe
+      (*
+        (%cypher.fracmath.AshFrac.get-numerator frac)
+        (%cypher.fracmath.AshFrac.get-numerator frac)
+      )
+      (ash (%cypher.fracmath.AshFrac.get-denominator-ash frac) 1)
+    )
+  )
+  (defun cypher.fracmath.AshFrac.square@precise (frac)
+    (%cypher.fracmath.AshFrac.square@precise frac))
 
   (defun-inline %cypher.fracmath.AshFrac.sqrt (ash_frac)
     ;; Square root.
+    ;
+    ; Args:
+    ;   frac: a `AshFrac`.
+    ;
+    ; Returns:
+    ;   A `AshFrac` with the same `denominator_ash` as `frac`.
 
     (%cypher.fracmath.AshFrac@unsafe
       (%cypher.math.sqrt
@@ -335,6 +371,13 @@
 
   (defun-inline %cypher.fracmath.AshFrac.gt-int (frac var)
     ;; Greater than an integer.
+    ;
+    ; Args:
+    ;   frac: a `AshFrac`.
+    ;   var: an integer.
+    ;
+    ; Returns:
+    ;   A boolean.
 
     (>
       (%cypher.fracmath.AshFrac.get-numerator frac)
@@ -346,6 +389,13 @@
 
   (defun-inline %cypher.fracmath.AshFrac.add-int (frac var)
     ;; Adding an integer.
+    ;
+    ; Args:
+    ;   frac: a `AshFrac`.
+    ;   var: an integer.
+    ;
+    ; Returns:
+    ;   A `AshFrac` with the same `denominator_ash` as `frac`.
 
     (%cypher.fracmath.AshFrac@unsafe
       (+
@@ -360,6 +410,13 @@
 
   (defun-inline %cypher.fracmath.AshFrac.sub-int (frac var)
     ;; Subtracting an integer.
+    ;
+    ; Args:
+    ;   frac: a `AshFrac`.
+    ;   var: an integer.
+    ;
+    ; Returns:
+    ;   A `AshFrac` with the same `denominator_ash` as `frac`.
 
     (%cypher.fracmath.AshFrac@unsafe
       (-
@@ -374,6 +431,13 @@
 
   (defun-inline %cypher.fracmath.AshFrac.div-int (frac var)
     ;; Dividing an integer.
+    ;
+    ; Args:
+    ;   frac: a `AshFrac`.
+    ;   var: an integer.
+    ;
+    ; Returns:
+    ;   A `AshFrac` with the same `denominator_ash` as `frac`.
 
     (%cypher.fracmath.AshFrac@unsafe
       (%cypher.math.div
@@ -386,25 +450,39 @@
   (defun cypher.fracmath.AshFrac.div-int (frac var)
     (%cypher.fracmath.AshFrac.div-int frac var))
 
-  (defun-inline %cypher.fracmath.AshFrac.eq (ash_frac other)
-    ;; `Equal to` against another `AshFrac`.
+  (defun-inline %cypher.fracmath.AshFrac.eq (frac other)
+    ;; Equality.
+    ;
+    ; Args:
+    ;   frac: a `AshFrac`.
+    ;   other: a `AshFrac`.
+    ;
+    ; Returns:
+    ;   A boolean.
 
     (@cypher.macros.and
       (=
-        (%cypher.fracmath.AshFrac.get-numerator ash_frac)
+        (%cypher.fracmath.AshFrac.get-numerator frac)
         (%cypher.fracmath.AshFrac.get-numerator other)
       )
       (=
-        (%cypher.fracmath.AshFrac.get-denominator-ash ash_frac)
+        (%cypher.fracmath.AshFrac.get-denominator-ash frac)
         (%cypher.fracmath.AshFrac.get-denominator-ash other)
       )
     )
   )
-  (defun cypher.fracmath.AshFrac.eq (ash_frac other)
-    (%cypher.fracmath.AshFrac.eq ash_frac other))
+  (defun cypher.fracmath.AshFrac.eq (frac other)
+    (%cypher.fracmath.AshFrac.eq frac other))
 
   (defun-inline %cypher.fracmath.AshFrac.mul (frac other)
     ;; Multiplication.
+    ;
+    ; Args:
+    ;   frac: a `AshFrac`.
+    ;   other: a `AshFrac`.
+    ;
+    ; Returns:
+    ;   A `AshFrac` with the same `denominator_ash` as `frac`.
 
     (%cypher.fracmath.AshFrac@unsafe
       (ash
@@ -419,18 +497,35 @@
   )
   (defun cypher.fracmath.AshFrac.mul (frac other)
     (%cypher.fracmath.AshFrac.mul frac other))
-  (defun cypher.fracmath.AshFrac.mul@reduce (fracs)
-    (if (r fracs)
-      (%cypher.fracmath.AshFrac.mul
-        (f fracs)
-        (cypher.fracmath.AshFrac.mul@reduce (r fracs))
+
+  (defun-inline %cypher.fracmath.AshFrac.mul@precise (frac other)
+    ;; Multiplication, retaining sufficient precision.
+    ;
+    ; Args:
+    ;   frac: a `AshFrac`.
+    ;   other: a `AshFrac`.
+    ;
+    ; Returns:
+    ;   A `AshFrac`.
+
+    (%cypher.fracmath.AshFrac@unsafe
+      (*
+        (%cypher.fracmath.AshFrac.get-numerator frac)
+        (%cypher.fracmath.AshFrac.get-numerator other)
       )
-      (f fracs)
+      (+
+        (%cypher.fracmath.AshFrac.get-denominator-ash frac)
+        (%cypher.fracmath.AshFrac.get-denominator-ash other)
+      )
     )
   )
+  (defun cypher.fracmath.AshFrac.mul@precise (frac other)
+    (%cypher.fracmath.AshFrac.mul@precise frac other))
 
   (defun-inline %cypher.fracmath.AshFrac.div (frac other)
     ;; Division.
+    ;
+    ; The result retains a bit depth the same as `frac`.
 
     (%cypher.fracmath.AshFrac@unsafe
       (%cypher.math.div
@@ -497,6 +592,8 @@
   (defun-inline cf.AshFrac.inv (f . r) (cypher.fracmath.AshFrac.inv f . r))
   (defun-inline %cf.AshFrac.square (f . r) (%cypher.fracmath.AshFrac.square f . r))
   (defun-inline cf.AshFrac.square (f . r) (cypher.fracmath.AshFrac.square f . r))
+  (defun-inline %cf.AshFrac.square@precise (f . r) (%cypher.fracmath.AshFrac.square@precise f . r))
+  (defun-inline cf.AshFrac.square@precise (f . r) (cypher.fracmath.AshFrac.square@precise f . r))
   (defun-inline %cf.AshFrac.sqrt (f . r) (%cypher.fracmath.AshFrac.sqrt f . r))
   (defun-inline cf.AshFrac.sqrt (f . r) (cypher.fracmath.AshFrac.sqrt f . r))
   (defun-inline %cf.AshFrac.gt-int (f . r) (%cypher.fracmath.AshFrac.gt-int f . r))
@@ -511,7 +608,6 @@
   (defun-inline cf.AshFrac.eq (f . r) (cypher.fracmath.AshFrac.eq f . r))
   (defun-inline %cf.AshFrac.mul (f . r) (%cypher.fracmath.AshFrac.mul f . r))
   (defun-inline cf.AshFrac.mul (f . r) (cypher.fracmath.AshFrac.mul f . r))
-  (defun-inline cf.AshFrac.mul@reduce (f . r) (cypher.fracmath.AshFrac.mul@reduce f . r))
   (defun-inline %cf.AshFrac.div (f . r) (%cypher.fracmath.AshFrac.div f . r))
   (defun-inline cf.AshFrac.div (f . r) (cypher.fracmath.AshFrac.div f . r))
 )
