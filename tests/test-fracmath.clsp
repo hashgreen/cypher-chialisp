@@ -53,7 +53,7 @@
   (defun-inline test-Frac-mul ()
     (@assert
       (@assert (%cf.Frac.eq
-        (%cf.Frac.mul (%cf.Frac 123 456) (%cf.Frac 789 12345))
+        (%cf.Frac.mul@precise (%cf.Frac 123 456) (%cf.Frac 789 12345))
         (%cf.Frac 97047 5629320)))
       "test-fracmath.test-Frac-mul"))
 

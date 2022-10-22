@@ -176,6 +176,23 @@
     ;; `Multiplication` with another `Frac`.
 
     (%cypher.fracmath.Frac@unsafe
+      (%cypher.math.div
+        (*
+          (%cypher.fracmath.Frac.get-numerator frac)
+          (%cypher.fracmath.Frac.get-numerator other)
+        )
+        (%cypher.fracmath.Frac.get-denominator other)
+      )
+      (%cypher.fracmath.Frac.get-denominator frac)
+    )
+  )
+  (defun cypher.fracmath.Frac.mul (frac other)
+    (%cypher.fracmath.Frac.mul frac other))
+
+  (defun-inline %cypher.fracmath.Frac.mul@precise (frac other)
+    ;; `Multiplication` with another `Frac`.
+
+    (%cypher.fracmath.Frac@unsafe
       (*
         (%cypher.fracmath.Frac.get-numerator frac)
         (%cypher.fracmath.Frac.get-numerator other)
@@ -186,8 +203,8 @@
       )
     )
   )
-  (defun cypher.fracmath.Frac.mul (frac other)
-    (%cypher.fracmath.Frac.mul frac other))
+  (defun cypher.fracmath.Frac.mul@precise (frac other)
+    (%cypher.fracmath.Frac.mul@precise frac other))
 
   ;; Fractions with arithmetic bit-shifting ("ash fractions").
 
@@ -474,7 +491,7 @@
   (defun cypher.fracmath.AshFrac.eq (frac other)
     (%cypher.fracmath.AshFrac.eq frac other))
 
-  (defun-inline %cypher.fracmath.AshFrac.mul (frac other)
+  (defun-inline --%cypher.fracmath.AshFrac.mul (frac other)
     ;; Multiplication.
     ;
     ; Args:
@@ -495,8 +512,30 @@
       (%cypher.fracmath.AshFrac.get-denominator-ash frac)
     )
   )
-  (defun cypher.fracmath.AshFrac.mul (frac other)
-    (%cypher.fracmath.AshFrac.mul frac other))
+  (defmacro %cypher.fracmath.AshFrac.mul fracs
+    (if (r fracs)
+      (qq
+        (--%cypher.fracmath.AshFrac.mul
+          (unquote (f fracs))
+          (unquote (c %cypher.fracmath.AshFrac.mul (r fracs)))
+        )
+      )
+      (f fracs)
+    )
+  )
+  (defun --cypher.fracmath.AshFrac.mul (frac other)
+    (--%cypher.fracmath.AshFrac.mul frac other))
+  (defmacro cypher.fracmath.AshFrac.mul fracs
+    (if (r fracs)
+      (qq
+        (--cypher.fracmath.AshFrac.mul
+          (unquote (f fracs))
+          (unquote (c cypher.fracmath.AshFrac.mul (r fracs)))
+        )
+      )
+      (f fracs)
+    )
+  )
 
   (defun-inline %cypher.fracmath.AshFrac.mul@precise (frac other)
     ;; Multiplication, retaining sufficient precision.
@@ -571,6 +610,8 @@
   (defun-inline cf.Frac.gt (f . r) (cypher.fracmath.Frac.gt f . r))
   (defun-inline %cf.Frac.mul (f . r) (%cypher.fracmath.Frac.mul f . r))
   (defun-inline cf.Frac.mul (f . r) (cypher.fracmath.Frac.mul f . r))
+  (defun-inline %cf.Frac.mul@precise (f . r) (%cypher.fracmath.Frac.mul@precise f . r))
+  (defun-inline cf.Frac.mul@precise (f . r) (cypher.fracmath.Frac.mul@precise f . r))
 
   (defun-inline %cf.AshFrac (f . r) (%cypher.fracmath.AshFrac f . r))
   (defun-inline cf.AshFrac (f . r) (cypher.fracmath.AshFrac f . r))
