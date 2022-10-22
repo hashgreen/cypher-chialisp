@@ -8,9 +8,9 @@
     inner_solution
   )
 
-  (include cypher.clvm)
-  (include chia/singleton-lib.clvm)
-  (include chia/singleton-lib-v1-1.clvm)
+  (include cypher.clsp)
+  (include chia/singleton-lib.clsp)
+  (include chia/singleton-lib-v1-1.clsp)
 
   (defun-inline main
     (singleton_mod inner_puzzle lineage_proof amount inner_solution)

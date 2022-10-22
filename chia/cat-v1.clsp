@@ -13,8 +13,8 @@
     extra_delta
   )
 
-  (include cypher.clvm)
-  (include chia/cat-lib.clvm)
+  (include cypher.clsp)
+  (include chia/cat-lib.clsp)
 
   (defun-inline concat-ring-announcements
     (

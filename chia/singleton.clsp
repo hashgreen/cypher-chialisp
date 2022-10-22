@@ -8,8 +8,8 @@
     inner_solution
   )
 
-  (include cypher.clvm)
-  (include chia/singleton-lib.clvm)
+  (include cypher.clsp)
+  (include chia/singleton-lib.clsp)
 
   (defun stager-three
     (singleton_mod lineage_proof id puzzle_hash inner_puzzle_hash amount inner_puzzle inner_solution)
