@@ -69,6 +69,14 @@
       (@assert-equal (%cf.sqrt 1000000000000) 1000000)
       "test-math.test-sqrt"))
 
+  (defun-inline test-pow ()
+    (@assert
+      (@assert-equal (%cf.pow 1 10) 1)
+      (@assert-equal (%cf.pow 2 0) 1)
+      (@assert-equal (%cf.pow 2 10) 1024)
+      (@assert-equal (%cf.pow -3 3) -27)
+      "test-math.test-pow"))
+
   (defun-inline test-math ()
     (@assert
       (test-unsigned-sub)
@@ -77,6 +85,7 @@
       (test-abs)
       (test-mul-frac)
       (test-sqrt)
+      (test-pow)
       "test-math"))
 
   (test-math)

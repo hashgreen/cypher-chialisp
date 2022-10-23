@@ -96,6 +96,21 @@
   (defun cypher.math.sqrt (var)
     (%cypher.math.sqrt var))
 
+  (defun --cypher.math.pow (base exponent)
+    (if (> exponent 0)
+      (* base (--cypher.math.pow base (- exponent 1)))
+      1
+    )
+  )
+  (defun-inline %cypher.math.pow (base exponent)
+    (@cypher.macros.assert
+      (not (> 0 exponent))
+      (--cypher.math.pow base exponent)
+    )
+  )
+  (defun cypher.math.pow (base exponent)
+    (%cypher.math.pow base exponent))
+
   ;; Exports
 
   (defun-inline %cf.unsigned-sub (f . r) (%cypher.math.unsigned-sub f . r))
@@ -116,4 +131,6 @@
   (defun-inline cf.mul-frac (f . r) (cypher.math.mul-frac f . r))
   (defun-inline %cf.sqrt (f . r) (%cypher.math.sqrt f . r))
   (defun-inline cf.sqrt (f . r) (cypher.math.sqrt f . r))
+  (defun-inline %cf.pow (f . r) (%cypher.math.pow f . r))
+  (defun-inline cf.pow (f . r) (cypher.math.pow f . r))
 )
