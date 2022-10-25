@@ -1,11 +1,12 @@
 (
   (include cypher/condition_codes.clsp)
   (include cypher/constants.clsp)
+  (include cypher/fracmath.clsp)
+  (include cypher/hashlib.clsp)
+  (include cypher/itertools.clsp)
+  (include cypher/logexpmath.clsp)
   (include cypher/macros.clsp)
   (include cypher/math.clsp)
-  (include cypher/fracmath.clsp)
-  (include cypher/itertools.clsp)
-  (include cypher/hashlib.clsp)
 
   (include cypher/standards/coin.clsp)
   (include cypher/standards/conditions.clsp)

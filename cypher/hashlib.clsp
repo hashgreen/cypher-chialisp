@@ -89,8 +89,8 @@
     )
   )
 
-  (defun-inline cypher.hashlib.build-curry-list (f . r)
-    (build-curry-list#cypher.hashlib.build-curry-list f . r))
+  (defmacro cypher.hashlib.build-curry-list args
+    (c build-curry-list#cypher.hashlib.build-curry-list args))
   (defun build-curry-list#cypher.hashlib.build-curry-list
     (reversed_curry_parameter_hashes environment_hash)
     ;; This function recursively calls `update-hash-for-parameter-hash`,
@@ -110,8 +110,8 @@
     )
   )
 
-  (defun-inline cypher.hashlib.puzzle-hash-of-curried-function (f . r)
-    (puzzle-hash-of-curried-function#cypher.hashlib.puzzle-hash-of-curried-function f . r))
+  (defmacro cypher.hashlib.puzzle-hash-of-curried-function args
+    (c puzzle-hash-of-curried-function#cypher.hashlib.puzzle-hash-of-curried-function args))
   (defun puzzle-hash-of-curried-function#cypher.hashlib.puzzle-hash-of-curried-function
     (function_hash . reversed_curry_parameter_hashes)
     ;; Calculate of the tree hash of a curried function without actually
@@ -147,8 +147,8 @@
     )
   )
 
-  (defun-inline cypher.hashlib.calculate-coin-id (f . r)
-    (calculate_coin_id#cypher.hashlib.calculate-coin-id f . r))
+  (defmacro cypher.hashlib.calculate-coin-id args
+    (c calculate_coin_id#cypher.hashlib.calculate-coin-id args))
   (defun calculate_coin_id#cypher.hashlib.calculate-coin-id
     (parent_coin_info puzzle_hash amount)
     ;; Calculate coin id, conditioned on all parameters being valid.
@@ -179,10 +179,10 @@
 
   ;; Exports
 
-  (defun-inline cf.sha256one (f . r) (cypher.hashlib.sha256one f . r))
-  (defun-inline cf.sha256two (f . r) (cypher.hashlib.sha256two f . r))
-  (defun-inline cf.sha256tree (f . r) (cypher.hashlib.sha256tree f . r))
-  (defun-inline cf.puzzle-hash-of-curried-function (f . r)
-    (cypher.hashlib.puzzle-hash-of-curried-function f . r))
-  (defun-inline cf.calculate-coin-id (f . r) (cypher.hashlib.calculate-coin-id f . r))
+  (defmacro cf.sha256one args (c cypher.hashlib.sha256one args))
+  (defmacro cf.sha256two args (c cypher.hashlib.sha256two args))
+  (defmacro cf.sha256tree args (c cypher.hashlib.sha256tree args))
+  (defmacro cf.puzzle-hash-of-curried-function (args)
+    (c cypher.hashlib.puzzle-hash-of-curried-function args))
+  (defmacro cf.calculate-coin-id args (c cypher.hashlib.calculate-coin-id args))
 )

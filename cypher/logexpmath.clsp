@@ -246,8 +246,8 @@
 
   ;; Exports
 
-  (defun-inline %cf.ln (f . r) (%cypher.logexpmath.ln f . r))
-  (defun-inline cf.ln (f . r) (cypher.logexpmath.ln f . r))
-  (defun-inline %cf.log (f . r) (%cypher.logexpmath.log f . r))
-  (defun-inline cf.log (f . r) (cypher.logexpmath.log f . r))
+  (defmacro %cf.ln args (c %cypher.logexpmath.ln args))
+  (defmacro cf.ln args (c cypher.logexpmath.ln args))
+  (defmacro %cf.log args (c %cypher.logexpmath.log args))
+  (defmacro cf.log args (c cypher.logexpmath.log args))
 )

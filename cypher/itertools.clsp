@@ -65,7 +65,7 @@
 
   ;; Exports
 
-  (defun-inline cf.chain-two (f . r) (cypher.itertools.chain-two f . r))
-  (defun-inline cf.chain (f . r) (cypher.itertools.chain f . r))
-  (defun-inline cf.map (f . r) (cypher.itertools.map f . r))
+  (defmacro cf.chain-two args (c cypher.itertools.chain-two args))
+  (defmacro cf.chain args (c cypher.itertools.chain args))
+  (defmacro cf.map args (c cypher.itertools.map args))
 )
