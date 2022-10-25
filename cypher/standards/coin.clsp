@@ -27,22 +27,22 @@
 
   ; Exports
 
-  (defun-inline cf.Coin (f . r)
-    (cypher.standards.coin.Coin f . r))
-  (defun-inline cf.Coin.get-parent-id (f . r)
-    (cypher.standards.coin.Coin.get-parent-id f . r))
-  (defun-inline cf.Coin.get-parent-id-rest (f . r)
-    (cypher.standards.coin.Coin.get-parent-id-rest f . r))
-  (defun-inline cf.Coin.get-puzzle-hash (f . r)
-    (cypher.standards.coin.Coin.get-puzzle-hash f . r))
-  (defun-inline cf.Coin.get-puzzle-hash-rest (f . r)
-    (cypher.standards.coin.Coin.get-puzzle-hash-rest f . r))
-  (defun-inline cf.Coin.get-amount (f . r)
-    (cypher.standards.coin.Coin.get-amount f . r))
-  (defun-inline cf.Coin.id (f . r)
-    (x))
-  (defun-inline cf.Coin.unsafe-id (f . r)
-    (cypher.standards.coin.Coin.id f . r))
-  (defun-inline cf.Coin.verified-id (f . r)
-    (cypher.standards.coin.Coin.verified-id f . r))
+  (defmacro cf.Coin args
+    (c cypher.standards.coin.Coin args))
+  (defmacro cf.Coin.get-parent-id args
+    (c cypher.standards.coin.Coin.get-parent-id args))
+  (defmacro cf.Coin.get-parent-id-rest args
+    (c cypher.standards.coin.Coin.get-parent-id-rest args))
+  (defmacro cf.Coin.get-puzzle-hash args
+    (c cypher.standards.coin.Coin.get-puzzle-hash args))
+  (defmacro cf.Coin.get-puzzle-hash-rest args
+    (c cypher.standards.coin.Coin.get-puzzle-hash-rest args))
+  (defmacro cf.Coin.get-amount args
+    (c cypher.standards.coin.Coin.get-amount args))
+  (defmacro cf.Coin.id args
+    (q . x))
+  (defmacro cf.Coin.unsafe-id args
+    (c cypher.standards.coin.Coin.id args))
+  (defmacro cf.Coin.verified-id args
+    (c cypher.standards.coin.Coin.verified-id args))
 )

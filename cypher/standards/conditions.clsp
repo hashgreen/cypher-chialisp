@@ -162,128 +162,128 @@
 
   ;; Exports
 
-  (defun-inline cf.Condition (f . r)
-    (cypher.standards.conditions.Condition f . r))
-  (defun-inline cf.Condition.is-condition (f . r)
-    (cypher.standards.conditions.Condition.is-condition f . r))
-  (defun-inline cf.Condition.get-condition-code (f . r)
-    (cypher.standards.conditions.Condition.get-condition-code f . r))
-  (defun-inline cf.Condition.output-amount (f . r)
-    (cypher.standards.conditions.Condition.output-amount f . r))
+  (defmacro cf.Condition args
+    (c cypher.standards.conditions.Condition args))
+  (defmacro cf.Condition.is-condition args
+    (c cypher.standards.conditions.Condition.is-condition args))
+  (defmacro cf.Condition.get-condition-code args
+    (c cypher.standards.conditions.Condition.get-condition-code args))
+  (defmacro cf.Condition.output-amount args
+    (c cypher.standards.conditions.Condition.output-amount args))
 
-  (defun-inline cf.AggSigUnsafe (f . r)
-    (cypher.standards.conditions.AggSigUnsafe f . r))
-  (defun-inline cf.AggSigUnsafe.is-condition (f . r)
-    (cypher.standards.conditions.AggSigUnsafe.is-condition f . r))
-  (defun-inline cf.AggSigUnsafe.get-pubkey (f . r)
-    (cypher.standards.conditions.AggSigUnsafe.get-pubkey f . r))
-  (defun-inline cf.AggSigUnsafe.get-pubkey-rest (f . r)
-    (cypher.standards.conditions.AggSigUnsafe.get-pubkey-rest f . r))
-  (defun-inline cf.AggSigUnsafe.get-message (f . r)
-    (cypher.standards.conditions.AggSigUnsafe.get-message f . r))
-  (defun-inline cf.AggSigUnsafe.get-message-rest (f . r)
-    (cypher.standards.conditions.AggSigUnsafe.get-message-rest f . r))
+  (defmacro cf.AggSigUnsafe args
+    (c cypher.standards.conditions.AggSigUnsafe args))
+  (defmacro cf.AggSigUnsafe.is-condition args
+    (c cypher.standards.conditions.AggSigUnsafe.is-condition args))
+  (defmacro cf.AggSigUnsafe.get-pubkey args
+    (c cypher.standards.conditions.AggSigUnsafe.get-pubkey args))
+  (defmacro cf.AggSigUnsafe.get-pubkey-rest args
+    (c cypher.standards.conditions.AggSigUnsafe.get-pubkey-rest args))
+  (defmacro cf.AggSigUnsafe.get-message args
+    (c cypher.standards.conditions.AggSigUnsafe.get-message args))
+  (defmacro cf.AggSigUnsafe.get-message-rest args
+    (c cypher.standards.conditions.AggSigUnsafe.get-message-rest args))
 
-  (defun-inline cf.AggSigMe (f . r)
-    (cypher.standards.conditions.AggSigMe f . r))
-  (defun-inline cf.AggSigMe.is-condition (f . r)
-    (cypher.standards.conditions.AggSigMe.is-condition f . r))
-  (defun-inline cf.AggSigMe.get-pubkey (f . r)
-    (cypher.standards.conditions.AggSigMe.get-pubkey f . r))
-  (defun-inline cf.AggSigMe.get-pubkey-rest (f . r)
-    (cypher.standards.conditions.AggSigMe.get-pubkey-rest f . r))
-  (defun-inline cf.AggSigMe.get-message (f . r)
-    (cypher.standards.conditions.AggSigMe.get-message f . r))
-  (defun-inline cf.AggSigMe.get-message-rest (f . r)
-    (cypher.standards.conditions.AggSigMe.get-message-rest f . r))
+  (defmacro cf.AggSigMe args
+    (c cypher.standards.conditions.AggSigMe args))
+  (defmacro cf.AggSigMe.is-condition args
+    (c cypher.standards.conditions.AggSigMe.is-condition args))
+  (defmacro cf.AggSigMe.get-pubkey args
+    (c cypher.standards.conditions.AggSigMe.get-pubkey args))
+  (defmacro cf.AggSigMe.get-pubkey-rest args
+    (c cypher.standards.conditions.AggSigMe.get-pubkey-rest args))
+  (defmacro cf.AggSigMe.get-message args
+    (c cypher.standards.conditions.AggSigMe.get-message args))
+  (defmacro cf.AggSigMe.get-message-rest args
+    (c cypher.standards.conditions.AggSigMe.get-message-rest args))
 
-  (defun-inline cf.ReserveFee (f . r)
-    (cypher.standards.conditions.ReserveFee f . r))
-  (defun-inline cf.ReserveFee.is-condition (f . r)
-    (cypher.standards.conditions.ReserveFee.is-condition f . r))
-  (defun-inline cf.ReserveFee.get-amount (f . r)
-    (cypher.standards.conditions.ReserveFee.get-amount f . r))
-  (defun-inline cf.ReserveFee.get-amount-rest (f . r)
-    (cypher.standards.conditions.ReserveFee.get-amount-rest f . r))
+  (defmacro cf.ReserveFee args
+    (c cypher.standards.conditions.ReserveFee args))
+  (defmacro cf.ReserveFee.is-condition args
+    (c cypher.standards.conditions.ReserveFee.is-condition args))
+  (defmacro cf.ReserveFee.get-amount args
+    (c cypher.standards.conditions.ReserveFee.get-amount args))
+  (defmacro cf.ReserveFee.get-amount-rest args
+    (c cypher.standards.conditions.ReserveFee.get-amount-rest args))
 
-  (defun-inline cf.CreateCoin (f . r)
-    (cypher.standards.conditions.CreateCoin f . r))
-  (defun-inline cf.CreateCoin.is-condition (f . r)
-    (cypher.standards.conditions.CreateCoin.is-condition f . r))
-  (defun-inline cf.CreateCoin.get-puzzle-hash (f . r)
-    (cypher.standards.conditions.CreateCoin.get-puzzle-hash f . r))
-  (defun-inline cf.CreateCoin.get-puzzle-hash-rest (f . r)
-    (cypher.standards.conditions.CreateCoin.get-puzzle-hash-rest f . r))
-  (defun-inline cf.CreateCoin.get-amount (f . r)
-    (cypher.standards.conditions.CreateCoin.get-amount f . r))
-  (defun-inline cf.CreateCoin.get-amount-rest (f . r)
-    (cypher.standards.conditions.CreateCoin.get-amount-rest f . r))
+  (defmacro cf.CreateCoin args
+    (c cypher.standards.conditions.CreateCoin args))
+  (defmacro cf.CreateCoin.is-condition args
+    (c cypher.standards.conditions.CreateCoin.is-condition args))
+  (defmacro cf.CreateCoin.get-puzzle-hash args
+    (c cypher.standards.conditions.CreateCoin.get-puzzle-hash args))
+  (defmacro cf.CreateCoin.get-puzzle-hash-rest args
+    (c cypher.standards.conditions.CreateCoin.get-puzzle-hash-rest args))
+  (defmacro cf.CreateCoin.get-amount args
+    (c cypher.standards.conditions.CreateCoin.get-amount args))
+  (defmacro cf.CreateCoin.get-amount-rest args
+    (c cypher.standards.conditions.CreateCoin.get-amount-rest args))
 
-  (defun-inline cf.CreateCoinAnnouncement (f . r)
-    (cypher.standards.conditions.CreateCoinAnnouncement f . r))
-  (defun-inline cf.CreateCoinAnnouncement.is-condition (f . r)
-    (cypher.standards.conditions.CreateCoinAnnouncement.is-condition f . r))
-  (defun-inline cf.CreateCoinAnnouncement.get-message (f . r)
-    (cypher.standards.conditions.CreateCoinAnnouncement.get-message f . r))
-  (defun-inline cf.CreateCoinAnnouncement.get-message-rest (f . r)
-    (cypher.standards.conditions.CreateCoinAnnouncement.get-message-rest f . r))
+  (defmacro cf.CreateCoinAnnouncement args
+    (c cypher.standards.conditions.CreateCoinAnnouncement args))
+  (defmacro cf.CreateCoinAnnouncement.is-condition args
+    (c cypher.standards.conditions.CreateCoinAnnouncement.is-condition args))
+  (defmacro cf.CreateCoinAnnouncement.get-message args
+    (c cypher.standards.conditions.CreateCoinAnnouncement.get-message args))
+  (defmacro cf.CreateCoinAnnouncement.get-message-rest args
+    (c cypher.standards.conditions.CreateCoinAnnouncement.get-message-rest args))
 
-  (defun-inline cf.AssertCoinAnnouncement (f . r)
-    (cypher.standards.conditions.AssertCoinAnnouncement f . r))
-  (defun-inline cf.AssertCoinAnnouncement.is-condition (f . r)
-    (cypher.standards.conditions.AssertCoinAnnouncement.is-condition f . r))
+  (defmacro cf.AssertCoinAnnouncement args
+    (c cypher.standards.conditions.AssertCoinAnnouncement args))
+  (defmacro cf.AssertCoinAnnouncement.is-condition args
+    (c cypher.standards.conditions.AssertCoinAnnouncement.is-condition args))
 
-  (defun-inline cf.CreatePuzzleAnnouncement (f . r)
-    (cypher.standards.conditions.CreatePuzzleAnnouncement f . r))
-  (defun-inline cf.CreatePuzzleAnnouncement.is-condition (f . r)
-    (cypher.standards.conditions.CreatePuzzleAnnouncement.is-condition f . r))
-  (defun-inline cf.CreatePuzzleAnnouncement.get-message (f . r)
-    (cypher.standards.conditions.CreatePuzzleAnnouncement.get-message f . r))
-  (defun-inline cf.CreatePuzzleAnnouncement.get-message-rest (f . r)
-    (cypher.standards.conditions.CreatePuzzleAnnouncement.get-message-rest f . r))
+  (defmacro cf.CreatePuzzleAnnouncement args
+    (c cypher.standards.conditions.CreatePuzzleAnnouncement args))
+  (defmacro cf.CreatePuzzleAnnouncement.is-condition args
+    (c cypher.standards.conditions.CreatePuzzleAnnouncement.is-condition args))
+  (defmacro cf.CreatePuzzleAnnouncement.get-message args
+    (c cypher.standards.conditions.CreatePuzzleAnnouncement.get-message args))
+  (defmacro cf.CreatePuzzleAnnouncement.get-message-rest args
+    (c cypher.standards.conditions.CreatePuzzleAnnouncement.get-message-rest args))
 
-  (defun-inline cf.AssertPuzzleAnnouncement (f . r)
-    (cypher.standards.conditions.AssertPuzzleAnnouncement f . r))
-  (defun-inline cf.AssertPuzzleAnnouncement.is-condition (f . r)
-    (cypher.standards.conditions.AssertPuzzleAnnouncement.is-condition f . r))
+  (defmacro cf.AssertPuzzleAnnouncement args
+    (c cypher.standards.conditions.AssertPuzzleAnnouncement args))
+  (defmacro cf.AssertPuzzleAnnouncement.is-condition args
+    (c cypher.standards.conditions.AssertPuzzleAnnouncement.is-condition args))
 
-  (defun-inline cf.AssertMyCoinID (f . r)
-    (cypher.standards.conditions.AssertMyCoinID f . r))
-  (defun-inline cf.AssertMyCoinID.is-condition (f . r)
-    (cypher.standards.conditions.AssertMyCoinID.is-condition f . r))
+  (defmacro cf.AssertMyCoinID args
+    (c cypher.standards.conditions.AssertMyCoinID args))
+  (defmacro cf.AssertMyCoinID.is-condition args
+    (c cypher.standards.conditions.AssertMyCoinID.is-condition args))
 
-  (defun-inline cf.AssertMyParentID (f . r)
-    (cypher.standards.conditions.AssertMyParentID f . r))
-  (defun-inline cf.AssertMyParentID.is-condition (f . r)
-    (cypher.standards.conditions.AssertMyParentID.is-condition f . r))
+  (defmacro cf.AssertMyParentID args
+    (c cypher.standards.conditions.AssertMyParentID args))
+  (defmacro cf.AssertMyParentID.is-condition args
+    (c cypher.standards.conditions.AssertMyParentID.is-condition args))
 
-  (defun-inline cf.AssertMyPuzzleHash (f . r)
-    (cypher.standards.conditions.AssertMyPuzzleHash f . r))
-  (defun-inline cf.AssertMyPuzzleHash.is-condition (f . r)
-    (cypher.standards.conditions.AssertMyPuzzleHash.is-condition f . r))
+  (defmacro cf.AssertMyPuzzleHash args
+    (c cypher.standards.conditions.AssertMyPuzzleHash args))
+  (defmacro cf.AssertMyPuzzleHash.is-condition args
+    (c cypher.standards.conditions.AssertMyPuzzleHash.is-condition args))
 
-  (defun-inline cf.AssertMyAmount (f . r)
-    (cypher.standards.conditions.AssertMyAmount f . r))
-  (defun-inline cf.AssertMyAmount.is-condition (f . r)
-    (cypher.standards.conditions.AssertMyAmount.is-condition f . r))
+  (defmacro cf.AssertMyAmount args
+    (c cypher.standards.conditions.AssertMyAmount args))
+  (defmacro cf.AssertMyAmount.is-condition args
+    (c cypher.standards.conditions.AssertMyAmount.is-condition args))
 
-  (defun-inline cf.AssertSecondsRelative (f . r)
-    (cypher.standards.conditions.AssertSecondsRelative f . r))
-  (defun-inline cf.AssertSecondsRelative.is-condition (f . r)
-    (cypher.standards.conditions.AssertSecondsRelative.is-condition f . r))
+  (defmacro cf.AssertSecondsRelative args
+    (c cypher.standards.conditions.AssertSecondsRelative args))
+  (defmacro cf.AssertSecondsRelative.is-condition args
+    (c cypher.standards.conditions.AssertSecondsRelative.is-condition args))
 
-  (defun-inline cf.AssertSecondsAbsolute (f . r)
-    (cypher.standards.conditions.AssertSecondsAbsolute f . r))
-  (defun-inline cf.AssertSecondsAbsolute.is-condition (f . r)
-    (cypher.standards.conditions.AssertSecondsAbsolute.is-condition f . r))
+  (defmacro cf.AssertSecondsAbsolute args
+    (c cypher.standards.conditions.AssertSecondsAbsolute args))
+  (defmacro cf.AssertSecondsAbsolute.is-condition args
+    (c cypher.standards.conditions.AssertSecondsAbsolute.is-condition args))
 
-  (defun-inline cf.AssertHeightRelative (f . r)
-    (cypher.standards.conditions.AssertHeightRelative f . r))
-  (defun-inline cf.AssertHeightRelative.is-condition (f . r)
-    (cypher.standards.conditions.AssertHeightRelative.is-condition f . r))
+  (defmacro cf.AssertHeightRelative args
+    (c cypher.standards.conditions.AssertHeightRelative args))
+  (defmacro cf.AssertHeightRelative.is-condition args
+    (c cypher.standards.conditions.AssertHeightRelative.is-condition args))
 
-  (defun-inline cf.AssertHeightAbsolute (f . r)
-    (cypher.standards.conditions.AssertHeightAbsolute f . r))
-  (defun-inline cf.AssertHeightAbsolute.is-condition (f . r)
-    (cypher.standards.conditions.AssertHeightAbsolute.is-condition f . r))
+  (defmacro cf.AssertHeightAbsolute args
+    (c cypher.standards.conditions.AssertHeightAbsolute args))
+  (defmacro cf.AssertHeightAbsolute.is-condition args
+    (c cypher.standards.conditions.AssertHeightAbsolute.is-condition args))
 )
