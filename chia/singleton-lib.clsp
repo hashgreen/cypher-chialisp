@@ -103,8 +103,8 @@
       (cf.Coin.get-amount coin)))
   (defun create_my_ID
     (singleton_mod puzzle_hash parent_parent_id parent_inner_puzzle_hash parent_amount amount)
-    (cf.Coin.id (cf.Coin
-      (cf.Coin.id (cf.Coin
+    (cf.Coin.id@unsafe (cf.Coin
+      (cf.Coin.id@unsafe (cf.Coin
         parent_parent_id
         (SingletonMod.morph-puzzle-hash singleton_mod parent_inner_puzzle_hash)
         parent_amount))

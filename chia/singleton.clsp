@@ -39,13 +39,13 @@
         (if
           (=
             (SingletonMod.get-launcher-id singleton_mod)
-            (cf.Coin.id (cf.Coin
+            (cf.Coin.id@unsafe (cf.Coin
               (EveLineageProof.get-parent-id lineage_proof)
               (SingletonMod.get-launcher-puzzle-hash singleton_mod)
               (EveLineageProof.get-amount lineage_proof)
             ))
           )
-          (cf.Coin.id (cf.Coin
+          (cf.Coin.id@unsafe (cf.Coin
             (SingletonMod.get-launcher-id singleton_mod)
             puzzle_hash
             amount

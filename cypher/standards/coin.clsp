@@ -41,6 +41,8 @@
     (c cypher.standards.coin.Coin.get-amount args))
   (defmacro cf.Coin.id args
     (q . x))
+  (defmacro cf.Coin.id@unsafe args
+    (c cypher.standards.coin.Coin.id args))
   (defmacro cf.Coin.unsafe-id args
     (c cypher.standards.coin.Coin.id args))
   (defmacro cf.Coin.verified-id args
