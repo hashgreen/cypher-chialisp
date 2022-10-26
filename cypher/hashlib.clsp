@@ -182,7 +182,7 @@
   (defmacro cf.sha256one args (c cypher.hashlib.sha256one args))
   (defmacro cf.sha256two args (c cypher.hashlib.sha256two args))
   (defmacro cf.sha256tree args (c cypher.hashlib.sha256tree args))
-  (defmacro cf.puzzle-hash-of-curried-function (args)
+  (defmacro cf.puzzle-hash-of-curried-function args
     (c cypher.hashlib.puzzle-hash-of-curried-function args))
   (defmacro cf.calculate-coin-id args (c cypher.hashlib.calculate-coin-id args))
 )
