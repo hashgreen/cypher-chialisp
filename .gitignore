@@ -1,0 +1,12 @@
+# compiler symbols
+main.sym
+
+# env
+env.sh
+.env
+venv/
+
+# output files
+*.clvm
+*.clvm.hex
+*.clvm.hex.sha256tree
