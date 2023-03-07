@@ -14,6 +14,26 @@
     )
   )
 
+  (defmacro @cypher.macros.assert@debug args
+    ;; Assert a series of statements with debugging message.
+    ;
+    ; Usage: (assert cond1 cond2 ...)
+    ; Taken from chia/wallet/puzzles/cat.clvm.
+
+    (if (r args)
+      (qq (if (unquote (f args))
+        (unquote (c @cypher.macros.assert (r args)))
+        (x
+          "@cypher.macros.assert failed: "
+          (q . (unquote (f args)))
+          "evaluates to false, leaving assertion body"
+          (q . (unquote (r args)))
+        )
+      ))
+      (f args)
+    )
+  )
+
   (defmacro @cypher.macros.and args
     ;; And a series of statements.
     ;
@@ -92,6 +112,7 @@
   ;; Exports
 
   (defmacro @cf.assert args (c @cypher.macros.assert args))
+  (defmacro @cf.assert@debug args (c @cypher.macros.assert@debug args))
   (defmacro @cf.and args (c @cypher.macros.and args))
   (defmacro @cf.and@v2 args (c @cypher.macros.and@v2 args))
   (defmacro @cf.concat args (c @cypher.macros.concat args))

@@ -165,4 +165,6 @@
   (defmacro cf.sqrt args (c cypher.math.sqrt args))
   (defmacro %cf.pow args (c %cypher.math.pow args))
   (defmacro cf.pow args (c cypher.math.pow args))
+  (defmacro %cf.str args (c %cypher.math.str args))
+  (defmacro cf.str args (c cypher.math.str args))
 )
