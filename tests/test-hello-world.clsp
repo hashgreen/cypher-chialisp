@@ -1,0 +1,15 @@
+(a (mod ()
+
+  (include cypher/math.clsp)
+  (include tests/utils.clsp)
+
+  (defun-inline test-hello-world ()
+    (@assert
+      (@assert-equal
+        (%cf.str 42069 3) "42.069")
+      "hello-world")
+  )
+
+  (test-hello-world)
+
+) ())
