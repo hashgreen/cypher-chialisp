@@ -63,6 +63,10 @@ To run the test suite, simply run
 $ make -j8 test
 ```
 
+### Standard Reimplementation
+
+Check out [our reimplementation](chia/) of standard puzzles to understand better how you can use Cypher to achieve your goals.
+
 ## What Is Cypher For?
 
 The goals of Cypher are to achieve:
