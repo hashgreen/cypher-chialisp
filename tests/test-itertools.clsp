@@ -1,0 +1,23 @@
+(a (mod ()
+
+  (include cypher/constants.clsp)
+  (include cypher/hashlib.clsp)
+  (include cypher/itertools.clsp)
+
+  (include tests/utils.clsp)
+
+  (defun-inline test-map ()
+    (@assert
+      (@assert-equal
+        (cf.sha256tree (cf.map (lambda (var) (+ var 1)) (list 100 200 300)))
+        (cf.sha256tree (list 101 201 301)))
+      "test-itertools.test-map"))
+
+  (defun-inline test-itertools ()
+    (@assert
+      (test-map)
+      "test-itertools"))
+
+  (test-itertools)
+
+) ())
