@@ -9,13 +9,25 @@
   (defun-inline test-map ()
     (@assert
       (@assert-equal
-        (cf.sha256tree (cf.map (lambda (var) (+ var 1)) (list 100 200 300)))
-        (cf.sha256tree (list 101 201 301)))
+        (cf.map (lambda (var) (+ var 1)) (list 100 200 300))
+        (list 101 201 301))
       "test-itertools.test-map"))
+
+  (defun-inline test-reduce ()
+    (@assert
+      (@assert-equal
+        (cf.reduce
+          (lambda (arg agg) (* arg agg))
+          (list 1 3 5 7)
+          1)
+        105)
+      "test-itertools.test-reduce")
+  )
 
   (defun-inline test-itertools ()
     (@assert
       (test-map)
+      (test-reduce)
       "test-itertools"))
 
   (test-itertools)

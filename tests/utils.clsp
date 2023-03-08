@@ -12,11 +12,24 @@
     ))
   )
 
+  (defun --cypher.tests.sha256tree (tree)
+    (if (l tree)
+      (sha256 2
+        (--cypher.tests.sha256tree (f tree))
+        (--cypher.tests.sha256tree (r tree))
+      )
+      (sha256 1 tree)
+    )
+  )
+
   (defmacro @cypher.tests.assert-equal (statement result)
     ;; Expect the statement to evaluate to result.
 
     (qq (if
-      (= (unquote statement) (unquote result))
+      (=
+        (--cypher.tests.sha256tree (unquote statement))
+        (--cypher.tests.sha256tree (unquote result))
+      )
       1
       (x
         (q . (unquote statement))

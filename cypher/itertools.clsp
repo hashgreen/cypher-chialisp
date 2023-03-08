@@ -63,9 +63,37 @@
     )
   )
 
+  (defun cypher.itertools.reduce (func args init)
+    ;; Apply reduce function to each element sequentially.
+    ;
+    ; Args:
+    ;   func: Compiled function. More commonly done by
+    ;     (mod (arg) (...)) or (lambda (arg) ...).
+    ;     Must accept two arguments `arg` and `agg`.
+    ;   args: List of arguments to apply func on.
+    ;   init: Initial value.
+    ;
+    ; Returns:
+    ;   A reduced value.
+    ;
+    ; The `reduce` function will begin from the left, sequentially perform
+    ;   - agg_0 <- (a func (list arg_0 init))
+    ;   - agg_1 <- (a func (list arg_1 agg))
+    ;   ... until the list is exhausted.
+
+    (if args
+      (a
+        func
+        (list (f args) (cypher.itertools.reduce func (r args) init))
+      )
+      init
+    )
+  )
+
   ;; Exports
 
   (defmacro cf.chain-two args (c cypher.itertools.chain-two args))
   (defmacro cf.chain args (c cypher.itertools.chain args))
   (defmacro cf.map args (c cypher.itertools.map args))
+  (defmacro cf.reduce args (c cypher.itertools.reduce args))
 )
