@@ -1,4 +1,4 @@
-# Cypher | chialisp library
+# Cypher | chialisp library 🌱
 
 A [chialisp](https://chialisp.com) library to develop smart coins (contracts) on the Chia Blockchain by [Hashgreen Labs](https://www.hashgreen.net).
 
