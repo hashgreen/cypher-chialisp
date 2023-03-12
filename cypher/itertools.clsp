@@ -47,8 +47,7 @@
     ;; Apply map function to each element.
     ;
     ; Args:
-    ;   func: Compiled function. More commonly done by
-    ;     (mod (arg) (...)).
+    ;   func: Function symbol name.
     ;   args: List of arguments to apply func on.
     ;
     ; Returns:
@@ -56,37 +55,32 @@
 
     (if args
       (c
-        (a func (list (f args)))
+        (func (f args))
         (cypher.itertools.map func (r args))
       )
       cypher.constants.NIL
     )
   )
 
-  (defun cypher.itertools.reduce (func args init)
+  (defun cypher.itertools.reduce (func args agg_init global_args)
     ;; Apply reduce function to each element sequentially.
     ;
     ; Args:
-    ;   func: Compiled function. More commonly done by
-    ;     (mod (arg) (...)) or (lambda (arg) ...).
-    ;     Must accept two arguments `arg` and `agg`.
+    ;   func: Function symbol name.
     ;   args: List of arguments to apply func on.
-    ;   init: Initial value.
+    ;   agg_init: Initial value.
+    ;   global_args: Global arguments.
     ;
     ; Returns:
     ;   A reduced value.
-    ;
-    ; The `reduce` function will begin from the left, sequentially perform
-    ;   - agg_0 <- (a func (list arg_0 init))
-    ;   - agg_1 <- (a func (list arg_1 agg))
-    ;   ... until the list is exhausted.
 
     (if args
-      (a
-        func
-        (list (f args) (cypher.itertools.reduce func (r args) init))
+      (func
+        (f args)
+        (cypher.itertools.reduce func (r args) agg_init global_args)
+        global_args
       )
-      init
+      agg_init
     )
   )
 
