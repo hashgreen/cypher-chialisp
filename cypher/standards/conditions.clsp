@@ -1,11 +1,10 @@
 (
   ; Condition
 
-  (defun-inline cypher.standards.conditions.Condition (condition_code f . r)
-    (list condition_code f . r))
+  (defun-inline cypher.standards.conditions.Condition (condition_code . args)
+    (list condition_code . args))
   (defun-inline cypher.standards.conditions.Condition.is-condition (condition_code condition)
     (= (cypher.standards.conditions.Condition.get-condition-code condition) condition_code))
-
   (defun-inline cypher.standards.conditions.Condition.get-condition-code (condition)
     (f condition))
   (defun-inline cypher.standards.conditions.Condition.output-amount (condition)
@@ -44,8 +43,8 @@
 
   ; CreateCoin
 
-  (defun-inline cypher.standards.conditions.CreateCoin (puzzle_hash amount)
-    (cypher.standards.conditions.Condition CREATE_COIN puzzle_hash amount))
+  (defun-inline cypher.standards.conditions.CreateCoin (puzzle_hash amount . memos)
+    (cypher.standards.conditions.Condition CREATE_COIN puzzle_hash amount . memos))
   (defun-inline cypher.standards.conditions.CreateCoin.is-condition (condition)
     (cypher.standards.conditions.Condition.is-condition CREATE_COIN condition))
   (defun-inline cypher.standards.conditions.CreateCoin.get-puzzle-hash (condition)
@@ -82,9 +81,11 @@
   ; AssertCoinAnnouncement
 
   (defun-inline cypher.standards.conditions.AssertCoinAnnouncement (coin_id message)
-    (list ASSERT_COIN_ANNOUNCEMENT (sha256 coin_id message)))
+    (cypher.standards.conditions.Condition ASSERT_COIN_ANNOUNCEMENT (sha256 coin_id message)))
   (defun-inline cypher.standards.conditions.AssertCoinAnnouncement.is-condition (condition)
     (cypher.standards.conditions.Condition.is-condition ASSERT_COIN_ANNOUNCEMENT condition))
+  (defun-inline cypher.standards.conditions.AssertCoinAnnouncement.get-announcement (condition)
+    (f (r condition)))
 
   ; CreatePuzzleAnnouncement
 
@@ -100,65 +101,155 @@
   ; AssertPuzzleAnnouncement
 
   (defun-inline cypher.standards.conditions.AssertPuzzleAnnouncement (puzzle_hash message)
-    (list ASSERT_PUZZLE_ANNOUNCEMENT (sha256 puzzle_hash message)))
+    (cypher.standards.conditions.Condition ASSERT_PUZZLE_ANNOUNCEMENT (sha256 puzzle_hash message)))
   (defun-inline cypher.standards.conditions.AssertPuzzleAnnouncement.is-condition (condition)
     (cypher.standards.conditions.Condition.is-condition ASSERT_PUZZLE_ANNOUNCEMENT condition))
+  (defun-inline cypher.standards.conditions.AssertPuzzleAnnouncement.get-announcement (condition)
+    (f (r condition)))
+
+  ; AssertConcurrentSpend
+
+  (defun-inline cypher.standards.conditions.AssertConcurrentSpend (coin_id)
+    (cypher.standards.conditions.Condition ASSERT_CONCURRENT_SPEND coin_id))
+  (defun-inline cypher.standards.conditions.AssertConcurrentSpend.is-condition (condition)
+    (cypher.standards.conditions.Condition.is-condition ASSERT_CONCURRENT_SPEND condition))
+  (defun-inline cypher.standards.conditions.AssertConcurrentSpend.get-coin-id (condition)
+    (f (r condition)))
+
+  ; AssertConcurrentPuzzle
+
+  (defun-inline cypher.standards.conditions.AssertConcurrentPuzzle (puzzle_hash)
+    (cypher.standards.conditions.Condition ASSERT_CONCURRENT_PUZZLE puzzle_hash))
+  (defun-inline cypher.standards.conditions.AssertConcurrentPuzzle.is-condition (condition)
+    (cypher.standards.conditions.Condition.is-condition ASSERT_CONCURRENT_PUZZLE condition))
+  (defun-inline cypher.standards.conditions.AssertConcurrentPuzzle.get-puzzle-hash (condition)
+    (f (r condition)))
 
   ; AssertMyCoinID
 
   (defun-inline cypher.standards.conditions.AssertMyCoinID (coin_id)
-    (list ASSERT_MY_COIN_ID coin_id))
+    (cypher.standards.conditions.Condition ASSERT_MY_COIN_ID coin_id))
   (defun-inline cypher.standards.conditions.AssertMyCoinID.is-condition (condition)
     (cypher.standards.conditions.Condition.is-condition ASSERT_MY_COIN_ID condition))
+  (defun-inline cypher.standards.conditions.AssertMyCoinID.get-coin-id (condition)
+    (f (r condition)))
 
   ; AssertMyParentID
 
   (defun-inline cypher.standards.conditions.AssertMyParentID (coin_id)
-    (list ASSERT_MY_PARENT_ID coin_id))
+    (cypher.standards.conditions.Condition ASSERT_MY_PARENT_ID coin_id))
   (defun-inline cypher.standards.conditions.AssertMyParentID.is-condition (condition)
     (cypher.standards.conditions.Condition.is-condition ASSERT_MY_PARENT_ID condition))
+  (defun-inline cypher.standards.conditions.AssertMyParentID.get-coin-id (condition)
+    (f (r condition)))
 
   ; AssertMyPuzzleHash
 
   (defun-inline cypher.standards.conditions.AssertMyPuzzleHash (puzzle_hash)
-    (list ASSERT_MY_PUZZLEHASH puzzle_hash))
+    (cypher.standards.conditions.Condition ASSERT_MY_PUZZLEHASH puzzle_hash))
   (defun-inline cypher.standards.conditions.AssertMyPuzzleHash.is-condition (condition)
     (cypher.standards.conditions.Condition.is-condition ASSERT_MY_PUZZLEHASH condition))
+  (defun-inline cypher.standards.conditions.AssertMyPuzzleHash.get-puzzle-hash (condition)
+    (f (r condition)))
 
   ; AssertMyAmount
 
   (defun-inline cypher.standards.conditions.AssertMyAmount (amount)
-    (list ASSERT_MY_AMOUNT amount))
+    (cypher.standards.conditions.Condition ASSERT_MY_AMOUNT amount))
   (defun-inline cypher.standards.conditions.AssertMyAmount.is-condition (condition)
     (cypher.standards.conditions.Condition.is-condition ASSERT_MY_AMOUNT condition))
+  (defun-inline cypher.standards.conditions.AssertMyAmount.get-amount (condition)
+    (f (r condition)))
+
+  ; AssertMyBirthSeconds
+
+  (defun-inline cypher.standards.conditions.AssertMyBirthSeconds (seconds)
+    (cypher.standards.conditions.Condition ASSERT_MY_BIRTH_SECONDS seconds))
+  (defun-inline cypher.standards.conditions.AssertMyBirthSeconds.is-condition (condition)
+    (cypher.standards.conditions.Condition.is-condition ASSERT_MY_BIRTH_SECONDS condition))
+  (defun-inline cypher.standards.conditions.AssertMyBirthSeconds.get-seconds (condition)
+    (f (r condition)))
+
+  ; AssertMyBirthHeight
+
+  (defun-inline cypher.standards.conditions.AssertMyBirthHeight (height)
+    (cypher.standards.conditions.Condition ASSERT_MY_BIRTH_HEIGHT height))
+  (defun-inline cypher.standards.conditions.AssertMyBirthHeight.is-condition (condition)
+    (cypher.standards.conditions.Condition.is-condition ASSERT_MY_BIRTH_HEIGHT condition))
+  (defun-inline cypher.standards.conditions.AssertMyBirthHeight.get-height (condition)
+    (f (r condition)))
 
   ; AssertSecondsRelative
 
   (defun-inline cypher.standards.conditions.AssertSecondsRelative (seconds)
-    (list ASSERT_SECONDS_RELATIVE seconds))
+    (cypher.standards.conditions.Condition ASSERT_SECONDS_RELATIVE seconds))
   (defun-inline cypher.standards.conditions.AssertSecondsRelative.is-condition (condition)
     (cypher.standards.conditions.Condition.is-condition ASSERT_SECONDS_RELATIVE condition))
+  (defun-inline cypher.standards.conditions.AssertSecondsRelative.get-seconds (condition)
+    (f (r condition)))
 
   ; AssertSecondsAbsolute
 
   (defun-inline cypher.standards.conditions.AssertSecondsAbsolute (seconds)
-    (list ASSERT_SECONDS_ABSOLUTE seconds))
+    (cypher.standards.conditions.Condition ASSERT_SECONDS_ABSOLUTE seconds))
   (defun-inline cypher.standards.conditions.AssertSecondsAbsolute.is-condition (condition)
     (cypher.standards.conditions.Condition.is-condition ASSERT_SECONDS_ABSOLUTE condition))
+  (defun-inline cypher.standards.conditions.AssertSecondsAbsolute.get-seconds (condition)
+    (f (r condition)))
 
   ; AssertHeightRelative
 
   (defun-inline cypher.standards.conditions.AssertHeightRelative (height)
-    (list ASSERT_HEIGHT_RELATIVE height))
+    (cypher.standards.conditions.Condition ASSERT_HEIGHT_RELATIVE height))
   (defun-inline cypher.standards.conditions.AssertHeightRelative.is-condition (condition)
     (cypher.standards.conditions.Condition.is-condition ASSERT_HEIGHT_RELATIVE condition))
+  (defun-inline cypher.standards.conditions.AssertHeightRelative.get-height (condition)
+    (f (r condition)))
 
   ; AssertHeightAbsolute
 
   (defun-inline cypher.standards.conditions.AssertHeightAbsolute (height)
-    (list ASSERT_HEIGHT_ABSOLUTE height))
+    (cypher.standards.conditions.Condition ASSERT_HEIGHT_ABSOLUTE height))
   (defun-inline cypher.standards.conditions.AssertHeightAbsolute.is-condition (condition)
     (cypher.standards.conditions.Condition.is-condition ASSERT_HEIGHT_ABSOLUTE condition))
+  (defun-inline cypher.standards.conditions.AssertHeightAbsolute.get-height (condition)
+    (f (r condition)))
+
+  ; AssertBeforeSecondsRelative
+
+  (defun-inline cypher.standards.conditions.AssertBeforeSecondsRelative (seconds)
+    (cypher.standards.conditions.Condition ASSERT_BEFORE_SECONDS_RELATIVE seconds))
+  (defun-inline cypher.standards.conditions.AssertBeforeSecondsRelative.is-condition (condition)
+    (cypher.standards.conditions.Condition.is-condition ASSERT_BEFORE_SECONDS_RELATIVE condition))
+  (defun-inline cypher.standards.conditions.AssertBeforeSecondsRelative.get-seconds (condition)
+    (f (r condition)))
+
+  ; AssertBeforeSecondsAbsolute
+
+  (defun-inline cypher.standards.conditions.AssertBeforeSecondsAbsolute (seconds)
+    (cypher.standards.conditions.Condition ASSERT_BEFORE_SECONDS_ABSOLUTE seconds))
+  (defun-inline cypher.standards.conditions.AssertBeforeSecondsAbsolute.is-condition (condition)
+    (cypher.standards.conditions.Condition.is-condition ASSERT_BEFORE_SECONDS_ABSOLUTE condition))
+  (defun-inline cypher.standards.conditions.AssertBeforeSecondsAbsolute.get-seconds (condition)
+    (f (r condition)))
+
+  ; AssertBeforeHeightRelative
+
+  (defun-inline cypher.standards.conditions.AssertBeforeHeightRelative (height)
+    (cypher.standards.conditions.Condition ASSERT_BEFORE_HEIGHT_RELATIVE height))
+  (defun-inline cypher.standards.conditions.AssertBeforeHeightRelative.is-condition (condition)
+    (cypher.standards.conditions.Condition.is-condition ASSERT_BEFORE_HEIGHT_RELATIVE condition))
+  (defun-inline cypher.standards.conditions.AssertBeforeHeightRelative.get-height (condition)
+    (f (r condition)))
+
+  ; AssertBeforeHeightAbsolute
+
+  (defun-inline cypher.standards.conditions.AssertBeforeHeightAbsolute (height)
+    (cypher.standards.conditions.Condition ASSERT_BEFORE_HEIGHT_ABSOLUTE height))
+  (defun-inline cypher.standards.conditions.AssertBeforeHeightAbsolute.is-condition (condition)
+    (cypher.standards.conditions.Condition.is-condition ASSERT_BEFORE_HEIGHT_ABSOLUTE condition))
+  (defun-inline cypher.standards.conditions.AssertBeforeHeightAbsolute.get-height (condition)
+    (f (r condition)))
 
   ;; Exports
 
@@ -197,15 +288,6 @@
   (defmacro cf.AggSigMe.get-message-rest args
     (c cypher.standards.conditions.AggSigMe.get-message-rest args))
 
-  (defmacro cf.ReserveFee args
-    (c cypher.standards.conditions.ReserveFee args))
-  (defmacro cf.ReserveFee.is-condition args
-    (c cypher.standards.conditions.ReserveFee.is-condition args))
-  (defmacro cf.ReserveFee.get-amount args
-    (c cypher.standards.conditions.ReserveFee.get-amount args))
-  (defmacro cf.ReserveFee.get-amount-rest args
-    (c cypher.standards.conditions.ReserveFee.get-amount-rest args))
-
   (defmacro cf.CreateCoin args
     (c cypher.standards.conditions.CreateCoin args))
   (defmacro cf.CreateCoin.is-condition args
@@ -218,6 +300,15 @@
     (c cypher.standards.conditions.CreateCoin.get-amount args))
   (defmacro cf.CreateCoin.get-amount-rest args
     (c cypher.standards.conditions.CreateCoin.get-amount-rest args))
+
+  (defmacro cf.ReserveFee args
+    (c cypher.standards.conditions.ReserveFee args))
+  (defmacro cf.ReserveFee.is-condition args
+    (c cypher.standards.conditions.ReserveFee.is-condition args))
+  (defmacro cf.ReserveFee.get-amount args
+    (c cypher.standards.conditions.ReserveFee.get-amount args))
+  (defmacro cf.ReserveFee.get-amount-rest args
+    (c cypher.standards.conditions.ReserveFee.get-amount-rest args))
 
   (defmacro cf.CreateCoinAnnouncement args
     (c cypher.standards.conditions.CreateCoinAnnouncement args))
@@ -232,6 +323,8 @@
     (c cypher.standards.conditions.AssertCoinAnnouncement args))
   (defmacro cf.AssertCoinAnnouncement.is-condition args
     (c cypher.standards.conditions.AssertCoinAnnouncement.is-condition args))
+  (defmacro cf.AssertCoinAnnouncement.get-announcement args
+    (c cypher.standards.conditions.AssertCoinAnnouncement.get-announcement args))
 
   (defmacro cf.CreatePuzzleAnnouncement args
     (c cypher.standards.conditions.CreatePuzzleAnnouncement args))
@@ -246,44 +339,118 @@
     (c cypher.standards.conditions.AssertPuzzleAnnouncement args))
   (defmacro cf.AssertPuzzleAnnouncement.is-condition args
     (c cypher.standards.conditions.AssertPuzzleAnnouncement.is-condition args))
+  (defmacro cf.AssertPuzzleAnnouncement.get-announcement args
+    (c cypher.standards.conditions.AssertPuzzleAnnouncement.get-announcement args))
+
+  (defmacro cf.AssertConcurrentSpend args
+    (c cypher.standards.conditions.AssertConcurrentSpend args))
+  (defmacro cf.AssertConcurrentSpend.is-condition args
+    (c cypher.standards.conditions.AssertConcurrentSpend.is-condition args))
+  (defmacro cf.AssertConcurrentSpend.get-coin-id args
+    (c cypher.standards.conditions.AssertConcurrentSpend.get-coin-id args))
+
+  (defmacro cf.AssertConcurrentPuzzle args
+    (c cypher.standards.conditions.AssertConcurrentPuzzle args))
+  (defmacro cf.AssertConcurrentPuzzle.is-condition args
+    (c cypher.standards.conditions.AssertConcurrentPuzzle.is-condition args))
+  (defmacro cf.AssertConcurrentPuzzle.get-puzzle-hash args
+    (c cypher.standards.conditions.AssertConcurrentPuzzle.get-puzzle-hash args))
 
   (defmacro cf.AssertMyCoinID args
     (c cypher.standards.conditions.AssertMyCoinID args))
   (defmacro cf.AssertMyCoinID.is-condition args
     (c cypher.standards.conditions.AssertMyCoinID.is-condition args))
+  (defmacro cf.AssertMyCoinID.get-coin-id args
+    (c cypher.standards.conditions.AssertMyCoinID.get-coin-id args))
 
   (defmacro cf.AssertMyParentID args
     (c cypher.standards.conditions.AssertMyParentID args))
   (defmacro cf.AssertMyParentID.is-condition args
     (c cypher.standards.conditions.AssertMyParentID.is-condition args))
+  (defmacro cf.AssertMyParentID.get-coin-id args
+    (c cypher.standards.conditions.AssertMyParentID.get-coin-id args))
 
   (defmacro cf.AssertMyPuzzleHash args
     (c cypher.standards.conditions.AssertMyPuzzleHash args))
   (defmacro cf.AssertMyPuzzleHash.is-condition args
     (c cypher.standards.conditions.AssertMyPuzzleHash.is-condition args))
+  (defmacro cf.AssertMyPuzzleHash.get-puzzle-hash args
+    (c cypher.standards.conditions.AssertMyPuzzleHash.get-puzzle-hash args))
 
   (defmacro cf.AssertMyAmount args
     (c cypher.standards.conditions.AssertMyAmount args))
   (defmacro cf.AssertMyAmount.is-condition args
     (c cypher.standards.conditions.AssertMyAmount.is-condition args))
+  (defmacro cf.AssertMyAmount.get-amount args
+    (c cypher.standards.conditions.AssertMyAmount.get-amount args))
+
+  (defmacro cf.AssertMyBirthSeconds args
+    (c cypher.standards.conditions.AssertMyBirthSeconds args))
+  (defmacro cf.AssertMyBirthSeconds.is-condition args
+    (c cypher.standards.conditions.AssertMyBirthSeconds.is-condition args))
+  (defmacro cf.AssertMyBirthSeconds.get-seconds args
+    (c cypher.standards.conditions.AssertMyBirthSeconds.get-seconds args))
+
+  (defmacro cf.AssertMyBirthHeight args
+    (c cypher.standards.conditions.AssertMyBirthHeight args))
+  (defmacro cf.AssertMyBirthHeight.is-condition args
+    (c cypher.standards.conditions.AssertMyBirthHeight.is-condition args))
+  (defmacro cf.AssertMyBirthHeight.get-height args
+    (c cypher.standards.conditions.AssertMyBirthHeight.get-height args))
 
   (defmacro cf.AssertSecondsRelative args
     (c cypher.standards.conditions.AssertSecondsRelative args))
   (defmacro cf.AssertSecondsRelative.is-condition args
     (c cypher.standards.conditions.AssertSecondsRelative.is-condition args))
+  (defmacro cf.AssertSecondsRelative.get-seconds args
+    (c cypher.standards.conditions.AssertSecondsRelative.get-seconds args))
 
   (defmacro cf.AssertSecondsAbsolute args
     (c cypher.standards.conditions.AssertSecondsAbsolute args))
   (defmacro cf.AssertSecondsAbsolute.is-condition args
     (c cypher.standards.conditions.AssertSecondsAbsolute.is-condition args))
+  (defmacro cf.AssertSecondsAbsolute.get-seconds args
+    (c cypher.standards.conditions.AssertSecondsAbsolute.get-seconds args))
 
   (defmacro cf.AssertHeightRelative args
     (c cypher.standards.conditions.AssertHeightRelative args))
   (defmacro cf.AssertHeightRelative.is-condition args
     (c cypher.standards.conditions.AssertHeightRelative.is-condition args))
+  (defmacro cf.AssertHeightRelative.get-height args
+    (c cypher.standards.conditions.AssertHeightRelative.get-height args))
 
   (defmacro cf.AssertHeightAbsolute args
     (c cypher.standards.conditions.AssertHeightAbsolute args))
   (defmacro cf.AssertHeightAbsolute.is-condition args
     (c cypher.standards.conditions.AssertHeightAbsolute.is-condition args))
+  (defmacro cf.AssertHeightAbsolute.get-height args
+    (c cypher.standards.conditions.AssertHeightAbsolute.get-height args))
+
+  (defmacro cf.AssertBeforeSecondsRelative args
+    (c cypher.standards.conditions.AssertBeforeSecondsRelative args))
+  (defmacro cf.AssertBeforeSecondsRelative.is-condition args
+    (c cypher.standards.conditions.AssertBeforeSecondsRelative.is-condition args))
+  (defmacro cf.AssertBeforeSecondsRelative.get-seconds args
+    (c cypher.standards.conditions.AssertBeforeSecondsRelative.get-seconds args))
+
+  (defmacro cf.AssertBeforeSecondsAbsolute args
+    (c cypher.standards.conditions.AssertBeforeSecondsAbsolute args))
+  (defmacro cf.AssertBeforeSecondsAbsolute.is-condition args
+    (c cypher.standards.conditions.AssertBeforeSecondsAbsolute.is-condition args))
+  (defmacro cf.AssertBeforeSecondsAbsolute.get-seconds args
+    (c cypher.standards.conditions.AssertBeforeSecondsAbsolute.get-seconds args))
+
+  (defmacro cf.AssertBeforeHeightRelative args
+    (c cypher.standards.conditions.AssertBeforeHeightRelative args))
+  (defmacro cf.AssertBeforeHeightRelative.is-condition args
+    (c cypher.standards.conditions.AssertBeforeHeightRelative.is-condition args))
+  (defmacro cf.AssertBeforeHeightRelative.get-height args
+    (c cypher.standards.conditions.AssertBeforeHeightRelative.get-height args))
+
+  (defmacro cf.AssertBeforeHeightAbsolute args
+    (c cypher.standards.conditions.AssertBeforeHeightAbsolute args))
+  (defmacro cf.AssertBeforeHeightAbsolute.is-condition args
+    (c cypher.standards.conditions.AssertBeforeHeightAbsolute.is-condition args))
+  (defmacro cf.AssertBeforeHeightAbsolute.get-height args
+    (c cypher.standards.conditions.AssertBeforeHeightAbsolute.get-height args))
 )
