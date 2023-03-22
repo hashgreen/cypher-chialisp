@@ -1,0 +1,12 @@
+#!/bin/env python
+
+from clvm_tools.cmds import launch_tool
+import sys
+
+
+def run_py(args=sys.argv):
+    return launch_tool(args, "run", default_stage=2)
+
+
+if __name__ == "__main__":
+    run_py()
