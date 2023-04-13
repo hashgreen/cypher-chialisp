@@ -1,0 +1,10 @@
+channels:
+  - conda-forge
+  - defaults
+dependencies:
+  - pip=22.3.1=pyhd8ed1ab_0
+  - pypy3.9=7.3.9=hd671c94_6
+  - python=3.9.12=0_73_pypy
+  - pip:
+    - git+https://github.com/hashgreen/clvm.git@d74c5eb
+    - git+https://github.com/Chia-Network/clvm_tools.git@dca2c8e
