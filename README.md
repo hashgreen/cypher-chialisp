@@ -19,7 +19,6 @@ $ poetry shell && poetry install
 
 Cypher is planned to be released as a package under [PyPI](https://pypi.org) once it reaches a stable version.
 
-
 ### Quick Start
 
 ```sh
@@ -80,7 +79,7 @@ The goals of Cypher are to achieve:
 
   As we all know, we learn smart contract security by avoiding others' mistakes, and the official standards are [no exception](https://www.chia.net/2022/07/25/upgrading-the-cat-standard/).
   We aim to incorporate logical checks around some commonly used functions, and ensure the invoked usages do not fall for basic exploits.
-  If you feel brave and completely understand what you are operating, you will have to explicitly *opt out* by using unsafe variations of the functions to remove these security checks.
+  If you feel brave and completely understand what you are operating, you will have to explicitly _opt out_ by using unsafe variations of the functions to remove these security checks.
 
 - **Common Utilities**
 
@@ -129,11 +128,30 @@ This is because in the implementation of the [official compiler](https://github.
 Importing Cypher by `(import cypher.clsp)` would trigger this by introducing all symbols into your program.
 
 For example, compiling the refactored singleton v1.1 took ~70s on a reasonably well machine.
+
 ```sh
 $ run --include . chia/singleton-v1-1.clsp > chia/singleton-v1-1.clvm
 ```
 
-There are two options to go: you an either directly import the desired second-level library by `(import cypher/math.clsp)`, or you can wait until this [new compiler](https://github.com/Chia-Network/clvm_tools_rs/blob/a660ce7ce07064a6a81bb361f169f6de195cba10/README.md?plain=1#L40-L43) to mature, and hopefully compiles everything blazingly fast!
+There are three options to go
+
+- You an either directly import the desired second-level library by `(import cypher/math.clsp)`, or
+- You can wait until this [new compiler](https://github.com/Chia-Network/clvm_tools_rs/blob/a660ce7ce07064a6a81bb361f169f6de195cba10/README.md?plain=1#L40-L43) to mature, and hopefully compiles everything blazingly fast!
+- Or... you can pull out pypy magic! See the section below.
+
+## Advanced Compilation with Pypy
+
+Importing the full symbol soup from Cypher is known to introduce long compilation time due to the lack of optimization in the [vanilla chialisp compiler](https://github.com/Chia-Network/clvm_tools/tree/main).
+Specifically, as detailed in a [comparison sheet](https://docs.google.com/spreadsheets/d/1vlkDI5i1JK2o1aQo9BICOzHN33j5ar44Wt2lSUtH_ZA), the python-based compiler can take up to 11 minutes on a decent linux workstation, while the polished [rust-based compiler port](https://github.com/Chia-Network/clvm_tools_rs) can still take up to a minute.
+
+To alleviate the problem, we have improved the vanilla compiler, and switched to pypy as the python interpreter for compilation, the two of which combined give a performance boost of > 50x.
+
+To run compilation in pypy, make sure Anaconda is [installed](https://conda.io/projects/conda/en/latest/user-guide/install/index.html) first, then enable pypy mode
+
+```sh
+$ conda env create -f environment.yml -n pypy
+$ PYPY_MODE=1 make clean compile
+```
 
 ## Contribute
 

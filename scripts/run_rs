@@ -1,0 +1,12 @@
+#!/bin/env python
+
+from clvm_tools_rs import launch_tool
+import sys
+
+
+def run_rs(args=sys.argv):
+    print(bytes(launch_tool("run", args, 2)).decode(), end="")
+
+
+if __name__ == "__main__":
+    run_rs()

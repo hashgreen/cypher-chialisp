@@ -1,12 +1,20 @@
 PYTHONPATH := .:$(PYTHONPATH)
 PY ?= PYTHONPATH=$(PYTHONPATH) python
 
-RUN ?= run --include .
-OPC ?= opc
 RM ?= rm -f
+OPC ?= opc
+
+RUN_RS = run $(INCLUDE)
+RUN_PY = scripts/run_py $(INCLUDE)
+
+ifeq ($(PYPY_MODE),1)
+  RUN = $(RUN_PY)
+else
+  RUN = $(RUN_RS)
+endif
 
 clvm_target_for_coin = $(1).clvm $(1).clvm.hex $(1).clvm.hex.sha256tree
-clvm_target_for_folder = $(foreach target,$(2),$(call clvm_target_for_coin,$(1)/$(target)))
+clvm_target_for_scheme = $(foreach target,$(2),$(call clvm_target_for_coin,$(1)/$(target)))
 
 .PRECIOUS: %.clvm %.clvm.hex %.clvm.hex.sha256tree
 
@@ -21,31 +29,23 @@ clvm_target_for_folder = $(foreach target,$(2),$(call clvm_target_for_coin,$(1)/
 
 # chia standards
 
-chia_clvm_targets = $(call clvm_target_for_folder,chia, \
+CHIA_CLVM_TARGETS = $(call clvm_target_for_scheme,chia, \
 	cat-v1 \
 	cat-v2 \
 	singleton \
 	singleton-v1-1 \
 )
 
-compile-chia: $(chia_clvm_targets)
-
+compile-chia: $(CHIA_CLVM_TARGETS)
 clean-chia:
-	-$(RM) $(chia_clvm_targets)
+	-$(RM) $(CHIA_CLVM_TARGETS)
 
+TEST_TARGETS = $(subst clsp,clvm,$(shell ls tests/test-*.clsp))
 
-# tests
-
-test_targets = $(subst clsp,clvm,$(shell ls tests/test-*.clsp))
-
-compile-test: $(test_targets)
-
+compile-test: $(TEST_TARGETS)
 clean-test:
-	-$(RM) $(test_targets)
-
-
-# general
+	-$(RM) $(TEST_TARGETS)
 
 test: compile-test
-
+compile: compile-chia compile-test
 clean: clean-chia clean-test
