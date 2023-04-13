@@ -68,7 +68,7 @@
     (r (r condition)))
 
   ; CreateCoinAnnouncement
-
+  
   (defun-inline cypher.standards.conditions.CreateCoinAnnouncement (message)
     (cypher.standards.conditions.Condition CREATE_COIN_ANNOUNCEMENT message))
   (defun-inline cypher.standards.conditions.CreateCoinAnnouncement.is-condition (condition)
@@ -79,9 +79,12 @@
     (r (r condition)))
 
   ; AssertCoinAnnouncement
-
+;message here: (sha256 RING_MORPH_BYTE this_coin_id this_subtotal)
   (defun-inline cypher.standards.conditions.AssertCoinAnnouncement (coin_id message)
     (cypher.standards.conditions.Condition ASSERT_COIN_ANNOUNCEMENT (sha256 coin_id message)))
+;message here: (sha256tree (list this_coin_id this_subtotal))
+  (defun-inline cypher.standards.conditions.AssertCoinAnnouncement-v2 (coin_id message)
+    (cypher.standards.conditions.Condition ASSERT_COIN_ANNOUNCEMENT (sha256 coin_id RING_MORPH_BYTE message)))
   (defun-inline cypher.standards.conditions.AssertCoinAnnouncement.is-condition (condition)
     (cypher.standards.conditions.Condition.is-condition ASSERT_COIN_ANNOUNCEMENT condition))
   (defun-inline cypher.standards.conditions.AssertCoinAnnouncement.get-announcement (condition)
@@ -321,6 +324,8 @@
 
   (defmacro cf.AssertCoinAnnouncement args
     (c cypher.standards.conditions.AssertCoinAnnouncement args))
+  (defmacro cf.AssertCoinAnnouncement-v2 args
+    (c cypher.standards.conditions.AssertCoinAnnouncement-v2 args))
   (defmacro cf.AssertCoinAnnouncement.is-condition args
     (c cypher.standards.conditions.AssertCoinAnnouncement.is-condition args))
   (defmacro cf.AssertCoinAnnouncement.get-announcement args
