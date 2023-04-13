@@ -25,7 +25,7 @@
     )
   )
 
-  (defun cypher.itertools.chain (iterables)
+  (defun cypher.itertools.chain iterables
     ;; Flatten multiple iterables.
     ;
     ; Args:
@@ -37,8 +37,18 @@
     (if iterables
       (cypher.itertools.chain-two
         (f iterables)
-        (cypher.itertools.chain (r iterables))
+        (cypher.itertools.chain . (r iterables))
       )
+      cypher.constants.NIL
+    )
+  )
+
+  (defmacro @cypher.itertools.chain iterables
+    (if iterables
+      (qq (cypher.itertools.chain-two
+        (unquote (f iterables))
+        (unquote (c @cypher.itertools.chain (r iterables)))
+      ))
       cypher.constants.NIL
     )
   )
@@ -88,6 +98,7 @@
 
   (defmacro cf.chain-two args (c cypher.itertools.chain-two args))
   (defmacro cf.chain args (c cypher.itertools.chain args))
+  (defmacro @cf.chain args (c @cypher.itertools.chain args))
   (defmacro cf.map args (c cypher.itertools.map args))
   (defmacro cf.reduce args (c cypher.itertools.reduce args))
 )
