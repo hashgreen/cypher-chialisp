@@ -14,6 +14,7 @@
   )
 
   (include cypher.clsp)
+  (include chia/cat-lib.clsp)
   (include chia/cat-lib-v2.clsp)
 
   (defun-inline concat-ring-announcements
@@ -88,7 +89,7 @@
 
       (@cf.and
         lineage_proof
-        (CatMod.is-coin-cat 
+        (CatMod.is-coin-cat-v2 
           (CatTruth.get-cat-mod cat_truth)
           lineage_proof
           (cf.Coin.get-parent-id (CatTruth.get-coin cat_truth))
