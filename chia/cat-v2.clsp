@@ -28,11 +28,10 @@
     )
     (@cf.concat
       (cf.CreateCoinAnnouncement
-        (CatMod.CreateCoinAnnouncementRingMessage prev_coin_id prev_subtotal))
-      (cf.AssertCoinAnnouncement-v2
+        (CatMod.RingMessage@v2 prev_coin_id prev_subtotal))
+      (cf.AssertCoinAnnouncement
         next_coin_id
-        (CatMod.AssertCoinAnnouncementRingMessage
-        this_coin_id this_subtotal))
+        (CatMod.RingMessage@v2 this_coin_id this_subtotal))
       inner_conditions)
   )
 
@@ -89,7 +88,7 @@
 
       (@cf.and
         lineage_proof
-        (CatMod.is-coin-cat-v2 
+        (CatMod.is-coin-cat@v2
           (CatTruth.get-cat-mod cat_truth)
           lineage_proof
           (cf.Coin.get-parent-id (CatTruth.get-coin cat_truth))
@@ -133,7 +132,7 @@
       (cf.AssertMyCoinID this_coin_id)
       (stager-two
         (CatTruth cat_mod this_coin_id this_coin inner_puzzle_hash)
-        (CatMod.MorphConditions_v2.do cat_mod inner_conditions ())
+        (CatMod.MorphConditions.do@v2 cat_mod inner_conditions ())
         lineage_proof
         prev_coin_id
         this_coin
@@ -144,13 +143,12 @@
     )
   )
 
-;pass
   (stager-one
     (CatMod MOD_HASH TAIL_PROGRAM_HASH)
     (a INNER_PUZZLE inner_solution)
     lineage_proof
-    (sha256tree1#cat-lib-v2 INNER_PUZZLE) 
-    (cf.Coin.verified-id  this_coin)
+    (sha256tree1#cat-lib@v2 INNER_PUZZLE)
+    (cf.Coin.verified-id this_coin)
     prev_coin_id
     this_coin
     next_inner_coin
