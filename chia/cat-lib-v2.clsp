@@ -1,0 +1,55 @@
+(
+  (defun-inline CatMod.is-coin-cat@v2 (cat_mod coin coin_id)
+    (= coin_id
+      (cf.Coin.verified-id (CatMod.morph-coin cat_mod coin))))
+
+  (defun-inline CatMod.RingMessage@v2 (coin_id subtotal)
+    (concat
+      RING_MORPH_BYTE
+      (sha256tree1#cat-lib@v2 (list coin_id subtotal))))
+
+  (defun-inline CatMod.MorphConditions.map@v2 (cat_mod condition)
+    (CatMod.MorphConditions.StateDelta
+      (@cf.switch
+        (
+          (cf.CreateCoin.is-condition condition) .
+          (@cf.concat
+            CREATE_COIN
+            (CatMod.morph-puzzle-hash cat_mod
+              (cf.CreateCoin.get-puzzle-hash condition))
+            (cf.CreateCoin.get-puzzle-hash-rest condition)))
+        (
+          (cf.CreateCoinAnnouncement.is-condition condition) .
+          (@cf.assert
+            (not
+              (@cf.and@v2
+                  (= 33 (strlen (f (r condition))))
+                  (= (substr (f (r condition)) 0 ONE#cypher.constants.ONE) RING_MORPH_BYTE)))
+            condition))
+        condition)
+      (cf.Condition.output-amount condition)))
+
+  (defun-inline CatMod.MorphConditions.do@v2 (cat_mod conditions tail_truth)
+    (find_and_strip_tail_info_v2 conditions cat_mod tail_truth))
+
+  (defun find_and_strip_tail_info_v2 (conditions cat_mod tail_truth)
+  (if conditions
+    (if (CatMod.CreateCoin.is-condition (f conditions))
+      (CatMod.MorphConditions.do@v2 cat_mod
+        (r conditions)
+        (CatTailTruth.from-cat-create-coin (f conditions)))
+      (CatMod.MorphConditions.reduce
+        cat_mod
+        (CatMod.MorphConditions.map@v2 cat_mod (f conditions))
+        (CatMod.MorphConditions.do@v2 cat_mod (r conditions) tail_truth)
+      )
+    )
+    (CatMod.MorphConditions.initialize cat_mod tail_truth)))
+
+  ;; Utils
+
+  (defun sha256tree1#cat-lib@v2 (tree)
+    (if (l tree)
+      (sha256 2 (sha256tree1#cat-lib@v2 (f tree)) (sha256tree1#cat-lib@v2 (r tree)))
+      (sha256 1 tree)))
+)
