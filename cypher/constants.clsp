@@ -1,32 +1,33 @@
 (
-  (defconstant cypher.constants.NIL ())
+  (defconstant cypher.constants.NIL ())  ; note that `()` and `0` are equivalent
   (defconstant cypher.constants.ZERO 0)
   (defconstant cypher.constants.ONE 1)
   (defconstant cypher.constants.TWO 2)
-  (defconstant cypher.constants.ONE_2 100)
-  (defconstant cypher.constants.ONE_3 1000)
-  (defconstant cypher.constants.ONE_6 1000000)
-  (defconstant cypher.constants.ONE_9 1000000000)
-  (defconstant cypher.constants.ONE_12 1000000000000)
+  (defconstant cypher.constants.ONE_2 100)  ;; consider hundred? Or `TEN_POW_2`?
+  (defconstant cypher.constants.ONE_3 1000) ;; thousand? Or `TEN_POW_3`?
+  (defconstant cypher.constants.ONE_6 1000000)  ; million/TEN_POW_6
+  (defconstant cypher.constants.ONE_9 1000000000)  ; billion/TEN_POW_9
+  (defconstant cypher.constants.ONE_12 1000000000000)  ; trillion/TEN_POW_12
 
-  (defconstant cypher.constants.CONS c)
-  (defconstant cypher.constants.FIRST f)
-  (defconstant cypher.constants.REST r)
-  (defconstant cypher.constants.LISTP l)
+  (defconstant cypher.constants.CONS #c)
+  (defconstant cypher.constants.FIRST #f)
+  (defconstant cypher.constants.REST #r)
+  (defconstant cypher.constants.LISTP #l)   ;; the `#` emphasizes that it's a keyword
 
-  (defconstant cypher.constants.APPLY a)
-  (defconstant cypher.constants.IF i)
-  (defconstant cypher.constants.RAISE x)
-  (defconstant cypher.constants.EQUAL =)
-  (defconstant cypher.constants.GT >)
-  (defconstant cypher.constants.BYTES_GT >s)
+  ;; maybe consider `cypher.opcode` instead of `cypher.constants` for the opcodes
+  (defconstant cypher.constants.APPLY #a)
+  (defconstant cypher.constants.IF #i)
+  (defconstant cypher.constants.RAISE #x)
+  (defconstant cypher.constants.EQUAL #=)
+  (defconstant cypher.constants.GT #>)
+  (defconstant cypher.constants.BYTES_GT #>s)
 
-  (defconstant cypher.constants.QUOTE q)
+  (defconstant cypher.constants.QUOTE #q)
 
-  (defconstant cypher.constants.PLUS +)
-  (defconstant cypher.constants.MINUS -)
-  (defconstant cypher.constants.MUL *)
-  (defconstant cypher.constants.DIV /)
+  (defconstant cypher.constants.PLUS #+)
+  (defconstant cypher.constants.MINUS #-)
+  (defconstant cypher.constants.MUL #*)
+  (defconstant cypher.constants.DIV #/)
 
   (defconstant cypher.constants.ARITHMETIC_SHIFT ash)
   (defconstant cypher.constants.LOGICAL_SHIFT lsh)
@@ -34,6 +35,8 @@
   ;; Exports
   ; TODO(stmharry): is there any way around this?
 
+  ;; these seem redundant. I'm sure there's a reason, but I'm not sure what it is
+  ;; maybe the idea is `cf` is the export level?
   (defconstant cf.NIL ())
   (defconstant cf.ZERO 0)
   (defconstant cf.ONE 1)
@@ -66,3 +69,4 @@
   (defconstant cf.ARITHMETIC_SHIFT ash)
   (defconstant cf.LOGICAL_SHIFT lsh)
 )
+;; looks reasonable

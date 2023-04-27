@@ -1,7 +1,7 @@
 ;; Hashing library.
 
 (
-  ; name mingling to be compatible with curry-and-treehash.clinc
+  ; name mangling to be compatible with curry-and-treehash.clinc
 
   (defconstant ONE#cypher.constants.ONE 1)
   (defconstant TWO#cypher.constants.TWO 2)
@@ -88,6 +88,13 @@
       )
     )
   )
+
+  ;; note that this function requires the parameter hashes to be reversed
+  ;; this is because I was brain-dead when I wrote this and thought it
+  ;; was more efficient to have the parameters reversed. Of course, it is not,
+  ;; but it is much harder to reason about. I've since written a version that is
+  ;; not stupid, which should be used going forward. It's at
+  ;; https://github.com/Chia-Network/chia-blockchain/blob/main/chia/wallet/puzzles/curry.clib
 
   (defmacro cypher.hashlib.build-curry-list args
     (c build-curry-list#cypher.hashlib.build-curry-list args))
@@ -186,3 +193,5 @@
     (c cypher.hashlib.puzzle-hash-of-curried-function args))
   (defmacro cf.calculate-coin-id args (c cypher.hashlib.calculate-coin-id args))
 )
+
+;; this looks reasonable. A lot of necessary name tweaks and hacks to get it to compile the standard way. Lots of hard work!

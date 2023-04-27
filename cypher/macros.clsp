@@ -14,6 +14,9 @@
     )
   )
 
+  ;; this is very clever
+  ;; I wonder if it makes sense to have "profiles" like rust does, so we can get debug messages
+  ;; back from asserts in DEBUG mode, but have them stripped out for RELEASE mode
   (defmacro @cypher.macros.assert@debug args
     ;; Assert a series of statements with debugging message.
     ;
@@ -54,6 +57,10 @@
     ;
     ; Usage: (and cond1 cond2 ...)
     ; Taken from chia/wallet/puzzles/utility_macros.clib.
+    ;; the other one is probably better as it terminates on the last condition rather
+    ;; than exposing a lone `1`
+    ;; the only advantage this one has is it doesn't choke on the (rather useless) `(and)`
+    ;; case. It could be written to support it, and then this `v2` version deprecated.
 
     (if args
       (qq (if (unquote (f args))
@@ -72,6 +79,17 @@
     ; Note that this is different from `list` as there is not a `()` in the end.
     ; This function is particularly useful when concatenating atoms to an existing list.
 
+    ;; this is a good idea. I do note that I consider `concat` to be a function that
+    ;; operates on two lists, flattening them into one. Maybe a good name for this
+    ;; is `prelist` (a portmanteau of "prefix list").
+    ;; So `(prelist A B C)` => `(c A (c B C))`
+    ;; Another good thing about `prelist` is I've never seen it before, so it doesn't have
+    ;; any preconceived notions.
+    ;; Another option is `multicons` or `mcons` (for "multiple cons")
+    ;; ChatGPT doesn't seem to be aware of an existing library function that does this in
+    ;; lisp nor scheme (although its confusion about `list*` suggests it's not a total
+    ;; lisp wizard)
+
     (if (r args)
       (qq (c
           (unquote (f args))
@@ -86,6 +104,11 @@
     ;
     ; Usage: (if-elif cond1 result1 cond2 result2 ... default)
 
+    ;; Bram calls this "continued if" and has requested it
+    ;; It's interesting that it actually is a generalization of `if`. It might
+    ;; make sense to simply change `if` in the base language (which is implemented as
+    ;; built-in macro) to allow for this.
+
     (if (r args)
       (qq (if (unquote (f args))
           (unquote (f (r args)))
@@ -99,6 +122,9 @@
     ;; Nested if-else statements with con'ed statements.
     ;
     ; Usage: (switch (cond1 . result1) (cond2 . result2) ... default)
+    ;; I think this is called `cond` in many lisps
+    ;; not sure if we actually want `(cond1 . result1)` vs `(cond1 result1)`
+    ;; would save the user typing a lot of dots for no real benefit
 
     (if (r args)
       (qq (if (unquote (f (f args)))
@@ -119,3 +145,4 @@
   (defmacro @cf.if-elif args (c @cypher.macros.if-elif args))
   (defmacro @cf.switch args (c @cypher.macros.switch args))
 )
+;; looks good

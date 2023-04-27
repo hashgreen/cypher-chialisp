@@ -11,3 +11,4 @@
   (include cypher/standards/coin.clsp)
   (include cypher/standards/conditions.clsp)
 )
+; mega-include file "include everything"
