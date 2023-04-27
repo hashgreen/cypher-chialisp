@@ -1,6 +1,12 @@
 (
   ;; Fractions.
 
+;; maybe an "unsafe" & shorter version of this which assumes `denom` > 0?
+;; there is a differentiation, in general between "trusted" and "untrusted" data
+;; (Never mind, I see you've done this.)
+;; also, I wonder if negative denominator is okay (obviously zero isn't). I'll keep
+;; this question in mind as I read.
+
   (defun-inline %cypher.fracmath.Frac (numer denom)
     ;; Fraction representation.
     ;

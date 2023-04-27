@@ -41,6 +41,7 @@
       )
       cypher.constants.NIL
     )
+    ;; I wonder if it would make sense to not use `chain-two` but rather put both loops in here
   )
 
   (defmacro @cypher.itertools.chain iterables
@@ -79,7 +80,7 @@
     ;   func: Function symbol name.
     ;   args: List of arguments to apply func on.
     ;   agg_init: Initial value.
-    ;   global_args: Global arguments.
+    ;   global_args: Global arguments. ;; consider calling it `context`
     ;
     ; Returns:
     ;   A reduced value.
@@ -102,3 +103,7 @@
   (defmacro cf.map args (c cypher.itertools.map args))
   (defmacro cf.reduce args (c cypher.itertools.reduce args))
 )
+;; looks good
+;; I spoke to Bram recently about his wish list for iters, and he mentioned several properties that could be
+;; chosen or not for a loop: filter, map, count, reduce, max, min, flatten, match. I'm going to do some
+;; more thinking about this though, maybe with macros.

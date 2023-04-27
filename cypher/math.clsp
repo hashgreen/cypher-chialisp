@@ -11,21 +11,29 @@
   ;; Rounding to even or odd.
 
   (defun-inline %cypher.math.round-down-to-even (var)
+    ;; how about `(logand var -2)`
+    ;; seems cheaper in `brun` for small values. Haven't tried large ones
     (if (logand var 1) (- var 1) var))
   (defun cypher.math.round-down-to-even (var)
     (%cypher.math.round-down-to-even var))
 
   (defun-inline %cypher.math.round-down-to-odd (var)
+   ;; maybe `(logior (- var 1) 1)`
+   ;; this seems more expensive
     (if (logand var 1) var (- var 1)))
   (defun cypher.math.round-down-to-odd (var)
     (%cypher.math.round-down-to-odd var))
 
   (defun-inline %cypher.math.round-up-to-even (var)
+   ;; maybe `(logand (+ 1 var) -2)`
+   ;; my tests suggest it's more expensive to run than the `if` form, although the code
+   ;; is smaller
     (if (logand var 1) (+ var 1) var))
   (defun cypher.math.round-up-to-even (var)
     (%cypher.math.round-up-to-even var))
 
   (defun-inline %cypher.math.round-up-to-odd (var)
+    ;; `(logior var 1)`
     (if (logand var 1) var (+ var 1)))
   (defun cypher.math.round-up-to-odd (var)
     (%cypher.math.round-up-to-odd var))
@@ -49,6 +57,7 @@
     (%cypher.math.abs var))
 
   ;; Multiply var by fraction (numer / denom).
+  ;; seeing this return an int instead of a fraction surprised me
 
   (defun-inline %cypher.math.mul-frac (var frac)
     (%cypher.math.div
@@ -104,7 +113,7 @@
   )
   (defun-inline %cypher.math.pow (base exponent)
     (@cypher.macros.assert
-      (not (> 0 exponent))
+      (> exponent 0) ;; we don't need `not`, and exponent == 0 is okay
       (--cypher.math.pow base exponent)
     )
   )
@@ -125,7 +134,7 @@
       (any (> var 0) (> decimals 0) (= decimals 0))
       (concat
         (--cypher.math.str
-          (%cypher.math.div var 10)
+          (%cypher.math.div var 10)  ;; you should be able to do this with a single `divmod` per loop
           (- decimals 1)
         )
         (+ 48 (r (divmod var 10)))
@@ -168,3 +177,4 @@
   (defmacro %cf.str args (c %cypher.math.str args))
   (defmacro cf.str args (c cypher.math.str args))
 )
+;; looks good
