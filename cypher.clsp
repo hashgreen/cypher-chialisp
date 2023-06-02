@@ -1,5 +1,4 @@
 (
-  (include cypher/condition_codes.clsp)
   (include cypher/constants.clsp)
   (include cypher/fracmath.clsp)
   (include cypher/hashlib.clsp)
@@ -10,4 +9,5 @@
 
   (include cypher/standards/coin.clsp)
   (include cypher/standards/conditions.clsp)
+  (include cypher/standards/condition_codes.clsp)
 )

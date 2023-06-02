@@ -1,3 +1,9 @@
+;;; Chia Conditions.
+;
+; Corresponds to `chia.wallet.puzzles.puzzle_utils` in the Python codebase.
+;   https://github.com/Chia-Network/chia-blockchain/blob/1.8.1/chia/wallet/puzzles/puzzle_utils.py
+
+
 (
   ; Condition
 

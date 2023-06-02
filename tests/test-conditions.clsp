@@ -1,0 +1,51 @@
+(a (mod
+
+  (
+    agg_sig_unsafe
+  )
+
+  (include cypher/standards/conditions.clsp)
+  (include cypher/standards/condition_codes.clsp)
+
+  (include tests/utils.clsp)
+
+  (defun-inline test-agg-sig-unsafe ()
+    (@assert
+      (@assert-equal
+        (cf.AggSigUnsafe
+          0xd35772bd3ae56d50ec251ba05d0fae55f3a8cc9f6ca38bac49b90188851a16c48e2e46e2fc3ea65a3670ac714da60d7a
+          "agg_sig_unsafe test")
+        agg_sig_unsafe)
+      (cf.AggSigUnsafe.is-condition agg_sig_unsafe)
+      (@assert-equal
+        (cf.AggSigUnsafe.get-pubkey agg_sig_unsafe)
+        0xd35772bd3ae56d50ec251ba05d0fae55f3a8cc9f6ca38bac49b90188851a16c48e2e46e2fc3ea65a3670ac714da60d7a)
+      (@assert-equal
+        (cf.AggSigUnsafe.get-pubkey-rest agg_sig_unsafe)
+        (list "agg_sig_unsafe test"))
+      (@assert-equal
+        (cf.AggSigUnsafe.get-message agg_sig_unsafe)
+        "agg_sig_unsafe test")
+      (@assert-equal
+        (cf.AggSigUnsafe.get-message-rest agg_sig_unsafe)
+        ())
+      "test-agg-sig-unsafe"))
+
+  ; TODO: more test should go here, but there are just too many conditions to test
+
+  (defun-inline test-conditions ()
+    (@assert
+      (test-agg-sig-unsafe)
+      "test-conditions"))
+
+  (test-conditions)
+
+) (list
+    ; agg_sig_unsafe
+    (list
+      49
+      0xd35772bd3ae56d50ec251ba05d0fae55f3a8cc9f6ca38bac49b90188851a16c48e2e46e2fc3ea65a3670ac714da60d7a
+      "agg_sig_unsafe test"
+    )
+  )
+)
