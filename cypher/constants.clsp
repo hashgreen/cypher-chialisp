@@ -1,3 +1,5 @@
+;;; Constant Values.
+
 (
   (defconstant cypher.constants.NIL ())
   (defconstant cypher.constants.ZERO 0)
@@ -9,30 +11,67 @@
   (defconstant cypher.constants.ONE_9 1000000000)
   (defconstant cypher.constants.ONE_12 1000000000000)
 
-  (defconstant cypher.constants.CONS c)
-  (defconstant cypher.constants.FIRST f)
-  (defconstant cypher.constants.REST r)
-  (defconstant cypher.constants.LISTP l)
+  ;; Operators.
+  ;
+  ; Note: the `#` prefix is used to signify that the symbol is a keyword in clvm.
+  ; Typically these are used in operations like tree-hash constructions and are not really useful
+  ; elsewhere.
 
-  (defconstant cypher.constants.APPLY a)
-  (defconstant cypher.constants.IF i)
-  (defconstant cypher.constants.RAISE x)
-  (defconstant cypher.constants.EQUAL =)
-  (defconstant cypher.constants.GT >)
-  (defconstant cypher.constants.BYTES_GT >s)
+  ; arithmetic
 
-  (defconstant cypher.constants.QUOTE q)
+  (defconstant cypher.constants.PLUS #+)
+  (defconstant cypher.constants.MINUS #-)
+  (defconstant cypher.constants.MUL #*)
+  (defconstant cypher.constants.DIV #/)
+  (defconstant cypher.constants.DIVMOD #divmod)
 
-  (defconstant cypher.constants.PLUS +)
-  (defconstant cypher.constants.MINUS -)
-  (defconstant cypher.constants.MUL *)
-  (defconstant cypher.constants.DIV /)
+  ; comparison
 
-  (defconstant cypher.constants.ARITHMETIC_SHIFT ash)
-  (defconstant cypher.constants.LOGICAL_SHIFT lsh)
+  (defconstant cypher.constants.EQUAL #=)
+  (defconstant cypher.constants.GT #>)
+  (defconstant cypher.constants.BYTES_GT #>s)
+  (defconstant cypher.constants.NOT #not)
+  (defconstant cypher.constants.ALL #all)
+  (defconstant cypher.constants.ANY #any)
+
+  ; control flow
+
+  (defconstant cypher.constants.IF #i)
+  (defconstant cypher.constants.RAISE #x)
+
+  ; evaluation
+
+  (defconstant cypher.constants.QUOTE #q)
+  (defconstant cypher.constants.APPLY #a)
+
+  ; lists
+
+  (defconstant cypher.constants.FIRST #f)
+  (defconstant cypher.constants.REST #r)
+  (defconstant cypher.constants.CONS #c)
+  (defconstant cypher.constants.LISTP #l)
+
+  ; atoms
+
+  (defconstant cypher.constants.SHA256 #sha256)
+  (defconstant cypher.constants.CONCAT #concat)
+  (defconstant cypher.constants.STRING_LEN #strlen)
+  (defconstant cypher.constants.SUBSTRING #substr)
+  (defconstant cypher.constants.LOGICAL_AND #logand)
+  (defconstant cypher.constants.LOGICAL_OR #logior)
+  (defconstant cypher.constants.LOGICAL_XOR #logxor)
+  (defconstant cypher.constants.LOGICAL_NOT #lognot)
+  (defconstant cypher.constants.ARITHMETIC_SHIFT #ash)
+  (defconstant cypher.constants.LOGICAL_SHIFT #lsh)
+
+  ; bls12-381
+
+  (defconstant cypher.constants.POINT_ADD #point_add)
+  (defconstant cypher.constants.PUBKEY_FOR_EXPONENT #pubkey_for_exp)
 
   ;; Exports
-  ; TODO(stmharry): is there any way around this?
+
+  ; TODO(stmharry): is there any way to reference `cypher.constants` directly?
 
   (defconstant cf.NIL ())
   (defconstant cf.ZERO 0)
@@ -44,25 +83,41 @@
   (defconstant cf.ONE_9 1000000000)
   (defconstant cf.ONE_12 1000000000000)
 
-  (defconstant cf.CONS c)
-  (defconstant cf.FIRST f)
-  (defconstant cf.REST r)
-  (defconstant cf.LISTP l)
+  (defconstant cf.PLUS #+)
+  (defconstant cf.MINUS #-)
+  (defconstant cf.MUL #*)
+  (defconstant cf.DIV #/)
+  (defconstant cf.DIVMOD #divmod)
 
-  (defconstant cf.APPLY a)
-  (defconstant cf.IF i)
-  (defconstant cf.RAISE x)
-  (defconstant cf.EQUAL =)
-  (defconstant cf.GT >)
-  (defconstant cf.BYTES_GT >s)
+  (defconstant cf.EQUAL #=)
+  (defconstant cf.GT #>)
+  (defconstant cf.BYTES_GT #>s)
+  (defconstant cf.NOT #not)
+  (defconstant cf.ALL #all)
+  (defconstant cf.ANY #any)
 
-  (defconstant cf.QUOTE q)
+  (defconstant cf.IF #i)
+  (defconstant cf.RAISE #x)
 
-  (defconstant cf.PLUS +)
-  (defconstant cf.MINUS -)
-  (defconstant cf.MUL *)
-  (defconstant cf.DIV /)
+  (defconstant cf.QUOTE #q)
+  (defconstant cf.APPLY #a)
 
-  (defconstant cf.ARITHMETIC_SHIFT ash)
-  (defconstant cf.LOGICAL_SHIFT lsh)
+  (defconstant cf.FIRST #f)
+  (defconstant cf.REST #r)
+  (defconstant cf.CONS #c)
+  (defconstant cf.LISTP #l)
+
+  (defconstant cf.SHA256 #sha256)
+  (defconstant cf.CONCAT #concat)
+  (defconstant cf.STRING_LEN #strlen)
+  (defconstant cf.SUBSTRING #substr)
+  (defconstant cf.LOGICAL_AND #logand)
+  (defconstant cf.LOGICAL_OR #logior)
+  (defconstant cf.LOGICAL_XOR #logxor)
+  (defconstant cf.LOGICAL_NOT #lognot)
+  (defconstant cf.ARITHMETIC_SHIFT #ash)
+  (defconstant cf.LOGICAL_SHIFT #lsh)
+
+  (defconstant cf.POINT_ADD #point_add)
+  (defconstant cf.PUBKEY_FOR_EXPONENT #pubkey_for_exp)
 )
