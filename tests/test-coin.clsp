@@ -1,0 +1,54 @@
+(a (mod
+
+  ;; fixtures
+
+  (coin)
+
+  ;; imports
+
+  (include cypher/hashlib.clsp)
+  (include cypher/standards/coin.clsp)
+
+  (include tests/utils.clsp)
+
+  ;; tests
+
+  (defun-inline test-properties ()
+    (@assert
+      (@assert-equal
+        (cf.Coin
+          0xe3b6753d7410a21d23756acb7d2952a4273e67ba941b7dc8d13d1de79352ae68
+          0xb0a38c5b82eb16a0d566d484ede69066944ae1ca394172478c54f4f38bde20ce
+          1337)
+        coin)
+      (@assert-equal (cf.Coin.get-parent-id coin) 0xe3b6753d7410a21d23756acb7d2952a4273e67ba941b7dc8d13d1de79352ae68)
+      (@assert-equal (cf.Coin.get-parent-id-rest coin) (list 0xb0a38c5b82eb16a0d566d484ede69066944ae1ca394172478c54f4f38bde20ce 1337))
+      (@assert-equal (cf.Coin.get-puzzle-hash coin) 0xb0a38c5b82eb16a0d566d484ede69066944ae1ca394172478c54f4f38bde20ce)
+      (@assert-equal (cf.Coin.get-puzzle-hash-rest coin) (list 1337))
+      (@assert-equal (cf.Coin.get-amount coin) 1337)
+      "test-coin.test-properties"))
+
+  (defun-inline test-methods ()
+    (@assert
+      (@assert-fails (cf.Coin.id coin))
+      (@assert-equal (cf.Coin.id@safe coin) 0xa5bc99ee87e8192340ee4984cf336edd2486cf169d358489b20485e454a2edf1)
+      (@assert-equal (cf.Coin.id@unsafe coin) 0xa5bc99ee87e8192340ee4984cf336edd2486cf169d358489b20485e454a2edf1)
+      "test-coin.test-methods"))
+
+  (defun-inline test-coin ()
+    (@assert
+      (test-properties)
+      (test-methods)
+      "test-coin"))
+
+  (test-coin)
+
+) (list
+    ; coin
+    (list
+      0xe3b6753d7410a21d23756acb7d2952a4273e67ba941b7dc8d13d1de79352ae68
+      0xb0a38c5b82eb16a0d566d484ede69066944ae1ca394172478c54f4f38bde20ce
+      1337
+    )
+  )
+)

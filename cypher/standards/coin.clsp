@@ -1,4 +1,7 @@
-;; Chia Coins.
+;;; Chia Coins.
+;
+; Corresponds to `chia.types.blockchain_format.coin.Coin` in the Python codebase.
+;   https://github.com/Chia-Network/chia-blockchain/blob/1.8.1/chia/types/blockchain_format/coin.py
 
 (
   (defun-inline cypher.standards.coin.Coin
@@ -14,18 +17,22 @@
     (r (r coin)))
   (defun-inline cypher.standards.coin.Coin.get-amount (coin)
     (f (r (r coin))))
+
   (defun-inline cypher.standards.coin.Coin.id (coin)
+    ; Note this coin id is unsafe to use in most cases unless you have verified all inputs.
+
     (sha256
       (cypher.standards.coin.Coin.get-parent-id coin)
       (cypher.standards.coin.Coin.get-puzzle-hash coin)
       (cypher.standards.coin.Coin.get-amount coin)))
+
   (defun-inline cypher.standards.coin.Coin.verified-id (coin)
     (cypher.hashlib.calculate-coin-id
       (cypher.standards.coin.Coin.get-parent-id coin)
       (cypher.standards.coin.Coin.get-puzzle-hash coin)
       (cypher.standards.coin.Coin.get-amount coin)))
 
-  ; Exports
+  ;; Exports
 
   (defmacro cf.Coin args
     (c cypher.standards.coin.Coin args))
@@ -39,10 +46,19 @@
     (c cypher.standards.coin.Coin.get-puzzle-hash-rest args))
   (defmacro cf.Coin.get-amount args
     (c cypher.standards.coin.Coin.get-amount args))
-  (defmacro cf.Coin.id args
-    (q . x))
+  (defun-inline cf.Coin.id args
+    ; We do not export `cypher.standards.coin.Coin.id` because of its unsafe nature.
+    ; One needs to specify `cf.Coin.id@safe` or `cf.Coin.id@unsafe` to get the
+    ; desired behavior.
+
+    (x "Error raised from `cf.Coin.id`: Please specify `cf.Coin.id@safe` or `cf.Coin.id@unsafe`."))
   (defmacro cf.Coin.id@unsafe args
     (c cypher.standards.coin.Coin.id args))
+  (defmacro cf.Coin.id@safe args
+    (c cypher.standards.coin.Coin.verified-id args))
+
+  ; Backwards compatibility
+
   (defmacro cf.Coin.unsafe-id args
     (c cypher.standards.coin.Coin.id args))
   (defmacro cf.Coin.verified-id args
