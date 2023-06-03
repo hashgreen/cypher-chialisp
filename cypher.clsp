@@ -10,4 +10,5 @@
   (include cypher/standards/coin.clsp)
   (include cypher/standards/conditions.clsp)
   (include cypher/standards/condition_codes.clsp)
+  (include cypher/standards/opcodes.clsp)
 )

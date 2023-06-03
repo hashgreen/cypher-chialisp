@@ -1,5 +1,6 @@
 PYTHONPATH := .:$(PYTHONPATH)
 PY ?= PYTHONPATH=$(PYTHONPATH) python
+INCLUDE = --include .
 
 RM ?= rm -f
 OPC ?= opc

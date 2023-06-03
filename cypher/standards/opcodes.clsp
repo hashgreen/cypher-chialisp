@@ -1,0 +1,104 @@
+;;; Operation Codes for clvm.
+;
+; See: https://chialisp.com/operators.
+; Note that chialisp (clsp) operation codes are not included here.
+
+(
+  ;; Operators.
+  ;
+  ; Note: the `#` prefix is used to signify that the symbol is a keyword in clvm.
+  ; Typically these are used in operations like tree-hash constructions and are not really useful
+  ; elsewhere.
+
+  ; arithmetic
+
+  (defconstant cypher.opcodes.PLUS #+)
+  (defconstant cypher.opcodes.MINUS #-)
+  (defconstant cypher.opcodes.MUL #*)
+  (defconstant cypher.opcodes.DIV #/)
+  (defconstant cypher.opcodes.DIVMOD #divmod)
+
+  ; comparison
+
+  (defconstant cypher.opcodes.EQUAL #=)
+  (defconstant cypher.opcodes.GT #>)
+  (defconstant cypher.opcodes.BYTES_GT #>)
+  (defconstant cypher.opcodes.NOT #not)
+  (defconstant cypher.opcodes.ALL #all)
+  (defconstant cypher.opcodes.ANY #any)
+
+  ; control flow
+
+  (defconstant cypher.opcodes.IF #i)
+  (defconstant cypher.opcodes.RAISE #x)
+
+  ; evaluation
+
+  (defconstant cypher.opcodes.QUOTE #q)
+  (defconstant cypher.opcodes.APPLY #a)
+
+  ; lists
+
+  (defconstant cypher.opcodes.FIRST #f)
+  (defconstant cypher.opcodes.REST #r)
+  (defconstant cypher.opcodes.CONS #c)
+  (defconstant cypher.opcodes.LISTP #l)
+
+  ; atoms
+
+  (defconstant cypher.opcodes.SHA256 #sha256)
+  (defconstant cypher.opcodes.CONCAT #concat)
+  (defconstant cypher.opcodes.STRING_LEN #strlen)
+  (defconstant cypher.opcodes.SUBSTRING #substr)
+  (defconstant cypher.opcodes.LOGICAL_AND #logand)
+  (defconstant cypher.opcodes.LOGICAL_OR #logior)
+  (defconstant cypher.opcodes.LOGICAL_XOR #logxor)
+  (defconstant cypher.opcodes.LOGICAL_NOT #lognot)
+  (defconstant cypher.opcodes.ARITHMETIC_SHIFT #ash)
+  (defconstant cypher.opcodes.LOGICAL_SHIFT #lsh)
+
+  ; bls12-381
+
+  (defconstant cypher.opcodes.POINT_ADD #point_add)
+  (defconstant cypher.opcodes.PUBKEY_FOR_EXPONENT #pubkey_for_exp)
+
+  ;; Exports
+
+  (defconstant cf.PLUS #+)
+  (defconstant cf.MINUS #-)
+  (defconstant cf.MUL #*)
+  (defconstant cf.DIV #/)
+  (defconstant cf.DIVMOD #divmod)
+
+  (defconstant cf.EQUAL #=)
+  (defconstant cf.GT #>)
+  (defconstant cf.BYTES_GT #>s)
+  (defconstant cf.NOT #not)
+  (defconstant cf.ALL #all)
+  (defconstant cf.ANY #any)
+
+  (defconstant cf.IF #i)
+  (defconstant cf.RAISE #x)
+
+  (defconstant cf.QUOTE #q)
+  (defconstant cf.APPLY #a)
+
+  (defconstant cf.FIRST #f)
+  (defconstant cf.REST #r)
+  (defconstant cf.CONS #c)
+  (defconstant cf.LISTP #l)
+
+  (defconstant cf.SHA256 #sha256)
+  (defconstant cf.CONCAT #concat)
+  (defconstant cf.STRING_LEN #strlen)
+  (defconstant cf.SUBSTRING #substr)
+  (defconstant cf.LOGICAL_AND #logand)
+  (defconstant cf.LOGICAL_OR #logior)
+  (defconstant cf.LOGICAL_XOR #logxor)
+  (defconstant cf.LOGICAL_NOT #lognot)
+  (defconstant cf.ARITHMETIC_SHIFT #ash)
+  (defconstant cf.LOGICAL_SHIFT #lsh)
+
+  (defconstant cf.POINT_ADD #point_add)
+  (defconstant cf.PUBKEY_FOR_EXPONENT #pubkey_for_exp)
+)

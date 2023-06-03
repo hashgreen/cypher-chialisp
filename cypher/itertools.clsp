@@ -1,4 +1,4 @@
-;; Iterator processing library.
+;;; Iterator processing library.
 ;
 ; Mocks the design of python itertools module.
 
