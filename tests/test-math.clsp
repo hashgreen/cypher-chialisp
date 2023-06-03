@@ -6,11 +6,11 @@
 
   (include tests/utils.clsp)
 
-  (defun-inline test-unsigned-sub ()
+  (defun-inline test-abs ()
     (@assert
-      (@assert-equal (%cf.unsigned-sub 2 2) 0)
-      (@assert-fails (%cf.unsigned-sub 1 2))
-      "test-math.test-unsigned-sub"))
+      (@assert-equal (%cf.abs -10) 10)
+      (@assert-equal (%cf.abs 123) 123)
+      "test-math.test-abs"))
 
   (defun-inline test-round ()
     (@assert
@@ -32,29 +32,6 @@
       (@assert-equal (%cf.round-down-to-even 3) 2)
       "test-math.test-round"))
 
-  (defun-inline test-div ()
-    (@assert
-      (@assert-equal (%cf.div 2 2) 1)
-      (@assert-equal (%cf.div 2 3) 0)
-      (@assert-equal (%cf.div -3 2) -2)
-      (@assert-equal (%cf.div 3 2) 1)
-      "test-math.test-div"))
-
-  (defun-inline test-abs ()
-    (@assert
-      (@assert-equal (%cf.abs -10) 10)
-      (@assert-equal (%cf.abs 123) 123)
-      "test-math.test-abs"))
-
-  (defun-inline test-mul-frac ()
-    (@assert
-      (@assert-equal (%cf.mul-frac 2 (%cf.Frac 300 100)) 6)
-      (@assert-equal (%cf.mul-frac 123 (%cf.Frac 457 100)) 562)
-      ; The `@assert-fails` test util is to be fixed
-      ; (@assert-fails (%cf.mul-frac -387 (%cf.Frac -584 -198)) -1142)
-      ; (@assert-fails (%cf.mul-frac 1 (%cf.Frac 1 0)))
-      "test-math.test-mul-frac"))
-
   (defun-inline test-sqrt ()
     (@assert
       (@assert-equal (%cf.sqrt 0) 0)
@@ -67,7 +44,36 @@
       (@assert-equal (%cf.sqrt 420) 20)
       (@assert-equal (%cf.sqrt 10000) 100)
       (@assert-equal (%cf.sqrt 1000000000000) 1000000)
+      ; (@assert-fails (%cf.sqrt -1))
       "test-math.test-sqrt"))
+
+  (defun-inline test-str ()
+    (@assert
+      (@assert-equal (%cf.str 0 -1) "0")
+      (@assert-equal (%cf.str 0 0) "0.")
+      (@assert-equal (%cf.str 0 1) "0.0")
+      (@assert-equal (%cf.str 1 -1) "1")
+      (@assert-equal (%cf.str 1 0) "1.")
+      (@assert-equal (%cf.str 1 1) "0.1")
+      (@assert-equal (%cf.str 11 -1) "11")
+      (@assert-equal (%cf.str 11 0) "11.")
+      (@assert-equal (%cf.str 11 1) "1.1")
+      (@assert-equal (%cf.str 1234567 3) "1234.567")
+      "test-math.test-str"))
+
+  (defun-inline test-unsigned-sub ()
+    (@assert
+      (@assert-equal (%cf.unsigned-sub 2 2) 0)
+      (@assert-fails (%cf.unsigned-sub 1 2))
+      "test-math.test-unsigned-sub"))
+
+  (defun-inline test-div ()
+    (@assert
+      (@assert-equal (%cf.div 2 2) 1)
+      (@assert-equal (%cf.div 2 3) 0)
+      (@assert-equal (%cf.div -3 2) -2)
+      (@assert-equal (%cf.div 3 2) 1)
+      "test-math.test-div"))
 
   (defun-inline test-pow ()
     (@assert
@@ -77,15 +83,22 @@
       (@assert-equal (%cf.pow -3 3) -27)
       "test-math.test-pow"))
 
+  (defun-inline test-mul-frac ()
+    (@assert
+      (@assert-equal (%cf.mul-frac 2 (%cf.Frac 300 100)) 6)
+      (@assert-equal (%cf.mul-frac 123 (%cf.Frac 457 100)) 562)
+      "test-math.test-mul-frac"))
+
   (defun-inline test-math ()
     (@assert
-      (test-unsigned-sub)
-      (test-round)
-      (test-div)
       (test-abs)
-      (test-mul-frac)
+      (test-round)
       (test-sqrt)
+      (test-str)
+      (test-unsigned-sub)
+      (test-div)
       (test-pow)
+      (test-mul-frac)
       "test-math"))
 
   (test-math)
