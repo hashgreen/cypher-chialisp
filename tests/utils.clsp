@@ -24,6 +24,10 @@
 
   (defmacro @cypher.tests.assert-equal (statement result)
     ;; Expect the statement to evaluate to result.
+    ;
+    ; Args:
+    ;   statement: the statement to evaluate.
+    ;   result: the expected result.
 
     (qq (if
       (=
@@ -32,9 +36,12 @@
       )
       1
       (x
+        ()
         (q . (unquote statement))
         "does not evaluate to"
         (q . (unquote result))
+        "but evaluates to"
+        (unquote statement)
       )
     ))
   )
