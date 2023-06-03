@@ -1,6 +1,7 @@
 (a (mod ()
 
   (include cypher/math.clsp)
+  (include cypher/macros.clsp)
   (include tests/utils.clsp)
 
   (defun-inline test-hello-world ()
