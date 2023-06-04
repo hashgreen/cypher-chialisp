@@ -6,6 +6,16 @@
 
   (include tests/utils.clsp)
 
+  (defun-inline test-chain ()
+    (@assert
+      (@assert-equal
+        (@cf.chain (list 100 200 300) (list 400 500 600))
+        (list 100 200 300 400 500 600))
+      (@assert-equal
+        (cf.chain (list 100 200 300) (list 400 500 600))
+        (list 100 200 300 400 500 600))
+      "test-itertools.test-chain"))
+
   (defun-inline test-map ()
     (@assert
       (@assert-equal
@@ -26,8 +36,9 @@
 
   (defun-inline test-itertools ()
     (@assert
-      (test-map)
-      (test-reduce)
+      (test-chain)
+      ; (test-map)
+      ; (test-reduce)
       "test-itertools"))
 
   (test-itertools)

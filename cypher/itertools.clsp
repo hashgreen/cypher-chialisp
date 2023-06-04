@@ -3,66 +3,77 @@
 ; Mocks the design of python itertools module.
 
 (
-  (defun cypher.itertools.chain-two (iterable_a iterable_b)
-    ;; Flatten two iterables.
+  (defun --cypher.itertools.chain (args_a args_b)
+    ;; Flatten two args.
     ;
     ; Args:
-    ;   iterable_a: List.
-    ;   iterable_b: Another list.
+    ;   args_a: list
+    ;   args_b: Another list.
     ;
     ; Returns:
     ;   The flattend list.
 
-    (if iterable_a
+    (if args_a
       (c
-        (f iterable_a)
-        (cypher.itertools.chain-two
-          (r iterable_a)
-          iterable_b
+        (f args_a)
+        (--cypher.itertools.chain (r args_a) args_b)
+      )
+      args_b
+    )
+  )
+
+  (defmacro @cypher.itertools.chain args_list
+    ;; Flatten multiple args.
+    ;
+    ; Args:
+    ;   args: list of list to flatten.
+    ;
+    ; Returns:
+    ;   The flattend list.
+
+    (if args_list
+      (qq
+        (--cypher.itertools.chain
+          (unquote (f args_list))
+          (@cypher.itertools.chain . (unquote (r args_list)))
         )
       )
-      iterable_b
+      cypher.constants.NIL
     )
   )
-
-  (defun cypher.itertools.chain iterables
-    ;; Flatten multiple iterables.
-    ;
-    ; Args:
-    ;   iterables: List of list to flatten.
-    ;
-    ; Returns:
-    ;   The flattend list.
-
-    (if iterables
-      (cypher.itertools.chain-two
-        (f iterables)
-        (cypher.itertools.chain . (r iterables))
+  (defun cypher.itertools.chain args_list
+    (if args_list
+      (--cypher.itertools.chain
+        (f args_list)
+        (cypher.itertools.chain . (r args_list))
       )
       cypher.constants.NIL
     )
   )
 
-  (defmacro @cypher.itertools.chain iterables
-    (if iterables
-      (qq (cypher.itertools.chain-two
-        (unquote (f iterables))
-        (unquote (c @cypher.itertools.chain (r iterables)))
-      ))
-      cypher.constants.NIL
-    )
-  )
-
-  (defun cypher.itertools.map (func args)
+  (defmacro @cypher.itertools.map (func args)
     ;; Apply map function to each element.
     ;
     ; Args:
-    ;   func: Function symbol name.
-    ;   args: List of arguments to apply func on.
+    ;   func: function symbol name.
+    ;   args: list of arguments to apply func on.
     ;
     ; Returns:
     ;   A list of mapped results from func.
 
+    (if args
+      (qq
+        (c
+          ; (unquote (c func (f args)))
+          (unquote (c list (f args)))
+          ; (unquote (list @cypher.itertools.map (list func (r args))))
+          ()
+        )
+      )
+      cypher.constants.NIL
+    )
+  )
+  (defun cypher.itertools.map (func args)
     (if args
       (c
         (func (f args))
@@ -96,7 +107,6 @@
 
   ;; Exports
 
-  (defmacro cf.chain-two args (c cypher.itertools.chain-two args))
   (defmacro cf.chain args (c cypher.itertools.chain args))
   (defmacro @cf.chain args (c @cypher.itertools.chain args))
   (defmacro cf.map args (c cypher.itertools.map args))
