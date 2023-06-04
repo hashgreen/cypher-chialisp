@@ -1,34 +1,55 @@
+;;; Logarithm and Exponentiation Math
+;
+; See: https://github.com/balancer/balancer-v2-monorepo/blob/db24e8372ac7fa51e5db65bfa961697382f68337/pkg/solidity-utils/contracts/math/LogExpMath.sol
+
 (
+  ;; Constants
+
   (defconstant cypher.logexpmath.constants.FRAC_64 64)
   (defconstant cypher.logexpmath.constants.FRAC_72 72)
   (defconstant cypher.logexpmath.constants.FRAC_128 128)
 
-  (defconstant cypher.logexpmath.constants.LN_72_A7 183591838716394507441929582827196479720296077407287175546725255668661662036302)
-  (defconstant cypher.logexpmath.constants.LN_72_A6 29444659034920256478884744064437645965741631810494)
-  (defconstant cypher.logexpmath.constants.LN_72_A5 372892036554861672118798300772074960)
-  (defconstant cypher.logexpmath.constants.LN_72_A4 41963470485121714839508006980)
-  (defconstant cypher.logexpmath.constants.LN_72_A3 14077176084848423785660528)
-  (defconstant cypher.logexpmath.constants.LN_72_A2 257832473743208563546842)
-  (defconstant cypher.logexpmath.constants.LN_72_A1 34893830861633635945704)
-  (defconstant cypher.logexpmath.constants.LN_72_A0 12836722997708609710783)
-  (defconstant cypher.logexpmath.constants.LN_72_AN1 7785866068348536395565)
-  (defconstant cypher.logexpmath.constants.LN_72_AN2 6063638590918920402555)
-  (defconstant cypher.logexpmath.constants.LN_72_AN3 5351142274878367833325)
-  (defconstant cypher.logexpmath.constants.LN_72_AN4 5026932953994157872561)
+  (defconstant cypher.logexpmath.constants.LN_72_A7  ; exp(2 ** 7)
+    183591838716394507441929582827196479720296077407287175546725255668661662036302)
+  (defconstant cypher.logexpmath.constants.LN_72_A6  ; exp(2 ** 6)
+    29444659034920256478884744064437645965741631810494)
+  (defconstant cypher.logexpmath.constants.LN_72_A5  ; exp(2 ** 5)
+    372892036554861672118798300772074960)
+  (defconstant cypher.logexpmath.constants.LN_72_A4  ; exp(2 ** 4)
+    41963470485121714839508006980)
+  (defconstant cypher.logexpmath.constants.LN_72_A3  ; exp(2 ** 3)
+    14077176084848423785660528)
+  (defconstant cypher.logexpmath.constants.LN_72_A2  ; exp(2 ** 2)
+    257832473743208563546842)
+  (defconstant cypher.logexpmath.constants.LN_72_A1  ; exp(2 ** 1)
+    34893830861633635945704)
+  (defconstant cypher.logexpmath.constants.LN_72_A0  ; exp(2 ** 0)
+    12836722997708609710783)
+  (defconstant cypher.logexpmath.constants.LN_72_AN1  ; exp(2 ** -1)
+    7785866068348536395565)
+  (defconstant cypher.logexpmath.constants.LN_72_AN2  ; exp(2 ** -2)
+    6063638590918920402555)
+  (defconstant cypher.logexpmath.constants.LN_72_AN3  ; exp(2 ** -3)
+    5351142274878367833325)
+  (defconstant cypher.logexpmath.constants.LN_72_AN4  ; exp(2 ** -4)
+    5026932953994157872561)
 
-  (defconstant cypher.logexpmath.constants.LN_72_EXPONENT_UPPER_BOUND 2417556491324078996586496)
+  (defconstant cypher.logexpmath.constants.LN_72_EXPONENT_UPPER_BOUND
+    2417556491324078996586496)
 
-  (defun-inline cypher.logexpmath.constants.USE_LN_128_UPPER_BOUND () (%cypher.fracmath.Frac@unsafe 11 10))
-  (defun-inline cypher.logexpmath.constants.USE_LN_128_LOWER_BOUND () (%cypher.fracmath.Frac@unsafe 9 10))
+  (defun-inline cypher.logexpmath.constants.USE_LN_128_UPPER_BOUND ()
+    (%cypher.fracmath.Frac@unsafe 11 10))
+  (defun-inline cypher.logexpmath.constants.USE_LN_128_LOWER_BOUND ()
+    (%cypher.fracmath.Frac@unsafe 9 10))
 
-  ;; Private
+  ;; Utilities
 
   (defun --cypher.logexpmath.ln-maclaurin.do
     (up_af uu_af logarithm_int taylor_coeffs)
 
     (if taylor_coeffs
       (--cypher.logexpmath.ln-maclaurin.do
-        (%cypher.fracmath.AshFrac.mul up_af uu_af)
+        (--%cypher.fracmath.AshFrac.mul@imprecise up_af uu_af)
         uu_af
         (+
           logarithm_int
@@ -49,7 +70,7 @@
     (ash
       (--cypher.logexpmath.ln-maclaurin.do
         u_af
-        (%cypher.fracmath.AshFrac.square u_af)
+        (--%cypher.fracmath.AshFrac.square@imprecise u_af)
         logarithm_int
         taylor_coeffs
       )
@@ -70,14 +91,14 @@
     )
   )
 
-  (defun-inline --cypher.logexpmath.ln-72-maclaurin (var_af72)
+  (defun-inline --%cypher.logexpmath.ln-72-maclaurin (var_af72)
     (--cypher.logexpmath.ln-maclaurin
       var_af72
       (list 1 3 5 7 9 11 13)
     )
   )
 
-  (defun-inline --cypher.logexpmath.ln-128-maclaurin (var_af128)
+  (defun-inline --%cypher.logexpmath.ln-128-maclaurin (var_af128)
     (--cypher.logexpmath.ln-maclaurin
       var_af128
       (list 1 3 5 7 9 11 13 15)
@@ -121,7 +142,7 @@
           cypher.logexpmath.constants.LN_72_EXPONENT_UPPER_BOUND
           logarithm_int
         )
-        (+ logarithm_int (--cypher.logexpmath.ln-72-maclaurin var_af72))
+        (+ logarithm_int (--%cypher.logexpmath.ln-72-maclaurin var_af72))
       )
     )
   )
@@ -151,6 +172,14 @@
   )
 
   (defun --cypher.logexpmath.ln-72 (var_f)
+    ;; Logarithm as 72-bit fractions.
+    ;
+    ; Args:
+    ;   var_f: a `Frac` fraction.
+    ;
+    ; Returns:
+    ;   Logarithm of `var_f` as a 72-bit `AshFrac` fraction.
+
     (%cypher.fracmath.AshFrac
       (if (%cypher.fracmath.Frac.gt-one var_f)
         (--cypher.logexpmath.ln-72.stager var_f)
@@ -166,8 +195,16 @@
   )
 
   (defun --cypher.logexpmath.ln-128 (var_f)
+    ;; Logarithm as 128-bit fractions.
+    ;
+    ; Args:
+    ;   var_f: a `Frac` fraction.
+    ;
+    ; Returns:
+    ;   Logarithm of `var_f` as a 128-bit `AshFrac` fraction.
+
     (%cypher.fracmath.AshFrac
-      (--cypher.logexpmath.ln-128-maclaurin
+      (--%cypher.logexpmath.ln-128-maclaurin
         (%cypher.fracmath.AshFrac.from-frac
           var_f
           cypher.logexpmath.constants.FRAC_128
@@ -178,6 +215,14 @@
   )
 
   (defun-inline --cypher.logexpmath.use-ln-128 (var_f)
+    ;; Whether to use 128-bit logarithm.
+    ;
+    ; Args:
+    ;   var_f: a `Frac` fraction.
+    ;
+    ; Returns:
+    ;   Boolean, whether to use 128-bit logarithm.
+
     (@cypher.macros.and
       (%cypher.fracmath.Frac.gt
         (cypher.logexpmath.constants.USE_LN_128_UPPER_BOUND)
@@ -213,6 +258,14 @@
   ;; Logarithms.
 
   (defun-inline %cypher.logexpmath.ln (var_f)
+    ;; Natural logarithm.
+    ;
+    ; Args:
+    ;   var_f: a `Frac` fraction.
+    ;
+    ; Returns:
+    ;   Natural logarithm of `var_f` as a `AshFrac` fraction.
+
     (@cypher.macros.assert
       (%cypher.fracmath.Frac.gt-zero var_f)
 
@@ -227,6 +280,15 @@
     (%cypher.logexpmath.ln var_f))
 
   (defun-inline %cypher.logexpmath.log (var_f base_f)
+    ;; Logarithm with base.
+    ;
+    ; Args:
+    ;   var_f: a `Frac` fraction.
+    ;   base_f: a `Frac` fraction.
+    ;
+    ; Returns:
+    ;   Logarithm of `var_f` with base `base_f` as a `AshFrac` fraction.
+
     (@cypher.macros.assert
       (%cypher.fracmath.Frac.gt-zero var_f)
       (%cypher.fracmath.Frac.gt-zero base_f)
@@ -246,8 +308,12 @@
 
   ;; Exports
 
-  (defmacro %cf.ln args (c %cypher.logexpmath.ln args))
-  (defmacro cf.ln args (c cypher.logexpmath.ln args))
-  (defmacro %cf.log args (c %cypher.logexpmath.log args))
-  (defmacro cf.log args (c cypher.logexpmath.log args))
+  (defmacro %cf.ln args
+    (c %cypher.logexpmath.ln args))
+  (defmacro cf.ln args
+    (c cypher.logexpmath.ln args))
+  (defmacro %cf.log args
+    (c %cypher.logexpmath.log args))
+  (defmacro cf.log args
+    (c cypher.logexpmath.log args))
 )
