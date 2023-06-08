@@ -3,6 +3,9 @@
 ; Mocks the design of python itertools module.
 
 (
+
+  ;; chain
+
   (defun --cypher.itertools.chain (args_a args_b)
     ;; Flatten two args.
     ;
@@ -23,10 +26,10 @@
   )
 
   (defmacro @cypher.itertools.chain args_list
-    ;; Flatten multiple args.
+    ;; Flatten multiple args, macro form.
     ;
     ; Args:
-    ;   args: list of list to flatten.
+    ;   args_list: list of list to flatten.
     ;
     ; Returns:
     ;   The flattend list.
@@ -41,21 +44,31 @@
       cypher.constants.NIL
     )
   )
-  (defun cypher.itertools.chain args_list
+  (defun cypher.itertools.chain (args_list)
+    ;; Flatten multiple args, function form.
+    ;
+    ; Args:
+    ;   args_list: list of list to flatten.
+    ;
+    ; Returns:
+    ;   The flattend list.
+
     (if args_list
       (--cypher.itertools.chain
         (f args_list)
-        (cypher.itertools.chain . (r args_list))
+        (cypher.itertools.chain (r args_list))
       )
       cypher.constants.NIL
     )
   )
 
-  (defmacro @cypher.itertools.map (func args)
-    ;; Apply map function to each element.
+  ;; map
+
+  (defmacro @cypher.itertools.map (func . args)
+    ;; Apply map function to each element, macro form.
     ;
     ; Args:
-    ;   func: function symbol name.
+    ;   func: function body.
     ;   args: list of arguments to apply func on.
     ;
     ; Returns:
@@ -64,24 +77,56 @@
     (if args
       (qq
         (c
-          ; (unquote (c func (f args)))
-          (unquote (c list (f args)))
-          ; (unquote (list @cypher.itertools.map (list func (r args))))
-          ()
+          (a (unquote func) (unquote (f args)))
+          (@cypher.itertools.map . ((unquote func) . (unquote (r args))))
         )
       )
       cypher.constants.NIL
     )
   )
-  (defun cypher.itertools.map (func args)
+  (defun --cypher.itertools.map (func args is-lambda)
+    ;; Apply map function to each element, function form.
+    ;
+    ; Note that:
+    ;   Chialisp's `(func args)` is secretly clvm's `func` application with
+    ;   `func` at position 2 and `args` at position 3, so
+    ;
+    ;     (func args) => (a func (c func args))
+    ;
+    ;   For lambda functions, they don't send themselves to the function body, so
+    ;
+    ;     (func args) => (a func args)
+    ;
+    ; Args:
+    ;   func: function.
+    ;   args: list of arguments to apply func on.
+    ;   is-lambda: whether func is a lambda function.
+    ;
+    ; Returns:
+    ;   A list of mapped results from func.
+
     (if args
       (c
-        (func (f args))
-        (cypher.itertools.map func (r args))
+        (a func (if is-lambda (f args) (c func (f args))))
+        (--cypher.itertools.map func (r args) is-lambda)
       )
       cypher.constants.NIL
     )
   )
+  (defmacro cypher.itertools.map (func args)
+    ; Note this is a hack to tell if `func` is a function name or a lambda function.
+
+    (qq
+      (--cypher.itertools.map
+        (unquote func)
+        (unquote args)
+        ; `(l func)` => 1 when `func` is not just a symbol name
+        (unquote (l func))
+      )
+    )
+  )
+
+  ;; reduce
 
   (defun cypher.itertools.reduce (func args agg_init global_args)
     ;; Apply reduce function to each element sequentially.
@@ -107,8 +152,15 @@
 
   ;; Exports
 
-  (defmacro cf.chain args (c cypher.itertools.chain args))
-  (defmacro @cf.chain args (c @cypher.itertools.chain args))
-  (defmacro cf.map args (c cypher.itertools.map args))
+  (defmacro @cf.chain args
+    (c @cypher.itertools.chain args))
+  (defmacro cf.chain args
+    (c cypher.itertools.chain args))
+
+  (defmacro @cf.map args
+    (c @cypher.itertools.map args))
+  (defmacro cf.map args
+    (c cypher.itertools.map args))
+
   (defmacro cf.reduce args (c cypher.itertools.reduce args))
 )

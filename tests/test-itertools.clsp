@@ -1,4 +1,10 @@
-(a (mod ()
+(a (mod
+
+  (
+    iterable
+    iterable_of_two_vars
+    iterables
+  )
 
   (include cypher/constants.clsp)
   (include cypher/hashlib.clsp)
@@ -12,15 +18,30 @@
         (@cf.chain (list 100 200 300) (list 400 500 600))
         (list 100 200 300 400 500 600))
       (@assert-equal
-        (cf.chain (list 100 200 300) (list 400 500 600))
+        (@cf.chain (list 100 200 300) (list 400 500 600) (list 700 800 900))
+        (list 100 200 300 400 500 600 700 800 900))
+      (@assert-equal
+        (cf.chain iterables)
         (list 100 200 300 400 500 600))
       "test-itertools.test-chain"))
+
+  (defun add-one-to-var var (+ var 1))
+  (defun add-two-vars (var1 var2) (+ var1 var2))
 
   (defun-inline test-map ()
     (@assert
       (@assert-equal
-        (cf.map (lambda (var) (+ var 1)) (list 100 200 300))
+        (@cf.map (lambda var (+ var 1)) 100 200 300)
         (list 101 201 301))
+      (@assert-equal
+        (cf.map (lambda var (+ var 1)) iterable)
+        (list 101 201 301))
+      (@assert-equal
+        (cf.map add-one-to-var iterable)
+        (list 101 201 301))
+      (@assert-equal
+        (cf.map add-two-vars iterable_of_two_vars)
+        (list 300 700 1100))
       "test-itertools.test-map"))
 
   (defun-inline test-reduce ()
@@ -37,10 +58,25 @@
   (defun-inline test-itertools ()
     (@assert
       (test-chain)
-      ; (test-map)
+      (test-map)
       ; (test-reduce)
       "test-itertools"))
 
   (test-itertools)
 
-) ())
+) (list
+    ; iterable
+    (list 100 200 300)
+    ; iterable_of_two_vars
+    (list
+      (list 100 200)
+      (list 300 400)
+      (list 500 600)
+    )
+    ; iterables
+    (list
+      (list 100 200 300)
+      (list 400 500 600)
+    )
+  )
+)
