@@ -4,6 +4,29 @@
 
 (
 
+  ;; utils
+
+  (defun-inline --is-printable-char (char)
+    (all (> char 31) (> 128 char))
+  )
+
+  (defun --is-printable-str.stager (str)
+    (if str
+      (all
+        (--is-printable-str (/ str 256))
+        (--is-printable-char (r (divmod str 256)))
+      )
+      1
+    )
+  )
+  (defun --is-printable-str (str)
+    (if (l str) 0 (--is-printable-str.stager str))
+  )
+
+  (defun-inline --apply (func args is-lambda)
+    (a func (if is-lambda args (c func args)))
+  )
+
   ;; chain
 
   (defun --cypher.itertools.chain (args_a args_b)
@@ -25,38 +48,38 @@
     )
   )
 
-  (defmacro @cypher.itertools.chain args_list
+  (defmacro @cypher.itertools.chain args
     ;; Flatten multiple args, macro form.
     ;
     ; Args:
-    ;   args_list: list of list to flatten.
+    ;   args: list of list to flatten.
     ;
     ; Returns:
     ;   The flattend list.
 
-    (if args_list
+    (if args
       (qq
         (--cypher.itertools.chain
-          (unquote (f args_list))
-          (@cypher.itertools.chain . (unquote (r args_list)))
+          (unquote (f args))
+          (@cypher.itertools.chain . (unquote (r args)))
         )
       )
       cypher.constants.NIL
     )
   )
-  (defun cypher.itertools.chain (args_list)
+  (defun cypher.itertools.chain (args)
     ;; Flatten multiple args, function form.
     ;
     ; Args:
-    ;   args_list: list of list to flatten.
+    ;   args: list of list to flatten.
     ;
     ; Returns:
     ;   The flattend list.
 
-    (if args_list
+    (if args
       (--cypher.itertools.chain
-        (f args_list)
-        (cypher.itertools.chain (r args_list))
+        (f args)
+        (cypher.itertools.chain (r args))
       )
       cypher.constants.NIL
     )
@@ -64,7 +87,7 @@
 
   ;; map
 
-  (defmacro @cypher.itertools.map (func . args)
+  (defmacro --@cypher.itertools.map (func args is-lambda)
     ;; Apply map function to each element, macro form.
     ;
     ; Args:
@@ -77,14 +100,26 @@
     (if args
       (qq
         (c
-          (a (unquote func) (unquote (f args)))
-          (@cypher.itertools.map . ((unquote func) . (unquote (r args))))
+          (--apply
+            (unquote func) (unquote (f args)) (unquote is-lambda)
+          )
+          (--@cypher.itertools.map
+            (unquote func) (unquote (r args)) (unquote is-lambda)
+          )
         )
       )
       cypher.constants.NIL
     )
   )
-  (defun --cypher.itertools.map (func args is-lambda)
+  (defmacro @cypher.itertools.map (func . args)
+    (qq
+      (--@cypher.itertools.map
+        (unquote func) (unquote args) (unquote (l func))
+      )
+    )
+  )
+
+  (defun --cypher.itertools.map.stager (func args is-lambda)
     ;; Apply map function to each element, function form.
     ;
     ; Note that:
@@ -107,20 +142,31 @@
 
     (if args
       (c
-        (a func (if is-lambda (f args) (c func (f args))))
-        (--cypher.itertools.map func (r args) is-lambda)
+        (--apply func (f args) is-lambda)
+        (--cypher.itertools.map.stager func (r args) is-lambda)
       )
       cypher.constants.NIL
     )
   )
-  (defmacro cypher.itertools.map (func args)
-    ; Note this is a hack to tell if `func` is a function name or a lambda function.
+  (defun --cypher.itertools.map (func args is-lambda)
+    ; This is to "resolve" the symbol `func`, and if it is still is an atom,
+    ;   it can be either still a symbol name, or a simple path as a function.
 
+    (if (--is-printable-str func)
+      (x
+        (concat
+          "`defun-inline` symbol does not work with `cf.map`! "
+          "Please use `defun` of lambda functions instead."
+        )
+      )
+      (--cypher.itertools.map.stager func args is-lambda)
+    )
+  )
+  (defmacro cypher.itertools.map (func args)
     (qq
-      (--cypher.itertools.map
+      (--cypher.itertools.map.stager
         (unquote func)
         (unquote args)
-        ; `(l func)` => 1 when `func` is not just a symbol name
         (unquote (l func))
       )
     )
@@ -128,25 +174,88 @@
 
   ;; reduce
 
-  (defun cypher.itertools.reduce (func args agg_init global_args)
-    ;; Apply reduce function to each element sequentially.
+  (defmacro --@cypher.itertools.reduce (func args initializer context is-lambda)
+    ;; Apply reduce function to each element sequentially, macro form.
     ;
     ; Args:
-    ;   func: Function symbol name.
-    ;   args: List of arguments to apply func on.
-    ;   agg_init: Initial value.
-    ;   global_args: Global arguments.
+    ;   func: function body.
+    ;   args: list of arguments to apply reduction func on.
+    ;   initializer: initial value for reduction.
+    ;   context: global arguments for reduction.
+    ;   is-lambda: whether func is a lambda function.
     ;
     ; Returns:
     ;   A reduced value.
 
     (if args
-      (func
-        (f args)
-        (cypher.itertools.reduce func (r args) agg_init global_args)
-        global_args
+      (qq
+        (--apply
+          (unquote func)
+          (c
+            (unquote (f args))
+            (c
+              (--@cypher.itertools.reduce
+                (unquote func) (unquote (r args)) (unquote initializer) (unquote context) (unquote is-lambda)
+              )
+              (unquote context)
+            )
+          )
+          (unquote is-lambda)
+        )
       )
-      agg_init
+      initializer
+    )
+  )
+  (defmacro @cypher.itertools.reduce (func initializer context . args)
+    (qq
+      (--@cypher.itertools.reduce
+        (unquote func) (unquote args) (unquote initializer) (unquote context) (unquote (l func))
+      )
+    )
+  )
+
+  (defun --cypher.itertools.reduce (func args initializer context is-lambda)
+    ;; Apply reduce function to each element sequentially, function form.
+    ;
+    ; Args:
+    ;   func: function that takes the arguments: (arg agg . context), where
+    ;     arg: the current argument,
+    ;     agg: the reduced value, and
+    ;     context: the global arguments.
+    ;
+    ;   args: list of arguments to apply reduction func on.
+    ;   initializer: initial value for reduction.
+    ;   context: global arguments.
+    ;   is-lambda: whether func is a lambda function.
+    ;
+    ; Returns:
+    ;   A reduced value.
+
+    (if args
+      (--apply
+        func
+        (c
+          (f args)
+          (c
+            (--cypher.itertools.reduce
+              func (r args) initializer context is-lambda)
+            context
+          )
+        )
+        is-lambda
+      )
+      initializer
+    )
+  )
+  (defmacro cypher.itertools.reduce (func initializer context args)
+    (qq
+      (--cypher.itertools.reduce
+        (unquote func)
+        (unquote args)
+        (unquote initializer)
+        (unquote context)
+        (unquote (l func))
+      )
     )
   )
 
@@ -162,5 +271,8 @@
   (defmacro cf.map args
     (c cypher.itertools.map args))
 
-  (defmacro cf.reduce args (c cypher.itertools.reduce args))
+  (defmacro @cf.reduce args
+    (c @cypher.itertools.reduce args))
+  (defmacro cf.reduce args
+    (c cypher.itertools.reduce args))
 )

@@ -12,6 +12,11 @@
 
   (include tests/utils.clsp)
 
+  (defun add-one-to-var var (+ var 1))
+  (defun add-two-vars (var1 var2) (+ var1 var2))
+
+  (defun-inline inline-add-two-vars (var1 var2) (+ var1 var2))
+
   (defun-inline test-chain ()
     (@assert
       (@assert-equal
@@ -25,13 +30,13 @@
         (list 100 200 300 400 500 600))
       "test-itertools.test-chain"))
 
-  (defun add-one-to-var var (+ var 1))
-  (defun add-two-vars (var1 var2) (+ var1 var2))
-
   (defun-inline test-map ()
     (@assert
       (@assert-equal
         (@cf.map (lambda var (+ var 1)) 100 200 300)
+        (list 101 201 301))
+      (@assert-equal
+        (@cf.map add-one-to-var 100 200 300)
         (list 101 201 301))
       (@assert-equal
         (cf.map (lambda var (+ var 1)) iterable)
@@ -42,24 +47,41 @@
       (@assert-equal
         (cf.map add-two-vars iterable_of_two_vars)
         (list 300 700 1100))
+      ; this doesn't work yet as `@assert-fails` works in a sandbox,
+      ; and we have not found a way to propagate `defun-inline` and fixtures.
+      ;
+      ; (@assert-fails
+      ;   (cf.map inline-add-two-vars iterable_of_two_vars))
       "test-itertools.test-map"))
+
+  (defun add-arg-if-not-equal-to-var (arg agg var)
+    (if (= arg var) agg (+ arg agg)))
 
   (defun-inline test-reduce ()
     (@assert
       (@assert-equal
-        (cf.reduce
-          (lambda (arg agg) (* arg agg))
-          (list 1 3 5 7)
-          1)
-        105)
-      "test-itertools.test-reduce")
-  )
+        (@cf.reduce (lambda (arg agg) (+ arg agg)) 0 () 1 2 3 4) 10)
+      (@assert-equal
+        (@cf.reduce (lambda (arg agg) (* arg agg)) 1 () 1 3 5 7) 105)
+      (@assert-equal
+        (@cf.reduce add-two-vars 32 () 1 2 3 4) 42)
+      (@assert-equal
+        (@cf.reduce add-arg-if-not-equal-to-var 0 (list 4) 1 2 3 4) 6)
+      (@assert-equal
+        (cf.reduce (lambda (arg agg) (+ arg agg)) 0 () (list 1 2 3 4)) 10)
+      (@assert-equal
+        (cf.reduce (lambda (arg agg) (* arg agg)) 1 () (list 1 3 5 7)) 105)
+      (@assert-equal
+        (cf.reduce add-two-vars 32 () (list 1 2 3 4)) 42)
+      (@assert-equal
+        (cf.reduce add-arg-if-not-equal-to-var 0 (list 4) (list 1 2 3 4)) 6)
+      "test-itertools.test-reduce"))
 
   (defun-inline test-itertools ()
     (@assert
       (test-chain)
       (test-map)
-      ; (test-reduce)
+      (test-reduce)
       "test-itertools"))
 
   (test-itertools)
