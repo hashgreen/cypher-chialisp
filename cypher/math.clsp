@@ -105,16 +105,15 @@
     ; Returns:
     ;   An integer, the result of the square root.
 
-    (@cypher.utils.switch
-      (
-        (> var 3) .
-        (--cypher.math.sqrt-loop-babylonian
-          var
-          var
-          (+ (ash var -1) 1))
+    (@cypher.utils.if
+      (> var 3)
+      (--cypher.math.sqrt-loop-babylonian
+        var
+        var
+        (+ (ash var -1) 1)
       )
-      ((> var 0) . 1)
-      ((= var 0) . 0)
+      (> var 0) 1
+      (= var 0) 0
       (x)
     )
   )
@@ -122,32 +121,26 @@
     (@cypher.math.sqrt var))
 
   (defun --cypher.math.str (var decimals)
-    (@cypher.utils.switch
-      (
-        (> decimals 0)
-        .
-        (concat
-          (--cypher.math.str (@cypher.math.div var 10) (- decimals 1))
-          (+ 48 (r (divmod var 10)))
-        )
+    (@cypher.utils.if
+      (> decimals 0)
+      (concat
+        (--cypher.math.str (@cypher.math.div var 10) (- decimals 1))
+        (+ 48 (r (divmod var 10)))
       )
-      (
-        (= decimals 0)
-        .
-        (concat
-          (--cypher.math.str (@cypher.math.div var 10) (- decimals 1))
-          (+ 48 (r (divmod var 10)))
-          "."
-        )
+      ;
+      (= decimals 0)
+      (concat
+        (--cypher.math.str (@cypher.math.div var 10) (- decimals 1))
+        (+ 48 (r (divmod var 10)))
+        "."
       )
-      (
-        (all (= decimals -1) (> var 0))
-        .
-        (concat
-          (--cypher.math.str (@cypher.math.div var 10) -1)
-          (+ 48 (r (divmod var 10)))
-        )
+      ;
+      (all (= decimals -1) (> var 0))
+      (concat
+        (--cypher.math.str (@cypher.math.div var 10) -1)
+        (+ 48 (r (divmod var 10)))
       )
+      ;
       ""
     )
   )

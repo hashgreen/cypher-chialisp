@@ -9,13 +9,13 @@
     ;   result: a `cypher.fracmath.Frac`
 
     (@cypher.tests.assert-approx
-      (%cypher.fracmath.Frac.get-numerator
-        (%cypher.fracmath.Frac.from-frac
+      (@cypher.fracmath.Frac.get-numerator
+        (@cypher.fracmath.Frac.from-frac
           statement
-          (%cypher.fracmath.Frac.get-denominator result)
+          (@cypher.fracmath.Frac.get-denominator result)
         )
       )
-      (%cypher.fracmath.Frac.get-numerator result)
+      (@cypher.fracmath.Frac.get-numerator result)
       2
     )
   )
@@ -30,13 +30,13 @@
     ;   result: a `cypher.fracmath.AshFrac`
 
     (@cypher.tests.assert-approx
-      (%cypher.fracmath.AshFrac.get-numerator
-        (%cypher.fracmath.AshFrac.from-ash-frac
+      (@cypher.fracmath.AshFrac.get-numerator
+        (@cypher.fracmath.AshFrac.from-ash-frac
           statement
-          (%cypher.fracmath.AshFrac.get-denominator-ash result)
+          (@cypher.fracmath.AshFrac.get-denominator-ash result)
         )
       )
-      (%cypher.fracmath.AshFrac.get-numerator result)
+      (@cypher.fracmath.AshFrac.get-numerator result)
       2
     )
   )

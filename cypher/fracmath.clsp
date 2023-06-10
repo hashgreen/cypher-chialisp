@@ -22,9 +22,9 @@
     ; Returns:
     ;   A `Frac` object.
 
-    (@cypher.utils.switch
-      ((> denom 0) . (c numer denom))
-      ((> 0 denom) . (c (- 0 numer) (- 0 denom)))
+    (@cypher.utils.if
+      (> denom 0) (c numer denom)
+      (> 0 denom) (c (- 0 numer) (- 0 denom))
       (x)
     )
   )
