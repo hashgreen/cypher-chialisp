@@ -1,8 +1,8 @@
 (a (mod ()
 
   (include cypher/fracmath.clsp)
-  (include cypher/macros.clsp)
   (include cypher/math.clsp)
+  (include cypher/utils.clsp)
 
   (include tests/utils.clsp)
 

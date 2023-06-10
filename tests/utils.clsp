@@ -7,7 +7,7 @@
       1
       (x
         (q . (unquote statement))
-        "should fail!"
+        "should fail! "
       )
     ))
   )
@@ -65,6 +65,8 @@
         (q . (unquote statement))
         "does not evaluate approximately to"
         (q . (unquote result))
+        "and evaluates to"
+        (unquote statement)
       )
     ))
   )

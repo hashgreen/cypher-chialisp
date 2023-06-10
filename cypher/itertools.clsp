@@ -7,6 +7,14 @@
   ;; utils
 
   (defun-inline --is-printable-char (char)
+    ;; Whether a character is printable.
+    ;
+    ; Args:
+    ;   char: a character.
+    ;
+    ; Returns:
+    ;   Boolean, whether the character is printable.
+
     (all (> char 31) (> 128 char))
   )
 
@@ -20,10 +28,28 @@
     )
   )
   (defun --is-printable-str (str)
+    ;; Whether a string is printable.
+    ;
+    ; Args:
+    ;   str: a string.
+    ;
+    ; Returns:
+    ;   Boolean, whether the string is printable.
+
     (if (l str) 0 (--is-printable-str.stager str))
   )
 
   (defun-inline --apply (func args is-lambda)
+    ;; Apply a function to a list of arguments.
+    ;
+    ; Args:
+    ;   func: a function.
+    ;   args: a list of arguments.
+    ;   is-lambda: whether `func` is a lambda.
+    ;
+    ; Returns:
+    ;   The result of applying `func` to `args`.
+
     (a func (if is-lambda args (c func args)))
   )
 

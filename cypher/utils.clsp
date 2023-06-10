@@ -1,0 +1,179 @@
+;;; Utilities.
+;
+; This file contains a collection of useful utils.
+
+(
+  ;; control flow
+
+  (defmacro @cypher.utils.assert args
+    ;; Assert a series of statements.
+    ;
+    ; Args:
+    ;   args: list of statements to assert with the last being the value to return.
+    ;
+    ; Returns:
+    ;   The last statement.
+
+    (if (r args)
+      (qq
+        (if (unquote (f args))
+          (@cypher.utils.assert . (unquote (r args)))
+          (x)
+        )
+      )
+      (f args)
+    )
+  )
+
+  (defmacro @cypher.utils.assert@debug args
+    ;; Assert a series of statements with debug info.
+    ;
+    ; Args:
+    ;   args: list of statements to assert with the last being the value to return.
+    ;
+    ; Returns:
+    ;   The last statement.
+
+    (if (r args)
+      (qq
+        (if (unquote (f args))
+          (@cypher.utils.assert . (unquote (r args)))
+          (x
+            "@cypher.utils.assert failed: "
+            (q . (unquote (f args)))
+            "evaluates to false, leaving assertion body"
+            (q . (unquote (r args)))
+          )
+        )
+      )
+      (f args)
+    )
+  )
+
+  (defmacro @cypher.utils.if args
+    ;; Continued if.
+    ;
+    ; The usage of this macro is: `(if cond1 stmt1 cond2 stmt2 ... default)`.
+    ;
+    ; Args:
+    ;   args: list of interleaved conditions and corresponding statements, with the
+    ;     last statement being the default.
+    ;
+    ; Returns:
+    ;   The statement corresponding to the first true condition, or the default if none is true.
+
+    (if (r args)
+      (qq
+        (if (unquote (f args))
+          (unquote (f (r args)))
+          (@cypher.utils.if . (unquote (r (r args))))
+        )
+      )
+      (f args)
+    )
+  )
+
+  (defmacro --@cypher.utils.if@debug args
+    ;; Continued if with debug info.
+    ;
+    ; The usage of this macro is: `(if cond1 stmt1 cond2 stmt2 ... default)`.
+    ;
+    ; Args:
+    ;   args: list of interleaved conditions and corresponding statements, with the
+    ;     last statement being the default.
+    ;
+    ; Returns:
+    ;   The statement corresponding to the first true condition, or the default if none is true.
+
+    (if (r args)
+      (if (r (r args))
+        (qq
+          (if (unquote (f args))
+            (unquote (f (r args)))
+            (--@cypher.utils.if@debug . (unquote (r (r args))))
+          )
+        )
+        (x "@cypher.utils.if: no default statement provided.")
+      )
+      (f args)
+    )
+  )
+  (defmacro @cypher.utils.if@debug args
+    (if args
+      (c --@cypher.utils.if@debug args)
+      (x "@cypher.utils.if: no arguments provided.")
+    )
+  )
+
+  ;; comparison
+
+  (defmacro --@cypher.utils.and args
+    ;; Lazy evaluation of `all`.
+    ;
+    ; Args:
+    ;   args: list of statements to evaluate.
+    ;
+    ; Returns:
+    ;   1 if all statements evaluate to true, 0 otherwise.
+
+    (if (r args)
+      (qq
+        (if (unquote (f args))
+          (--@cypher.utils.and . (unquote (r args)))
+          0
+        )
+      )
+      (f args)
+    )
+  )
+  (defmacro @cypher.utils.and args
+    ; This gets around the case of lone `@cypher.utils.and` with no args.
+    (if args
+      (c --@cypher.utils.and args)
+      1
+    )
+  )
+
+  ;; list
+
+  (defmacro @cypher.utils.prelist args
+    ;; Construct a prepending list.
+    ;
+    ; Note that this is different from `list` as there is not a `()` in the end.
+    ;   This function is particularly useful when concatenating atoms to an existing list.
+    ;
+    ; Args:
+    ;  args: list of statements to prepend, with the last statement being the list to prepend to.
+    ;
+    ; Returns:
+    ;   The prepending list.
+    ;
+
+    (if (r args)
+      (qq
+        (c
+          (unquote (f args))
+          (@cypher.utils.prelist . (unquote (r args)))
+        )
+      )
+      (f args)
+    )
+  )
+
+  ;; Exports
+
+  (defmacro @cf.assert args
+    (c @cypher.utils.assert args))
+  (defmacro @cf.assert@debug args
+    (c @cypher.utils.assert@debug args))
+  (defmacro @cf.if args
+    (c @cypher.utils.if args))
+  (defmacro @cf.if@debug args
+    (c @cypher.utils.if@debug args))
+
+  (defmacro @cf.and args
+    (c @cypher.utils.and args))
+
+  (defmacro @cf.prelist args
+    (c @cypher.utils.prelist args))
+)

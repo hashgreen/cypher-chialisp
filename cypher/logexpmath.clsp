@@ -137,7 +137,7 @@
           (r precalcs)
         )
       )
-      (@cypher.macros.assert
+      (@cypher.utils.assert
         (>
           cypher.logexpmath.constants.LN_72_EXPONENT_UPPER_BOUND
           logarithm_int
@@ -223,7 +223,7 @@
     ; Returns:
     ;   Boolean, whether to use 128-bit logarithm.
 
-    (@cypher.macros.and
+    (@cypher.utils.and
       (%cypher.fracmath.Frac.gt
         (cypher.logexpmath.constants.USE_LN_128_UPPER_BOUND)
         var_f
@@ -266,7 +266,7 @@
     ; Returns:
     ;   Natural logarithm of `var_f` as a `AshFrac` fraction.
 
-    (@cypher.macros.assert
+    (@cypher.utils.assert
       (%cypher.fracmath.Frac.gt-zero var_f)
 
       ; Use `defun` form due to complex return value
@@ -289,7 +289,7 @@
     ; Returns:
     ;   Logarithm of `var_f` with base `base_f` as a `AshFrac` fraction.
 
-    (@cypher.macros.assert
+    (@cypher.utils.assert
       (%cypher.fracmath.Frac.gt-zero var_f)
       (%cypher.fracmath.Frac.gt-zero base_f)
 

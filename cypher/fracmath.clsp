@@ -22,7 +22,7 @@
     ; Returns:
     ;   A `Frac` object.
 
-    (@cypher.macros.switch
+    (@cypher.utils.switch
       ((> denom 0) . (c numer denom))
       ((> 0 denom) . (c (- 0 numer) (- 0 denom)))
       (x)
@@ -556,7 +556,7 @@
     ; Returns:
     ;   The `AshFrac` fraction.
 
-    (@cypher.macros.assert
+    (@cypher.utils.assert
       (> denom_ash 0)
       (c numer denom_ash)
     )

@@ -2,8 +2,8 @@
 
   (include cypher/fracmath.clsp)
   (include cypher/logexpmath.clsp)
-  (include cypher/macros.clsp)
   (include cypher/math.clsp)
+  (include cypher/utils.clsp)
 
   (include tests/utils.clsp)
   (include tests/fracmath-utils.clsp)

@@ -1,0 +1,62 @@
+(a (mod ()
+
+  (include cypher/utils.clsp)
+
+  (include tests/utils.clsp)
+
+  (defun-inline test-assert ()
+    (@assert
+      (@assert-equal (@cf.assert 1 1 "successful") "successful")
+      (@assert-fails (@cf.assert 1 1 0 "failed"))
+      "test-utils.test-assert"))
+
+  (defun-inline test-if ()
+    (@assert
+      (@assert-equal
+        (@cf.if
+          1 "hashgreen"
+          "hashbrown"
+        ) "hashgreen")
+      (@assert-equal
+        (@cf.if
+          0 "hashgreen"
+          1 "hashbrown"
+          "hashred"
+        ) "hashbrown")
+      (@assert-equal
+        (@cf.if
+          0 "hashgreen"
+          0 "hashbrown"
+          "hashred"
+        ) "hashred")
+      "test-utils.test-if"))
+
+  (defun-inline test-and ()
+    (@assert
+      (@assert-equal (@cf.and) 1)
+      (@assert-equal (@cf.and 0 0) 0)
+      (@assert-equal (@cf.and 0 1) 0)
+      (@assert-equal (@cf.and 1 1 1) 1)
+      "test-utils.test-and"))
+
+  (defun-inline test-prelist ()
+    (@assert
+      (@assert-equal
+        (@cf.prelist 1 2 3 4 ())
+        (list 1 2 3 4))
+      (@assert-equal
+        (@cf.prelist 3 5 7 9)
+        (c 3 (c 5 (c 7 9))))
+      "test-utils.test-prelist"))
+
+  (defun-inline test-utils ()
+    (@assert
+      (test-assert)
+      (test-if)
+      (test-and)
+      (test-prelist)
+      "test-utils"))
+
+  (test-utils)
+
+) ())
