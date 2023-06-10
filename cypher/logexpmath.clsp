@@ -38,9 +38,9 @@
     2417556491324078996586496)
 
   (defun-inline cypher.logexpmath.constants.USE_LN_128_UPPER_BOUND ()
-    (%cypher.fracmath.Frac@unsafe 11 10))
+    (@cypher.fracmath.Frac@unsafe 11 10))
   (defun-inline cypher.logexpmath.constants.USE_LN_128_LOWER_BOUND ()
-    (%cypher.fracmath.Frac@unsafe 9 10))
+    (@cypher.fracmath.Frac@unsafe 9 10))
 
   ;; Utilities
 
@@ -49,12 +49,12 @@
 
     (if taylor_coeffs
       (--cypher.logexpmath.ln-maclaurin.do
-        (--%cypher.fracmath.AshFrac.mul@imprecise up_af uu_af)
+        (--@cypher.fracmath.AshFrac.mul@imprecise up_af uu_af)
         uu_af
         (+
           logarithm_int
-          (%cypher.math.div
-            (%cypher.fracmath.AshFrac.get-numerator up_af)
+          (@cypher.math.div
+            (@cypher.fracmath.AshFrac.get-numerator up_af)
             (f taylor_coeffs)
           )
         )
@@ -70,7 +70,7 @@
     (ash
       (--cypher.logexpmath.ln-maclaurin.do
         u_af
-        (--%cypher.fracmath.AshFrac.square@imprecise u_af)
+        (--@cypher.fracmath.AshFrac.square@imprecise u_af)
         logarithm_int
         taylor_coeffs
       )
@@ -82,23 +82,23 @@
     (var_af taylor_coeffs)
 
     (--cypher.logexpmath.ln-maclaurin.stager
-      (%cypher.fracmath.AshFrac.div
-        (%cypher.fracmath.AshFrac.sub-int var_af 1)
-        (%cypher.fracmath.AshFrac.add-int var_af 1)
+      (@cypher.fracmath.AshFrac.div
+        (@cypher.fracmath.AshFrac.sub-int var_af 1)
+        (@cypher.fracmath.AshFrac.add-int var_af 1)
       )
       0
       taylor_coeffs
     )
   )
 
-  (defun-inline --%cypher.logexpmath.ln-72-maclaurin (var_af72)
+  (defun-inline --@cypher.logexpmath.ln-72-maclaurin (var_af72)
     (--cypher.logexpmath.ln-maclaurin
       var_af72
       (list 1 3 5 7 9 11 13)
     )
   )
 
-  (defun-inline --%cypher.logexpmath.ln-128-maclaurin (var_af128)
+  (defun-inline --@cypher.logexpmath.ln-128-maclaurin (var_af128)
     (--cypher.logexpmath.ln-maclaurin
       var_af128
       (list 1 3 5 7 9 11 13 15)
@@ -112,7 +112,7 @@
       (if
         (>
           (r (f precalcs))
-          (%cypher.fracmath.AshFrac.get-numerator var_af72)
+          (@cypher.fracmath.AshFrac.get-numerator var_af72)
         )
         (--cypher.logexpmath.ln-72.do
           var_af72
@@ -120,9 +120,9 @@
           (r precalcs)
         )
         (--cypher.logexpmath.ln-72.do
-          (%cypher.fracmath.AshFrac.div
+          (@cypher.fracmath.AshFrac.div
             var_af72
-            (%cypher.fracmath.AshFrac
+            (@cypher.fracmath.AshFrac
               (r (f precalcs))
               cypher.logexpmath.constants.FRAC_72
             )
@@ -142,14 +142,14 @@
           cypher.logexpmath.constants.LN_72_EXPONENT_UPPER_BOUND
           logarithm_int
         )
-        (+ logarithm_int (--%cypher.logexpmath.ln-72-maclaurin var_af72))
+        (+ logarithm_int (--@cypher.logexpmath.ln-72-maclaurin var_af72))
       )
     )
   )
 
   (defun-inline --cypher.logexpmath.ln-72.stager (var_f)
     (--cypher.logexpmath.ln-72.do
-      (%cypher.fracmath.AshFrac.from-frac
+      (@cypher.fracmath.AshFrac.from-frac
         var_f
         cypher.logexpmath.constants.FRAC_72
       )
@@ -180,13 +180,13 @@
     ; Returns:
     ;   Logarithm of `var_f` as a 72-bit `AshFrac` fraction.
 
-    (%cypher.fracmath.AshFrac
-      (if (%cypher.fracmath.Frac.gt-one var_f)
+    (@cypher.fracmath.AshFrac
+      (if (@cypher.fracmath.Frac.gt-one var_f)
         (--cypher.logexpmath.ln-72.stager var_f)
         (-
           0
           (--cypher.logexpmath.ln-72.stager
-            (%cypher.fracmath.Frac.inv var_f)
+            (@cypher.fracmath.Frac.inv var_f)
           )
         )
       )
@@ -203,9 +203,9 @@
     ; Returns:
     ;   Logarithm of `var_f` as a 128-bit `AshFrac` fraction.
 
-    (%cypher.fracmath.AshFrac
-      (--%cypher.logexpmath.ln-128-maclaurin
-        (%cypher.fracmath.AshFrac.from-frac
+    (@cypher.fracmath.AshFrac
+      (--@cypher.logexpmath.ln-128-maclaurin
+        (@cypher.fracmath.AshFrac.from-frac
           var_f
           cypher.logexpmath.constants.FRAC_128
         )
@@ -224,11 +224,11 @@
     ;   Boolean, whether to use 128-bit logarithm.
 
     (@cypher.utils.and
-      (%cypher.fracmath.Frac.gt
+      (@cypher.fracmath.Frac.gt
         (cypher.logexpmath.constants.USE_LN_128_UPPER_BOUND)
         var_f
       )
-      (%cypher.fracmath.Frac.gt
+      (@cypher.fracmath.Frac.gt
         var_f
         (cypher.logexpmath.constants.USE_LN_128_LOWER_BOUND)
       )
@@ -237,7 +237,7 @@
 
   (defun --cypher.logexpmath.ln-to-af72 (var_f)
     (if (--cypher.logexpmath.use-ln-128 var_f)
-      (%cypher.fracmath.AshFrac.from-ash-frac
+      (@cypher.fracmath.AshFrac.from-ash-frac
         (--cypher.logexpmath.ln-128 var_f)
         cypher.logexpmath.constants.FRAC_72
       )
@@ -248,7 +248,7 @@
   (defun --cypher.logexpmath.ln-to-af128 (var_f)
     (if (--cypher.logexpmath.use-ln-128 var_f)
       (--cypher.logexpmath.ln-128 var_f)
-      (%cypher.fracmath.AshFrac.from-ash-frac
+      (@cypher.fracmath.AshFrac.from-ash-frac
         (--cypher.logexpmath.ln-72 var_f)
         cypher.logexpmath.constants.FRAC_128
       )
@@ -257,7 +257,7 @@
 
   ;; Logarithms.
 
-  (defun-inline %cypher.logexpmath.ln (var_f)
+  (defun-inline @cypher.logexpmath.ln (var_f)
     ;; Natural logarithm.
     ;
     ; Args:
@@ -267,7 +267,7 @@
     ;   Natural logarithm of `var_f` as a `AshFrac` fraction.
 
     (@cypher.utils.assert
-      (%cypher.fracmath.Frac.gt-zero var_f)
+      (@cypher.fracmath.Frac.gt-zero var_f)
 
       ; Use `defun` form due to complex return value
       (cypher.fracmath.AshFrac.from-ash-frac
@@ -277,9 +277,9 @@
     )
   )
   (defun cypher.logexpmath.ln (var_f)
-    (%cypher.logexpmath.ln var_f))
+    (@cypher.logexpmath.ln var_f))
 
-  (defun-inline %cypher.logexpmath.log (var_f base_f)
+  (defun-inline @cypher.logexpmath.log (var_f base_f)
     ;; Logarithm with base.
     ;
     ; Args:
@@ -290,8 +290,8 @@
     ;   Logarithm of `var_f` with base `base_f` as a `AshFrac` fraction.
 
     (@cypher.utils.assert
-      (%cypher.fracmath.Frac.gt-zero var_f)
-      (%cypher.fracmath.Frac.gt-zero base_f)
+      (@cypher.fracmath.Frac.gt-zero var_f)
+      (@cypher.fracmath.Frac.gt-zero base_f)
 
       ; Use `defun` form due to complex return value
       (cypher.fracmath.AshFrac.from-ash-frac
@@ -304,16 +304,16 @@
     )
   )
   (defun cypher.logexpmath.log (var_f base_f)
-    (%cypher.logexpmath.log var_f base_f))
+    (@cypher.logexpmath.log var_f base_f))
 
   ;; Exports
 
-  (defmacro %cf.ln args
-    (c %cypher.logexpmath.ln args))
+  (defmacro @cf.ln args
+    (c @cypher.logexpmath.ln args))
   (defmacro cf.ln args
     (c cypher.logexpmath.ln args))
-  (defmacro %cf.log args
-    (c %cypher.logexpmath.log args))
+  (defmacro @cf.log args
+    (c @cypher.logexpmath.log args))
   (defmacro cf.log args
     (c cypher.logexpmath.log args))
 )

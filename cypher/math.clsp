@@ -3,7 +3,7 @@
 (
   ;; Unary operators.
 
-  (defun-inline %cypher.math.abs (var)
+  (defun-inline @cypher.math.abs (var)
     ;; Absolute value.
     ;
     ; Args:
@@ -15,9 +15,9 @@
     (if (> var 0) var (- 0 var))
   )
   (defun cypher.math.abs (var)
-    (%cypher.math.abs var))
+    (@cypher.math.abs var))
 
-  (defun-inline %cypher.math.round-down-to-even (var)
+  (defun-inline @cypher.math.round-down-to-even (var)
     ;; Round down to the nearest even number.
     ;
     ; Args:
@@ -29,9 +29,9 @@
     (if (logand var 1) (- var 1) var)
   )
   (defun cypher.math.round-down-to-even (var)
-    (%cypher.math.round-down-to-even var))
+    (@cypher.math.round-down-to-even var))
 
-  (defun-inline %cypher.math.round-down-to-odd (var)
+  (defun-inline @cypher.math.round-down-to-odd (var)
     ;; Round down to the nearest odd number.
     ;
     ; Args:
@@ -43,9 +43,9 @@
     (if (logand var 1) var (- var 1))
   )
   (defun cypher.math.round-down-to-odd (var)
-    (%cypher.math.round-down-to-odd var))
+    (@cypher.math.round-down-to-odd var))
 
-  (defun-inline %cypher.math.round-up-to-even (var)
+  (defun-inline @cypher.math.round-up-to-even (var)
     ;; Round up to the nearest even number.
     ;
     ; Args:
@@ -57,9 +57,9 @@
     (if (logand var 1) (+ var 1) var)
   )
   (defun cypher.math.round-up-to-even (var)
-    (%cypher.math.round-up-to-even var))
+    (@cypher.math.round-up-to-even var))
 
-  (defun-inline %cypher.math.round-up-to-odd (var)
+  (defun-inline @cypher.math.round-up-to-odd (var)
     ;; Round up to the nearest odd number.
     ;
     ; Args:
@@ -71,7 +71,7 @@
     (if (logand var 1) var (+ var 1));
   )
   (defun cypher.math.round-up-to-odd (var)
-    (%cypher.math.round-up-to-odd var))
+    (@cypher.math.round-up-to-odd var))
 
   (defun --cypher.math.sqrt-loop-babylonian (var var1 var2)
     ;; Babylonian method for square root.
@@ -90,13 +90,13 @@
       (--cypher.math.sqrt-loop-babylonian
         var
         var2
-        (ash (+ (%cypher.math.div var var2) var2) -1)
+        (ash (+ (@cypher.math.div var var2) var2) -1)
       )
       var1
     )
   )
 
-  (defun-inline %cypher.math.sqrt (var)
+  (defun-inline @cypher.math.sqrt (var)
     ;; Square root.
     ;
     ; Args:
@@ -119,7 +119,7 @@
     )
   )
   (defun cypher.math.sqrt (var)
-    (%cypher.math.sqrt var))
+    (@cypher.math.sqrt var))
 
   (defun --cypher.math.str (var decimals)
     (@cypher.utils.switch
@@ -127,7 +127,7 @@
         (> decimals 0)
         .
         (concat
-          (--cypher.math.str (%cypher.math.div var 10) (- decimals 1))
+          (--cypher.math.str (@cypher.math.div var 10) (- decimals 1))
           (+ 48 (r (divmod var 10)))
         )
       )
@@ -135,7 +135,7 @@
         (= decimals 0)
         .
         (concat
-          (--cypher.math.str (%cypher.math.div var 10) (- decimals 1))
+          (--cypher.math.str (@cypher.math.div var 10) (- decimals 1))
           (+ 48 (r (divmod var 10)))
           "."
         )
@@ -144,7 +144,7 @@
         (all (= decimals -1) (> var 0))
         .
         (concat
-          (--cypher.math.str (%cypher.math.div var 10) -1)
+          (--cypher.math.str (@cypher.math.div var 10) -1)
           (+ 48 (r (divmod var 10)))
         )
       )
@@ -152,7 +152,7 @@
     )
   )
 
-  (defun-inline %cypher.math.str (var decimals)
+  (defun-inline @cypher.math.str (var decimals)
     ;; Convert var to string.
     ;
     ; Args:
@@ -167,16 +167,16 @@
       "0"
       (concat
         (if (> 0 var) "-" "")
-        (--cypher.math.str (%cypher.math.abs var) decimals)
+        (--cypher.math.str (@cypher.math.abs var) decimals)
       )
     )
   )
   (defun cypher.math.str (var decimals)
-    (%cypher.math.str var decimals))
+    (@cypher.math.str var decimals))
 
   ;; Binary operators.
 
-  (defun-inline %cypher.math.unsigned-sub (minuend subtrahend)
+  (defun-inline @cypher.math.unsigned-sub (minuend subtrahend)
     ;; Unsigned subtraction.
     ;
     ; Args:
@@ -189,9 +189,9 @@
     (if (> subtrahend minuend) (x) (- minuend subtrahend))
   )
   (defun cypher.math.unsigned-sub (minuend subtrahend)
-    (%cypher.math.unsigned-sub minuend subtrahend))
+    (@cypher.math.unsigned-sub minuend subtrahend))
 
-  (defun-inline %cypher.math.div@unsafe (numer denom)
+  (defun-inline @cypher.math.div@unsafe (numer denom)
     ;; Division using the vanilla `/` operator.
     ;
     ; Args:
@@ -204,9 +204,9 @@
     (/ numer denom)
   )
   (defun cypher.math.div@unsafe (numer denom)
-    (%cypher.math.div@unsafe numer denom))
+    (@cypher.math.div@unsafe numer denom))
 
-  (defun-inline %cypher.math.div (numer denom)
+  (defun-inline @cypher.math.div (numer denom)
     ;; Division.
     ;
     ; The vanilla `/` operator has some unintended behavior, so we fall back to
@@ -222,7 +222,7 @@
     (f (divmod numer denom))
   )
   (defun cypher.math.div (numer denom)
-    (%cypher.math.div numer denom))
+    (@cypher.math.div numer denom))
 
   (defun --cypher.math.pow (base exponent)
 
@@ -231,7 +231,7 @@
       1
     )
   )
-  (defun-inline %cypher.math.pow (base exponent)
+  (defun-inline @cypher.math.pow (base exponent)
     ;; Naive power.
     ;
     ; Args:
@@ -247,11 +247,11 @@
     )
   )
   (defun cypher.math.pow (base exponent)
-    (%cypher.math.pow base exponent))
+    (@cypher.math.pow base exponent))
 
   ;; Binary operators with other objects.
 
-  (defun-inline %cypher.math.mul-frac (var frac)
+  (defun-inline @cypher.math.mul-frac (var frac)
     ;; Multiply a number by a fraction.
     ;
     ; Args:
@@ -261,66 +261,66 @@
     ; Returns:
     ;   An integer, the result of the multiplication.
 
-    (%cypher.math.div
+    (@cypher.math.div
       (*
         var
-        (%cypher.fracmath.Frac.get-numerator frac)
+        (@cypher.fracmath.Frac.get-numerator frac)
       )
-      (%cypher.fracmath.Frac.get-denominator frac)
+      (@cypher.fracmath.Frac.get-denominator frac)
     )
   )
   (defun cypher.math.mul-frac (var frac)
-    (%cypher.math.mul-frac var frac))
+    (@cypher.math.mul-frac var frac))
 
   ;; Exports
 
-  (defmacro %cf.abs args
-    (c %cypher.math.abs args))
+  (defmacro @cf.abs args
+    (c @cypher.math.abs args))
   (defmacro cf.abs args
     (c cypher.math.abs args))
-  (defmacro %cf.round-down-to-even args
-    (c %cypher.math.round-down-to-even args))
+  (defmacro @cf.round-down-to-even args
+    (c @cypher.math.round-down-to-even args))
   (defmacro cf.round-down-to-even args
     (c cypher.math.round-down-to-even args))
-  (defmacro %cf.round-down-to-odd args
-    (c %cypher.math.round-down-to-odd args))
+  (defmacro @cf.round-down-to-odd args
+    (c @cypher.math.round-down-to-odd args))
   (defmacro cf.round-down-to-odd args
     (c cypher.math.round-down-to-odd args))
-  (defmacro %cf.round-up-to-even args
-    (c %cypher.math.round-up-to-even args))
+  (defmacro @cf.round-up-to-even args
+    (c @cypher.math.round-up-to-even args))
   (defmacro cf.round-up-to-even args
     (c cypher.math.round-up-to-even args))
-  (defmacro %cf.round-up-to-odd args
-    (c %cypher.math.round-up-to-odd args))
+  (defmacro @cf.round-up-to-odd args
+    (c @cypher.math.round-up-to-odd args))
   (defmacro cf.round-up-to-odd args
     (c cypher.math.round-up-to-odd args))
-  (defmacro %cf.sqrt args
-    (c %cypher.math.sqrt args))
+  (defmacro @cf.sqrt args
+    (c @cypher.math.sqrt args))
   (defmacro cf.sqrt args
     (c cypher.math.sqrt args))
-  (defmacro %cf.str args
-    (c %cypher.math.str args))
+  (defmacro @cf.str args
+    (c @cypher.math.str args))
   (defmacro cf.str args
     (c cypher.math.str args))
 
-  (defmacro %cf.unsigned-sub args
-    (c %cypher.math.unsigned-sub args))
+  (defmacro @cf.unsigned-sub args
+    (c @cypher.math.unsigned-sub args))
   (defmacro cf.unsigned-sub args
     (c cypher.math.unsigned-sub args))
-  (defmacro %cf.div@unsafe args
-    (c %cypher.math.div@unsafe args))
+  (defmacro @cf.div@unsafe args
+    (c @cypher.math.div@unsafe args))
   (defmacro cf.div@unsafe args
     (c cypher.math.div@unsafe args))
-  (defmacro %cf.div args
-    (c %cypher.math.div args))
+  (defmacro @cf.div args
+    (c @cypher.math.div args))
   (defmacro cf.div args
     (c cypher.math.div args))
-  (defmacro %cf.pow args
-    (c %cypher.math.pow args))
+  (defmacro @cf.pow args
+    (c @cypher.math.pow args))
   (defmacro cf.pow args
     (c cypher.math.pow args))
-  (defmacro %cf.mul-frac args
-    (c %cypher.math.mul-frac args))
+  (defmacro @cf.mul-frac args
+    (c @cypher.math.mul-frac args))
   (defmacro cf.mul-frac args
     (c cypher.math.mul-frac args))
 )

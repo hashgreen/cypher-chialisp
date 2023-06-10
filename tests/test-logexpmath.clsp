@@ -11,33 +11,33 @@
   (defun-inline test-ln ()
     (@assert
       (@assert-ash-frac-approx
-        (%cf.ln (%cf.Frac 1234 1000))
-        (%cf.AshFrac 3878629481089832769 (q . 64)))
+        (@cf.ln (@cf.Frac 1234 1000))
+        (@cf.AshFrac 3878629481089832769 (q . 64)))
       (@assert-ash-frac-approx
-        (%cf.ln (%cf.Frac 651981916131 1))
-        (%cf.AshFrac 501811993239788826311 (q . 64)))
+        (@cf.ln (@cf.Frac 651981916131 1))
+        (@cf.AshFrac 501811993239788826311 (q . 64)))
       (@assert-ash-frac-approx
-        (%cf.ln (%cf.Frac 10 1000))
-        (%cf.AshFrac -84950395836799738039 (q . 64)))
+        (@cf.ln (@cf.Frac 10 1000))
+        (@cf.AshFrac -84950395836799738039 (q . 64)))
       (@assert-ash-frac-approx
-        (%cf.ln (%cf.Frac 1 1000000))
-        (%cf.AshFrac -254851187510399214117 (q . 64)))
+        (@cf.ln (@cf.Frac 1 1000000))
+        (@cf.AshFrac -254851187510399214117 (q . 64)))
       (@assert-ash-frac-approx
-        (%cf.ln (%cf.Frac 1 1))
-        (%cf.AshFrac 0 (q . 64)))
+        (@cf.ln (@cf.Frac 1 1))
+        (@cf.AshFrac 0 (q . 64)))
       (@assert-ash-frac-approx
-        (%cf.ln (%cf.Frac 1 1000000000000))
-        (%cf.AshFrac -509702375020798428235 (q . 64)))
+        (@cf.ln (@cf.Frac 1 1000000000000))
+        (@cf.AshFrac -509702375020798428235 (q . 64)))
       "test-logexpmath.test-ln"))
 
   (defun-inline test-log ()
     (@assert
       (@assert-ash-frac-approx
-        (%cf.log (%cf.Frac 314159 100000) (%cf.Frac 123456 100000))
-        (%cf.AshFrac 100213846217947407301 (q . 64)))
+        (@cf.log (@cf.Frac 314159 100000) (@cf.Frac 123456 100000))
+        (@cf.AshFrac 100213846217947407301 (q . 64)))
       (@assert-ash-frac-approx
-        (%cf.log (%cf.Frac 1000000000 1) (%cf.Frac 10 1))
-        (%cf.AshFrac 166020696663385964544 (q . 64)))
+        (@cf.log (@cf.Frac 1000000000 1) (@cf.Frac 10 1))
+        (@cf.AshFrac 166020696663385964544 (q . 64)))
       "test-logexpmath.test-log"))
 
   (defun-inline test-logexpmath ()

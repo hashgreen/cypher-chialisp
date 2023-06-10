@@ -1,4 +1,6 @@
 ;; Hashing library.
+;
+; TODO: Add functions from `chia-blockchain/chia/wallet/puzzles/curry.clib`
 
 (
   (defun-inline @cypher.hashlib.sha256one (tree)
