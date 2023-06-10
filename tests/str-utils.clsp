@@ -1,0 +1,29 @@
+(
+  (defmacro @cypher.tests.assert-startswith (statement result)
+    ;; Expect the statement to start with result.
+    ;
+    ; Args:
+    ;   statement: the statement to evaluate.
+    ;   result: the string to start with.
+
+    (qq
+      (if
+        (=
+          (unquote result)
+          (substr (unquote statement) 0 (strlen (unquote result)))
+        )
+        1
+        (x
+          (q . (unquote statement))
+          "does not start with"
+          (q . (unquote result))
+          "and evaluates to"
+          (unquote statement)
+        )
+      )
+    )
+  )
+
+  (defmacro @assert-startswith args
+    (c @cypher.tests.assert-startswith args))
+)

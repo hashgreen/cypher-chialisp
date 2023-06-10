@@ -2,14 +2,16 @@
   (defmacro @cypher.tests.assert-fails (statement)
     ;; Expect the statement to fail.
 
-    (qq (if
-      (= (f (mod () (unquote statement))) (q . x))
-      1
-      (x
-        (q . (unquote statement))
-        "should fail! "
+    (qq
+      (if
+        (= (f (mod () (unquote statement))) (q . x))
+        1
+        (x
+          (q . (unquote statement))
+          "should fail! "
+        )
       )
-    ))
+    )
   )
 
   (defun --cypher.tests.sha256tree (tree)
@@ -29,46 +31,50 @@
     ;   statement: the statement to evaluate.
     ;   result: the expected result.
 
-    (qq (if
-      (=
-        (--cypher.tests.sha256tree (unquote statement))
-        (--cypher.tests.sha256tree (unquote result))
+    (qq
+      (if
+        (=
+          (--cypher.tests.sha256tree (unquote statement))
+          (--cypher.tests.sha256tree (unquote result))
+        )
+        1
+        (x
+          ()
+          (q . (unquote statement))
+          "does not evaluate to"
+          (q . (unquote result))
+          "but evaluates to"
+          (unquote statement)
+        )
       )
-      1
-      (x
-        ()
-        (q . (unquote statement))
-        "does not evaluate to"
-        (q . (unquote result))
-        "but evaluates to"
-        (unquote statement)
-      )
-    ))
+    )
   )
 
   (defmacro @cypher.tests.assert-approx (statement result epsilon)
     ;; Expect the statement to evaluate approximately to result.
 
-    (qq (if
-      (all
-        (>
-          (unquote epsilon)
-          (- (unquote statement) (unquote result))
+    (qq
+      (if
+        (all
+          (>
+            (unquote epsilon)
+            (- (unquote statement) (unquote result))
+          )
+          (>
+            (unquote epsilon)
+            (- (unquote result) (unquote statement))
+          )
         )
-        (>
-          (unquote epsilon)
-          (- (unquote result) (unquote statement))
+        1
+        (x
+          (q . (unquote statement))
+          "does not evaluate approximately to"
+          (q . (unquote result))
+          "and evaluates to"
+          (unquote statement)
         )
       )
-      1
-      (x
-        (q . (unquote statement))
-        "does not evaluate approximately to"
-        (q . (unquote result))
-        "and evaluates to"
-        (unquote statement)
-      )
-    ))
+    )
   )
 
   (defmacro @cypher.tests.assert args
@@ -88,8 +94,12 @@
     )
   )
 
-  (defmacro @assert-fails args (c @cypher.tests.assert-fails args))
-  (defmacro @assert-equal args (c @cypher.tests.assert-equal args))
-  (defmacro @assert-approx args (c @cypher.tests.assert-approx args))
-  (defmacro @assert args (c @cypher.tests.assert args))
+  (defmacro @assert-fails args
+    (c @cypher.tests.assert-fails args))
+  (defmacro @assert-equal args
+    (c @cypher.tests.assert-equal args))
+  (defmacro @assert-approx args
+    (c @cypher.tests.assert-approx args))
+  (defmacro @assert args
+    (c @cypher.tests.assert args))
 )

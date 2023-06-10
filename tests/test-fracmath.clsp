@@ -6,11 +6,13 @@
   )
 
   (include cypher/fracmath.clsp)
+  (include cypher/logexpmath.clsp)
   (include cypher/math.clsp)
   (include cypher/utils.clsp)
 
   (include tests/utils.clsp)
   (include tests/fracmath-utils.clsp)
+  (include tests/str-utils.clsp)
 
   (defun-inline test-Frac-init ()
     (@assert
@@ -35,6 +37,13 @@
       (@assert-equal (@cf.Frac.get-numerator frac) 123)
       (@assert-equal (@cf.Frac.get-denominator frac) 456)
       "test-fracmath.test-Frac-getters"))
+
+  (defun-inline test-Frac-str ()
+    (@assert
+      (@assert-startswith (@cf.Frac.str (@cf.Frac 123 4)) "30.75")
+      (@assert-startswith (@cf.Frac.str (@cf.Frac 123 456)) "0.2697")
+      (@assert-startswith (@cf.Frac.str (@cf.Frac -123 45678)) "-0.002693")
+      "test-fracmath.test-Frac-str"))
 
   (defun-inline test-Frac-gt-zero ()
     (@assert
@@ -167,7 +176,7 @@
       (test-Frac-from-frac)
       (test-Frac-from-ash-frac)
       (test-Frac-getters)
-      ; (test-Frac-str)
+      (test-Frac-str)
       (test-Frac-gt-zero)
       (test-Frac-gt-one)
       (test-Frac-to-int)

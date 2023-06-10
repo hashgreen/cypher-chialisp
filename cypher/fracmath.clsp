@@ -180,14 +180,15 @@
     (--@cypher.fracmath.Frac.str
       frac
       (+
-        1
+        ; one digit for rounding up, one digit for extra precision
+        2
         (@cypher.fracmath.AshFrac.to-int
           (@cypher.logexpmath.log
-            (@cypher.fracmath.AshFrac@unsafe
+            (@cypher.fracmath.Frac@unsafe
               (@cypher.fracmath.Frac.get-denominator frac)
-              0
+              1
             )
-            (@cypher.fracmath.AshFrac@unsafe 10 0)
+            (@cypher.fracmath.Frac@unsafe 10 1)
           )
         )
       )
@@ -195,6 +196,27 @@
   )
   (defun cypher.fracmath.Frac.str (frac)
     (@cypher.fracmath.Frac.str frac))
+
+  (defun-inline @cypher.fracmath.Frac.repr (frac)
+    ;; Convert the fraction to a floating point string.
+    ;
+    ; Args:
+    ;   frac: an `Frac` object.
+    ;
+    ; Returns:
+    ;   A string representation of the fraction.
+
+    (concat
+      "Frac("
+      (@cypher.fracmath.Frac.get-numerator frac)
+      ", "
+      (@cypher.fracmath.Frac.get-denominator frac)
+      ") = "
+      (@cypher.fracmath.Frac.str frac)
+    )
+  )
+  (defun cypher.fracmath.Frac.repr (frac)
+    (@cypher.fracmath.Frac.repr frac))
 
   ;; Unary arithmetic functions.
 
@@ -557,7 +579,7 @@
     ;   The `AshFrac` fraction.
 
     (@cypher.utils.assert
-      (> denom_ash 0)
+      (not (> 0 denom_ash))
       (c numer denom_ash)
     )
   )
@@ -1253,6 +1275,10 @@
     (c @cypher.fracmath.Frac.str args))
   (defmacro cf.Frac.str args
     (c cypher.fracmath.Frac.str args))
+  (defmacro @cf.Frac.repr args
+    (c @cypher.fracmath.Frac.repr args))
+  (defmacro cf.Frac.repr args
+    (c cypher.fracmath.Frac.repr args))
 
   (defmacro @cf.Frac.gt-zero args
     (c @cypher.fracmath.Frac.gt-zero args))

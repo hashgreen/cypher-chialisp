@@ -41,6 +41,8 @@
     )
   )
 
-  (defun-inline @assert-ash-frac-approx (f . r) (@cypher.tests.assert-ash-frac-approx f . r))
-  (defun-inline @assert-frac-approx (f . r) (@cypher.tests.assert-frac-approx f . r))
+  (defmacro @assert-frac-approx args
+    (c @cypher.tests.assert-frac-approx args))
+  (defmacro @assert-ash-frac-approx args
+    (c @cypher.tests.assert-ash-frac-approx args))
 )
