@@ -27,10 +27,16 @@
       (cypher.standards.coin.Coin.get-amount coin)))
 
   (defun-inline cypher.standards.coin.Coin.verified-id (coin)
-    (cypher.hashlib.calculate-coin-id
-      (cypher.standards.coin.Coin.get-parent-id coin)
-      (cypher.standards.coin.Coin.get-puzzle-hash coin)
-      (cypher.standards.coin.Coin.get-amount coin)))
+    (if
+      (all
+        (= (strlen (cypher.standards.coin.Coin.get-parent-id coin)) 32)
+        (= (strlen (cypher.standards.coin.Coin.get-puzzle-hash coin)) 32)
+        (> (cypher.standards.coin.Coin.get-amount coin) -1)
+      )
+      (cypher.standards.coin.Coin.id coin)
+      (x)
+    )
+  )
 
   ;; Exports
 
@@ -51,16 +57,9 @@
     ; One needs to specify `cf.Coin.id@safe` or `cf.Coin.id@unsafe` to get the
     ; desired behavior.
 
-    (x "Error raised from `cf.Coin.id`: Please specify `cf.Coin.id@safe` or `cf.Coin.id@unsafe`."))
+    (x "cf.Coin.id: Please specify `cf.Coin.id@safe` or `cf.Coin.id@unsafe`."))
   (defmacro cf.Coin.id@unsafe args
     (c cypher.standards.coin.Coin.id args))
   (defmacro cf.Coin.id@safe args
-    (c cypher.standards.coin.Coin.verified-id args))
-
-  ; Backwards compatibility
-
-  (defmacro cf.Coin.unsafe-id args
-    (c cypher.standards.coin.Coin.id args))
-  (defmacro cf.Coin.verified-id args
     (c cypher.standards.coin.Coin.verified-id args))
 )

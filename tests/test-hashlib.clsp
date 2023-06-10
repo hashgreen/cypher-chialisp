@@ -1,0 +1,45 @@
+(a (mod ()
+
+  (include cypher/constants.clsp)
+  (include cypher/hashlib.clsp)
+  (include cypher/standards/opcodes.clsp)
+
+  (include tests/utils.clsp)
+
+  (defun-inline test-sha256tree ()
+    (@assert
+      (@assert-equal
+        (@cf.sha256one 1337)
+        0x5b7a8a302f103f65058f861c70ba00d2c0d8302253d43438614002a1db017c75)
+      (@assert-equal
+        (cf.sha256tree
+          (list
+            (list (list 1 2 3) (list 4 5 6))
+            (list (list 7 8 9) (list 10 11 12))
+          )
+        )
+        0x6763d29f7bf44218ba5aa947dc033edfac841f0ad9a6369eaa2dbee928b29602)
+      "test-hashlib.test-sha256tree"))
+
+  (defun-inline test-puzzle-hash-of-curried-function ()
+    (@assert
+      (@assert-equal
+        (cf.puzzle-hash-of-curried-function
+          0x37bef360ee858133b69d595a906dc45d01af50379dad515eb9518abb7c1d2a7a  ; CAT_MOD_HASH
+          (cf.sha256tree 1)  ; ACS_MOD
+          (cf.sha256tree 0x0000000000000000000000000000000000000000000000000000000000000000)  ; ZEROS_32
+          (cf.sha256tree 0x37bef360ee858133b69d595a906dc45d01af50379dad515eb9518abb7c1d2a7a)  ; CAT_MOD_HASH
+        )
+        0x0222f127af07761d7f168e492c5e21ad559193dc87535a3b3c362df99c0459d7)
+      "test-hashlib.test-puzzle-hash")
+  )
+
+  (defun-inline test-hashlib ()
+    (@assert
+      (test-sha256tree)
+      (test-puzzle-hash-of-curried-function)
+      "test-hashlib"))
+
+  (test-hashlib)
+
+) ())

@@ -1,19 +1,12 @@
 ;; Hashing library.
 
 (
-  ; name mingling to be compatible with curry-and-treehash.clinc
+  (defun-inline @cypher.hashlib.sha256one (tree)
+    (sha256 cypher.constants.ONE tree)
+  )
 
-  (defconstant ONE#cypher.constants.ONE 1)
-  (defconstant TWO#cypher.constants.TWO 2)
-  (defconstant A_KW#cypher.constants.APPLY a)
-  (defconstant Q_KW#cypher.constants.QUOTE q)
-  (defconstant C_KW#cypher.constants.CONS c)
-  (defconstant b32#cypher.constants.BYTES32 32)
-
-  (defun-inline cypher.hashlib.sha256one (tree)
-    (sha256 ONE#cypher.constants.ONE tree))
-  (defun-inline cypher.hashlib.sha256two (ftree rtree)
-    (sha256 TWO#cypher.constants.TWO ftree rtree))
+  (defun-inline @cypher.hashlib.sha256two (f_tree r_tree)
+    (sha256 cypher.constants.TWO f_tree r_tree))
 
   (defun cypher.hashlib.sha256tree (tree)
     ;; Takes a lisp tree and returns the hash of it.
@@ -27,11 +20,11 @@
     ;   The tree hash of the input.
 
     (if (l tree)
-      (cypher.hashlib.sha256two
+      (@cypher.hashlib.sha256two
         (cypher.hashlib.sha256tree (f tree))
         (cypher.hashlib.sha256tree (r tree))
       )
-      (cypher.hashlib.sha256one tree)
+      (@cypher.hashlib.sha256one tree)
     )
   )
 
@@ -46,16 +39,16 @@
     ; This is the new environment tree with the addition parameter P curried in.
     ; Note that `(c (q . P) E)` = `(c . ((q . P) . (E . 0)))`
 
-    (sha256 TWO#cypher.constants.TWO
-      (sha256 ONE#cypher.constants.ONE C_KW#cypher.constants.CONS)
-      (sha256 TWO#cypher.constants.TWO
-        (sha256 TWO#cypher.constants.TWO
-          (sha256 ONE#cypher.constants.ONE Q_KW#cypher.constants.QUOTE)
+    (@cypher.hashlib.sha256two
+      (@cypher.hashlib.sha256one cypher.opcodes.CONS)
+      (@cypher.hashlib.sha256two
+        (@cypher.hashlib.sha256two
+          (@cypher.hashlib.sha256one cypher.opcodes.QUOTE)
           parameter_hash
         )
-        (sha256 TWO#cypher.constants.TWO
+        (@cypher.hashlib.sha256two
           environment_hash
-          (sha256 ONE#cypher.constants.ONE 0)  ; do not use cf.ZERO!
+          (@cypher.hashlib.sha256one cypher.constants.ZERO)
         )
       )
     )
@@ -74,24 +67,22 @@
     ;
     ; Note that `(a (q . F) E)` = `(a . ((q . F)  . (E . 0)))`.
 
-    (sha256 TWO#cypher.constants.TWO
-      (sha256 ONE#cypher.constants.ONE A_KW#cypher.constants.APPLY)
-      (sha256 TWO#cypher.constants.TWO
-        (sha256 TWO#cypher.constants.TWO
-          (sha256 ONE#cypher.constants.ONE Q_KW#cypher.constants.QUOTE)
+    (@cypher.hashlib.sha256two
+      (@cypher.hashlib.sha256one cypher.opcodes.APPLY)
+      (@cypher.hashlib.sha256two
+        (@cypher.hashlib.sha256two
+          (@cypher.hashlib.sha256one cypher.opcodes.QUOTE)
           function_hash
         )
-        (sha256 TWO#cypher.constants.TWO
+        (@cypher.hashlib.sha256two
           environment_hash
-          (sha256 ONE#cypher.constants.ONE 0)  ; do not use cf.ZERO!
+          (@cypher.hashlib.sha256one cypher.constants.ZERO)
         )
       )
     )
   )
 
-  (defmacro cypher.hashlib.build-curry-list args
-    (c build-curry-list#cypher.hashlib.build-curry-list args))
-  (defun build-curry-list#cypher.hashlib.build-curry-list
+  (defun cypher.hashlib.build-curry-list
     (reversed_curry_parameter_hashes environment_hash)
     ;; This function recursively calls `update-hash-for-parameter-hash`,
     ;; updating `environment-hash` along the way.
@@ -99,7 +90,7 @@
     ; Taken from chia/wallet/puzzles/curry-and-treehash.clinc.
 
     (if reversed_curry_parameter_hashes
-      (build-curry-list#cypher.hashlib.build-curry-list
+      (cypher.hashlib.build-curry-list
         (r reversed_curry_parameter_hashes)
         (cypher.hashlib.update-hash-for-parameter-hash
           (f reversed_curry_parameter_hashes)
@@ -110,9 +101,7 @@
     )
   )
 
-  (defmacro cypher.hashlib.puzzle-hash-of-curried-function args
-    (c puzzle-hash-of-curried-function#cypher.hashlib.puzzle-hash-of-curried-function args))
-  (defun puzzle-hash-of-curried-function#cypher.hashlib.puzzle-hash-of-curried-function
+  (defun cypher.hashlib.puzzle-hash-of-curried-function
     (function_hash . reversed_curry_parameter_hashes)
     ;; Calculate of the tree hash of a curried function without actually
     ;; doing the curry, and using other optimization tricks like unrolling
@@ -140,49 +129,21 @@
 
     (cypher.hashlib.tree-hash-of-apply
       function_hash
-      (build-curry-list#cypher.hashlib.build-curry-list
+      (cypher.hashlib.build-curry-list
         reversed_curry_parameter_hashes
-        (sha256 ONE#cypher.constants.ONE ONE#cypher.constants.ONE)
+        (sha256 cypher.constants.ONE cypher.constants.ONE)
       )
-    )
-  )
-
-  (defmacro cypher.hashlib.calculate-coin-id args
-    (c calculate_coin_id#cypher.hashlib.calculate-coin-id args))
-  (defun calculate_coin_id#cypher.hashlib.calculate-coin-id
-    (parent_coin_info puzzle_hash amount)
-    ;; Calculate coin id, conditioned on all parameters being valid.
-    ;
-    ; Taken from chia/wallet/puzzles/curry-and-treehash.clinc.
-    ;
-    ; Args:
-    ;   parent_coin_info: parent_coin_info of a coin.
-    ;   puzzle_hash: puzzle_hash of a coin.
-    ;   amount: amount of a coin.
-    ;
-    ; Returns:
-    ;   Coin ID.
-    ;
-    ; Raises:
-    ;   When inputs are not of size bytes32 or amount is negative.
-
-    (if
-      (all
-        (= (strlen parent_coin_info) b32#cypher.constants.BYTES32)
-        (= (strlen puzzle_hash) b32#cypher.constants.BYTES32)
-        (> amount -1)
-      )
-      (sha256 parent_coin_info puzzle_hash amount)
-      (x)
     )
   )
 
   ;; Exports
 
-  (defmacro cf.sha256one args (c cypher.hashlib.sha256one args))
-  (defmacro cf.sha256two args (c cypher.hashlib.sha256two args))
-  (defmacro cf.sha256tree args (c cypher.hashlib.sha256tree args))
+  (defmacro @cf.sha256one args
+    (c @cypher.hashlib.sha256one args))
+  (defmacro @cf.sha256two args
+    (c @cypher.hashlib.sha256two args))
+  (defmacro cf.sha256tree args
+    (c cypher.hashlib.sha256tree args))
   (defmacro cf.puzzle-hash-of-curried-function args
     (c cypher.hashlib.puzzle-hash-of-curried-function args))
-  (defmacro cf.calculate-coin-id args (c cypher.hashlib.calculate-coin-id args))
 )
