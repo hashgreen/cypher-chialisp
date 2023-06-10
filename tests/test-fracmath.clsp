@@ -17,7 +17,7 @@
   (defun-inline test-Frac-init ()
     (@assert
       (@assert-equal (@cf.Frac 123 456) (c 123 456))
-      (@assert-fails (@cf.Frac 123 0))
+      (@assert-fail (@cf.Frac 123 0))
       "test-fracmath.test-Frac-init"))
 
   (defun-inline test-Frac-from-frac ()
@@ -98,7 +98,7 @@
         (@cf.Frac.inv (@cf.Frac 123 456)) (@cf.Frac 456 123))
       (@assert-equal
         (@cf.Frac.inv (@cf.Frac -456 123)) (@cf.Frac -123 456))
-      (@assert-fails
+      (@assert-fail
         (@cf.Frac.inv (@cf.Frac 0 1)))
       "test-fracmath.test-Frac-inv"))
 

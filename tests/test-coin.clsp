@@ -30,7 +30,7 @@
 
   (defun-inline test-methods ()
     (@assert
-      (@assert-fails (cf.Coin.id coin))
+      (@assert-fail (cf.Coin.id coin))
       (@assert-equal (cf.Coin.id@safe coin) 0xa5bc99ee87e8192340ee4984cf336edd2486cf169d358489b20485e454a2edf1)
       (@assert-equal (cf.Coin.id@unsafe coin) 0xa5bc99ee87e8192340ee4984cf336edd2486cf169d358489b20485e454a2edf1)
       "test-coin.test-methods"))

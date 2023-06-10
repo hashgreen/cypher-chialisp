@@ -94,7 +94,7 @@
     )
   )
 
-  (defmacro @assert-fails args
+  (defmacro @assert-fail args
     (c @cypher.tests.assert-fails args))
   (defmacro @assert-equal args
     (c @cypher.tests.assert-equal args))

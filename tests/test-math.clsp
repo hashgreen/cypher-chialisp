@@ -44,7 +44,7 @@
       (@assert-equal (@cf.sqrt 420) 20)
       (@assert-equal (@cf.sqrt 10000) 100)
       (@assert-equal (@cf.sqrt 1000000000000) 1000000)
-      ; (@assert-fails (@cf.sqrt -1))
+      ; (@assert-fail (@cf.sqrt -1))
       "test-math.test-sqrt"))
 
   (defun-inline test-str ()
@@ -64,7 +64,7 @@
   (defun-inline test-unsigned-sub ()
     (@assert
       (@assert-equal (@cf.unsigned-sub 2 2) 0)
-      (@assert-fails (@cf.unsigned-sub 1 2))
+      (@assert-fail (@cf.unsigned-sub 1 2))
       "test-math.test-unsigned-sub"))
 
   (defun-inline test-div ()

@@ -47,10 +47,10 @@
       (@assert-equal
         (cf.map add-two-vars iterable_of_two_vars)
         (list 300 700 1100))
-      ; this doesn't work yet as `@assert-fails` works in a sandbox,
+      ; this doesn't work yet as `@assert-fail` works in a sandbox,
       ; and we have not found a way to propagate `defun-inline` and fixtures.
       ;
-      ; (@assert-fails
+      ; (@assert-fail
       ;   (cf.map inline-add-two-vars iterable_of_two_vars))
       "test-itertools.test-map"))
 
