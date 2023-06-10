@@ -217,14 +217,12 @@
       (qq
         (--apply
           (unquote func)
-          (c
+          (@cypher.utils.prelist
             (unquote (f args))
-            (c
-              (--@cypher.itertools.reduce
-                (unquote func) (unquote (r args)) (unquote initializer) (unquote context) (unquote is-lambda)
-              )
-              (unquote context)
+            (--@cypher.itertools.reduce
+              (unquote func) (unquote (r args)) (unquote initializer) (unquote context) (unquote is-lambda)
             )
+            (unquote context)
           )
           (unquote is-lambda)
         )
@@ -260,13 +258,12 @@
     (if args
       (--apply
         func
-        (c
+        (@cypher.utils.prelist
           (f args)
-          (c
-            (--cypher.itertools.reduce
-              func (r args) initializer context is-lambda)
-            context
+          (--cypher.itertools.reduce
+            func (r args) initializer context is-lambda
           )
+          context
         )
         is-lambda
       )
