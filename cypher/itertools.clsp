@@ -195,6 +195,8 @@
   )
 
   (defun --cypher.itertools.reduce (fn args initializer context is_lambda)
+    ; `fn` should be concrete functions, not symbols, while `is_lambda` hints
+    ; the origin of `fn`
     (if args
       (--@cypher.utils.apply
         fn

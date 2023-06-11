@@ -42,18 +42,18 @@
     (if (l str) 0 (--cypher.utils.is-printable-str.stager str))
   )
 
-  (defun-inline --@cypher.utils.apply (func args is_lambda)
-    ;; Apply a function to a list of arguments.
+  (defun-inline --@cypher.utils.apply (fn args is_lambda)
+    ;; Apply a fntion to a list of arguments.
     ;
     ; Args:
-    ;   func: a function.
+    ;   fn: a concrete function.
     ;   args: a list of arguments.
-    ;   is_lambda: whether `func` is a lambda.
+    ;   is_lambda: whether `fn` is a lambda.
     ;
     ; Returns:
-    ;   The result of applying `func` to `args`.
+    ;   The result of applying `fn` to `args`.
 
-    (a func (if is_lambda args (c func args)))
+    (a fn (if is_lambda args (c fn args)))
   )
 
   ;; control flow
@@ -200,24 +200,24 @@
     ; Returns:
     ;   The minimum value.
 
+    ; TODO: this does not work with `comp_fn` in fuction symbol yet
+
     (qq
       (--@cypher.itertools.reduce
-        (lambda
-          (arg agg)
+        (lambda (left right comp_fn)
           (if
             (>
               0
-              (--@cypher.utils.apply
-                (unquote comp_fn) (list arg agg) (unquote (l comp_fn))
-              )
+              (--@cypher.utils.apply comp_fn (list left right) (unquote is_lambda))
             )
-            (unquote arg)
-            (unquote agg)
+            left
+            right
           )
         )
         (unquote args)
         (unquote (f args))
-        ()
+        ; `comp_fn` is passed in the context
+        (list (unquote comp_fn))
         (unquote (l comp_fn))
       )
     )
