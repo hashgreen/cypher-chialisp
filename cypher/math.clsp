@@ -169,6 +169,36 @@
 
   ;; Binary operators.
 
+  (defun-inline @cypher.math.add (augend addend)
+    ;; Addition.
+    ;
+    ; Args:
+    ;   augend: The augend.
+    ;   addend: The addend.
+    ;
+    ; Returns:
+    ;   An integer, the result of the addition.
+
+    (+ augend addend)
+  )
+  (defun cypher.math.add (augend addend)
+    (@cypher.math.add augend addend))
+
+  (defun-inline @cypher.math.sub (minuend subtrahend)
+    ;; Subtraction.
+    ;
+    ; Args:
+    ;   minuend: The minuend.
+    ;   subtrahend: The subtrahend.
+    ;
+    ; Returns:
+    ;   An integer, the result of the subtraction.
+
+    (- minuend subtrahend)
+  )
+  (defun cypher.math.sub (minuend subtrahend)
+    (@cypher.math.sub minuend subtrahend))
+
   (defun-inline @cypher.math.unsigned-sub (minuend subtrahend)
     ;; Unsigned subtraction.
     ;
@@ -296,6 +326,12 @@
   (defmacro cf.str args
     (c cypher.math.str args))
 
+  (defmacro @cf.add args
+    (c @cypher.math.add args))
+  (defmacro cf.add args
+    (c cypher.math.add args))
+  (defmacro @cf.sub args
+    (c @cypher.math.sub args))
   (defmacro @cf.unsigned-sub args
     (c @cypher.math.unsigned-sub args))
   (defmacro cf.unsigned-sub args

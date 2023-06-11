@@ -1,5 +1,6 @@
 (a (mod ()
 
+  (include cypher/itertools.clsp)
   (include cypher/utils.clsp)
 
   (include tests/utils.clsp)
@@ -39,6 +40,15 @@
       (@assert-equal (@cf.and 1 1 1) 1)
       "test-utils.test-and"))
 
+  (defun-inline test-min ()
+    (@assert
+      (@assert-equal
+        (@cf.min
+          (lambda (minuend subtrahend) (- minuend subtrahend))
+          3 1 4 5 1 9 2 6 5 3 5
+        ) 1)
+      "test-utils.test-min"))
+
   (defun-inline test-prelist ()
     (@assert
       (@assert-equal
@@ -54,6 +64,7 @@
       (test-assert)
       (test-if)
       (test-and)
+      (test-min)
       (test-prelist)
       "test-utils"))
 

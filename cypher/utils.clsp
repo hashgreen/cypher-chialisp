@@ -1,8 +1,61 @@
 ;;; Utilities.
 ;
 ; This file contains a collection of useful utils.
+;
+; TODO: add the following functions:
+;   - match
+;   - len (or count?)
 
 (
+  ;; function
+
+  (defun-inline --cypher.utils.is-printable-char (char)
+    ;; Whether a character is printable.
+    ;
+    ; Args:
+    ;   char: a character.
+    ;
+    ; Returns:
+    ;   Boolean, whether the character is printable.
+
+    (all (> char 31) (> 128 char))
+  )
+
+  (defun --cypher.utils.is-printable-str.stager (str)
+    (if str
+      (all
+        (--cypher.utils.is-printable-str (/ str 256))
+        (--cypher.utils.is-printable-char (r (divmod str 256)))
+      )
+      1
+    )
+  )
+  (defun --cypher.utils.is-printable-str (str)
+    ;; Whether a string is printable.
+    ;
+    ; Args:
+    ;   str: a string.
+    ;
+    ; Returns:
+    ;   Boolean, whether the string is printable.
+
+    (if (l str) 0 (--cypher.utils.is-printable-str.stager str))
+  )
+
+  (defun-inline --@cypher.utils.apply (func args is_lambda)
+    ;; Apply a function to a list of arguments.
+    ;
+    ; Args:
+    ;   func: a function.
+    ;   args: a list of arguments.
+    ;   is_lambda: whether `func` is a lambda.
+    ;
+    ; Returns:
+    ;   The result of applying `func` to `args`.
+
+    (a func (if is_lambda args (c func args)))
+  )
+
   ;; control flow
 
   (defmacro @cypher.utils.assert args
@@ -134,6 +187,44 @@
     )
   )
 
+  (defmacro @cypher.utils.min (comp_fn . args)
+    ;; Find the minimum value in a list, macro form.
+    ;
+    ; Args:
+    ;   comp_fn: comparison function that takes two arguments, and when
+    ;     - (comp_fn left right) < 0, left shuold be smaller than right,
+    ;     - (comp_fn left right) > 0, left shuold be larger than right, and
+    ;     - (comp_fn left right) = 0, left and right are equal.
+    ;   args: list of arguments to find minimum value.
+    ;
+    ; Returns:
+    ;   The minimum value.
+
+    (qq
+      (--@cypher.itertools.reduce
+        (lambda
+          (arg agg)
+          (if
+            (>
+              0
+              (--@cypher.utils.apply
+                (unquote comp_fn) (list arg agg) (unquote (l comp_fn))
+              )
+            )
+            (unquote arg)
+            (unquote agg)
+          )
+        )
+        (unquote args)
+        (unquote (f args))
+        ()
+        (unquote (l comp_fn))
+      )
+    )
+  )
+
+  ; TODO: min, function form
+
   ;; list
 
   (defmacro @cypher.utils.prelist args
@@ -173,6 +264,8 @@
 
   (defmacro @cf.and args
     (c @cypher.utils.and args))
+  (defmacro @cf.min args
+    (c @cypher.utils.min args))
 
   (defmacro @cf.prelist args
     (c @cypher.utils.prelist args))
