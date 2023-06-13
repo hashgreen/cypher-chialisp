@@ -295,61 +295,105 @@
   (defun cypher.math.mul-frac (var frac)
     (@cypher.math.mul-frac var frac))
 
+  ;; List reduction operators.
+
+  (defmacro @cypher.math.min args
+    ;; Find the minimum value in an integer list, macro form.
+    ;
+    ; Args:
+    ;   args: A list of integers.
+    ;
+    ; Returns:
+    ;   An integer, the minimum value in the list.
+
+    (qq
+      (@cypher.itertools.reduce
+        (lambda (left right) (if (> left right) right left))
+        (unquote (f args))
+        ()
+        . (unquote args)
+      )
+    )
+  )
+  (defmacro cypher.math.min args
+    ;; Find the minimum value in an integer list, function form.
+    ;
+    ; Args:
+    ;   args: A list of integers.
+    ;
+    ; Returns:
+    ;   An integer, the minimum value in the list.
+
+    (qq
+      (cypher.itertools.reduce
+        (lambda (left right) (if (> left right) right left))
+        (unquote (f args))
+        ()
+        (unquote args)
+      )
+    )
+  )
+
   ;; Exports
 
-  (defmacro @cf.abs args
+  (defmacro @cf.math.abs args
     (c @cypher.math.abs args))
-  (defmacro cf.abs args
+  (defmacro cf.math.abs args
     (c cypher.math.abs args))
-  (defmacro @cf.round-down-to-even args
+  (defmacro @cf.math.round-down-to-even args
     (c @cypher.math.round-down-to-even args))
-  (defmacro cf.round-down-to-even args
+  (defmacro cf.math.round-down-to-even args
     (c cypher.math.round-down-to-even args))
-  (defmacro @cf.round-down-to-odd args
+  (defmacro @cf.math.round-down-to-odd args
     (c @cypher.math.round-down-to-odd args))
-  (defmacro cf.round-down-to-odd args
+  (defmacro cf.math.round-down-to-odd args
     (c cypher.math.round-down-to-odd args))
-  (defmacro @cf.round-up-to-even args
+  (defmacro @cf.math.round-up-to-even args
     (c @cypher.math.round-up-to-even args))
-  (defmacro cf.round-up-to-even args
+  (defmacro cf.math.round-up-to-even args
     (c cypher.math.round-up-to-even args))
-  (defmacro @cf.round-up-to-odd args
+  (defmacro @cf.math.round-up-to-odd args
     (c @cypher.math.round-up-to-odd args))
-  (defmacro cf.round-up-to-odd args
+  (defmacro cf.math.round-up-to-odd args
     (c cypher.math.round-up-to-odd args))
-  (defmacro @cf.sqrt args
+  (defmacro @cf.math.sqrt args
     (c @cypher.math.sqrt args))
-  (defmacro cf.sqrt args
+  (defmacro cf.math.sqrt args
     (c cypher.math.sqrt args))
-  (defmacro @cf.str args
+  (defmacro @cf.math.str args
     (c @cypher.math.str args))
-  (defmacro cf.str args
+  (defmacro cf.math.str args
     (c cypher.math.str args))
 
-  (defmacro @cf.add args
+  (defmacro @cf.math.add args
     (c @cypher.math.add args))
-  (defmacro cf.add args
+  (defmacro cf.math.add args
     (c cypher.math.add args))
-  (defmacro @cf.sub args
+  (defmacro @cf.math.sub args
     (c @cypher.math.sub args))
-  (defmacro @cf.unsigned-sub args
+  (defmacro @cf.math.unsigned-sub args
     (c @cypher.math.unsigned-sub args))
-  (defmacro cf.unsigned-sub args
+  (defmacro cf.math.unsigned-sub args
     (c cypher.math.unsigned-sub args))
-  (defmacro @cf.div@unsafe args
+  (defmacro @cf.math.div@unsafe args
     (c @cypher.math.div@unsafe args))
-  (defmacro cf.div@unsafe args
+  (defmacro cf.math.div@unsafe args
     (c cypher.math.div@unsafe args))
-  (defmacro @cf.div args
+  (defmacro @cf.math.div args
     (c @cypher.math.div args))
-  (defmacro cf.div args
+  (defmacro cf.math.div args
     (c cypher.math.div args))
-  (defmacro @cf.pow args
+  (defmacro @cf.math.pow args
     (c @cypher.math.pow args))
-  (defmacro cf.pow args
+  (defmacro cf.math.pow args
     (c cypher.math.pow args))
-  (defmacro @cf.mul-frac args
+  (defmacro @cf.math.mul-frac args
     (c @cypher.math.mul-frac args))
-  (defmacro cf.mul-frac args
+  (defmacro cf.math.mul-frac args
     (c cypher.math.mul-frac args))
+
+  (defmacro @cf.math.min args
+    (c @cypher.math.min args))
+  (defmacro cf.math.min args
+    (c cypher.math.min args))
 )

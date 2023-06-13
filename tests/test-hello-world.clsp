@@ -8,7 +8,7 @@
   (defun-inline test-hello-world ()
     (@assert
       (@assert-equal
-        (@cf.str 42069 3) "42.069")
+        (@cf.math.str 42069 3) "42.069")
       "hello-world")
   )
 
