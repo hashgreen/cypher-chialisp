@@ -187,6 +187,33 @@
     )
   )
 
+  (defmacro --@cypher.utils.or args
+    ;; Lazy evaluation of `any`.
+    ;
+    ; Args:
+    ;   args: list of statements to evaluate.
+    ;
+    ; Returns:
+    ;   1 if any statement evaluates to true, 0 otherwise.
+
+    (if (r args)
+      (qq
+        (if (unquote (f args))
+          1
+          (--@cypher.utils.or . (unquote (r args)))
+        )
+      )
+      (f args)
+    )
+  )
+  (defmacro @cypher.utils.or args
+    ; This gets around the case of lone `@cypher.utils.or` with no args.
+    (if args
+      (c --@cypher.utils.or args)
+      0
+    )
+  )
+
   (defmacro @cypher.utils.min (comp_fn . args)
     ;; Find the minimum value in a list, macro form.
     ;
@@ -264,6 +291,8 @@
 
   (defmacro @cf.and args
     (c @cypher.utils.and args))
+  (defmacro @cf.or args
+    (c @cypher.utils.or args))
   (defmacro @cf.min args
     (c @cypher.utils.min args))
 

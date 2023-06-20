@@ -40,6 +40,14 @@
       (@assert-equal (@cf.and 1 1 1) 1)
       "test-utils.test-and"))
 
+  (defun-inline test-or ()
+    (@assert
+      (@assert-equal (@cf.or) 0)
+      (@assert-equal (@cf.or 0 0) 0)
+      (@assert-equal (@cf.or 0 1) 1)
+      (@assert-equal (@cf.or 1 1 1) 1)
+      "test-utils.test-or")
+
   (defun-inline test-min ()
     (@assert
       (@assert-equal
@@ -64,6 +72,7 @@
       (test-assert)
       (test-if)
       (test-and)
+      (test-or)
       (test-min)
       (test-prelist)
       "test-utils"))
