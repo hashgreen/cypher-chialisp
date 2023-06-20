@@ -343,6 +343,14 @@
         (@cf.AshFrac 1234567 10) (@cf.AshFrac 1234567 10))
       "test-fracmath.test-AshFrac-eq"))
 
+  (defun-inline test-AshFrac-gt ()
+    (@assert
+      (@cf.AshFrac.gt
+        (@cf.AshFrac 1234567 10) (@cf.AshFrac 1234566 10))
+      (@cf.AshFrac.gt
+        (@cf.AshFrac 1234567 10) (@cf.AshFrac 1205 0))
+      "test-fracmath.test-AshFrac-gt"))
+
   (defun-inline test-AshFrac-add ()
     (@assert
       (@assert-equal
@@ -385,6 +393,7 @@
       (test-AshFrac-mul-int)
       (test-AshFrac-div-int)
       (test-AshFrac-eq)
+      (test-AshFrac-gt)
       (test-AshFrac-add)
       (test-AshFrac-mul)
       (test-AshFrac-div)

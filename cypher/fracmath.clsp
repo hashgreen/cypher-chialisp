@@ -62,7 +62,7 @@
     ; Returns:
     ;   A `Frac` object, the converted fraction.
 
-    (@cypher.fracmath.Frac
+    (@cypher.fracmath.Frac@unsafe
       (@cypher.math.div
         (*
           (@cypher.fracmath.Frac.get-numerator frac)
@@ -641,7 +641,7 @@
     ; Returns:
     ;   A `AshFrac` object, the converted fraction.
 
-    (@cypher.fracmath.AshFrac
+    (@cypher.fracmath.AshFrac@unsafe
       (ash
         (@cypher.fracmath.AshFrac.get-numerator ash_frac)
         (- denom_ash (@cypher.fracmath.AshFrac.get-denominator-ash ash_frac))
@@ -1065,6 +1065,30 @@
   (defun cypher.fracmath.AshFrac.eq (ash_frac other)
     (@cypher.fracmath.AshFrac.eq ash_frac other))
 
+  (defun-inline @cypher.fracmath.AshFrac.gt (ash_frac other)
+    ;; Greater than comparison of fractions.
+    ;
+    ; Args:
+    ;   ash_frac: a `AshFrac`.
+    ;   other: a `AshFrac`.
+    ;
+    ; Returns:
+    ;   Whether the fraction is greater than the other.
+
+    (>
+      (ash
+        (@cypher.fracmath.AshFrac.get-numerator ash_frac)
+        (@cypher.fracmath.AshFrac.get-denominator-ash other)
+      )
+      (ash
+        (@cypher.fracmath.AshFrac.get-numerator other)
+        (@cypher.fracmath.AshFrac.get-denominator-ash ash_frac)
+      )
+    )
+  )
+  (defun cypher.fracmath.AshFrac.gt (ash_frac other)
+    (@cypher.fracmath.AshFrac.gt ash_frac other))
+
   (defun-inline --@cypher.fracmath.AshFrac.add@imprecise (ash_frac other)
     ;; Addition of fractions, not retaining sufficient precision.
     ;
@@ -1432,6 +1456,10 @@
     (c @cypher.fracmath.AshFrac.eq args))
   (defmacro cf.AshFrac.eq args
     (c cypher.fracmath.AshFrac.eq args))
+  (defmacro @cf.AshFrac.gt args
+    (c @cypher.fracmath.AshFrac.gt args))
+  (defmacro cf.AshFrac.gt args
+    (c cypher.fracmath.AshFrac.gt args))
   (defmacro @cf.AshFrac.add args
     (c @cypher.fracmath.AshFrac.add args))
   (defmacro cf.AshFrac.add args
