@@ -1,6 +1,4 @@
 ;; Hashing library.
-;
-; TODO: Add functions from `chia-blockchain/chia/wallet/puzzles/curry.clib`
 
 (
   (defun-inline @cypher.hashlib.sha256one (tree)
@@ -56,7 +54,7 @@
     )
   )
 
-  (defun-inline cypher.hashlib.tree-hash-of-apply
+  (defun-inline @cypher.hashlib.tree-hash-of-apply
     (function_hash environment_hash)
     ;; Given the tree hash `environment_hash` of an environment tree E
     ;; and the tree hash `function_hash` of a function tree F
@@ -84,7 +82,7 @@
     )
   )
 
-  (defun cypher.hashlib.build-curry-list
+  (defun cypher.hashlib.build-curry-list@v1
     (reversed_curry_parameter_hashes environment_hash)
     ;; This function recursively calls `update-hash-for-parameter-hash`,
     ;; updating `environment-hash` along the way.
@@ -92,7 +90,7 @@
     ; Taken from chia/wallet/puzzles/curry-and-treehash.clinc.
 
     (if reversed_curry_parameter_hashes
-      (cypher.hashlib.build-curry-list
+      (cypher.hashlib.build-curry-list@v1
         (r reversed_curry_parameter_hashes)
         (cypher.hashlib.update-hash-for-parameter-hash
           (f reversed_curry_parameter_hashes)
@@ -103,7 +101,28 @@
     )
   )
 
-  (defun cypher.hashlib.puzzle-hash-of-curried-function
+  (defun cypher.hashlib.build-curry-list@v2
+    (curry_parameter_hashes environment_hash)
+    ;; This function recursively calls `update-hash-for-parameter-hash`,
+    ;; updating `environment-hash` along the way.
+    ;
+    ; Note this function takes `curry_parameter_hashes` in normal order, as
+    ; opposed to `cypher.hashlib.build-curry-list@v1` where the order is
+    ; reversed.
+
+    (if curry_parameter_hashes
+      (cypher.hashlib.update-hash-for-parameter-hash
+        (f curry_parameter_hashes)
+        (cypher.hashlib.build-curry-list@v2
+          (r curry_parameter_hashes)
+          environment_hash
+        )
+      )
+      environment_hash
+    )
+  )
+
+  (defun-inline @cypher.hashlib.puzzle-hash-of-curried-function@v1
     (function_hash . reversed_curry_parameter_hashes)
     ;; Calculate of the tree hash of a curried function without actually
     ;; doing the curry, and using other optimization tricks like unrolling
@@ -129,14 +148,41 @@
     ;   The hash of the curried expression.
     ;     (a (q . function-hash) (c (cp1 (c cp2 (c ... 1)...))))
 
-    (cypher.hashlib.tree-hash-of-apply
+    (@cypher.hashlib.tree-hash-of-apply
       function_hash
-      (cypher.hashlib.build-curry-list
+      (cypher.hashlib.build-curry-list@v1
         reversed_curry_parameter_hashes
         (sha256 cypher.constants.ONE cypher.constants.ONE)
       )
     )
   )
+  (defun cypher.hashlib.puzzle-hash-of-curried-function@v1
+    (function_hash . reversed_curry_parameter_hashes)
+    (@cypher.hashlib.puzzle-hash-of-curried-function@v1
+      function_hash . reversed_curry_parameter_hashes))
+
+  (defun-inline @cypher.hashlib.puzzle-hash-of-curried-function@v2
+    (function_hash . curry_parameter_hashes)
+    ;; Calculate of the tree hash of a curried function without actually
+    ;; doing the curry, and using other optimization tricks like unrolling
+    ;; `sha256tree`.
+    ;
+    ; Note this function takes `curry_parameter_hashes` in normal order, as
+    ; opposed to `cypher.hashlib.puzzle-hash-of-curried-function@v1` where the
+    ; order is reversed.
+
+    (@cypher.hashlib.tree-hash-of-apply
+      function_hash
+      (cypher.hashlib.build-curry-list@v2
+        curry_parameter_hashes
+        (sha256 cypher.constants.ONE cypher.constants.ONE)
+      )
+    )
+  )
+  (defun cypher.hashlib.puzzle-hash-of-curried-function@v2
+    (function_hash . curry_parameter_hashes)
+    (@cypher.hashlib.puzzle-hash-of-curried-function@v2
+      function_hash . curry_parameter_hashes))
 
   ;; Exports
 
@@ -144,8 +190,21 @@
     (c @cypher.hashlib.sha256one args))
   (defmacro @cf.sha256two args
     (c @cypher.hashlib.sha256two args))
+
   (defmacro cf.sha256tree args
     (c cypher.hashlib.sha256tree args))
+
+  (defmacro @cf.puzzle-hash-of-curried-function@v1 args
+    (c @cypher.hashlib.puzzle-hash-of-curried-function@v1 args))
+  (defmacro cf.puzzle-hash-of-curried-function@v1 args
+    (c cypher.hashlib.puzzle-hash-of-curried-function@v1 args))
+  (defmacro @cf.puzzle-hash-of-curried-function@v2 args
+    (c @cypher.hashlib.puzzle-hash-of-curried-function@v2 args))
+  (defmacro cf.puzzle-hash-of-curried-function@v2 args
+    (c cypher.hashlib.puzzle-hash-of-curried-function@v2 args))
+
   (defmacro cf.puzzle-hash-of-curried-function args
-    (c cypher.hashlib.puzzle-hash-of-curried-function args))
+    (c cypher.hashlib.puzzle-hash-of-curried-function@v1 args))
+  (defmacro @cf.puzzle-hash-of-curried-function args
+    (c @cypher.hashlib.puzzle-hash-of-curried-function@v1 args))
 )

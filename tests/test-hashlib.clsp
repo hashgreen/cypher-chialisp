@@ -31,8 +31,15 @@
           (cf.sha256tree 0x37bef360ee858133b69d595a906dc45d01af50379dad515eb9518abb7c1d2a7a)  ; CAT_MOD_HASH
         )
         0x0222f127af07761d7f168e492c5e21ad559193dc87535a3b3c362df99c0459d7)
-      "test-hashlib.test-puzzle-hash")
-  )
+      (@assert-equal
+        (cf.puzzle-hash-of-curried-function@v2
+          0x37bef360ee858133b69d595a906dc45d01af50379dad515eb9518abb7c1d2a7a  ; CAT_MOD_HASH
+          (cf.sha256tree 0x37bef360ee858133b69d595a906dc45d01af50379dad515eb9518abb7c1d2a7a)  ; CAT_MOD_HASH
+          (cf.sha256tree 0x0000000000000000000000000000000000000000000000000000000000000000)  ; ZEROS_32
+          (cf.sha256tree 1)  ; ACS_MOD
+        )
+        0x0222f127af07761d7f168e492c5e21ad559193dc87535a3b3c362df99c0459d7)
+      "test-hashlib.test-puzzle-hash"))
 
   (defun-inline test-hashlib ()
     (@assert
