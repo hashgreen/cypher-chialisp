@@ -220,6 +220,37 @@
 
   ;; Unary arithmetic functions.
 
+  (defun-inline @cypher.fracmath.Frac.eq-zero (frac)
+    ;; Whether the fraction is equal to zero.
+    ;
+    ; Args:
+    ;   frac: a `Frac` object.
+    ;
+    ; Returns:
+    ;   A boolean, whether the fraction is equal to zero.
+
+    (= 0 (@cypher.fracmath.Frac.get-numerator frac))
+  )
+  (defun cypher.fracmath.Frac.eq-zero (frac)
+    (@cypher.fracmath.Frac.eq-zero frac))
+
+  (defun-inline @cypher.fracmath.Frac.eq-one (frac)
+    ;; Whether the fraction is equal to one.
+    ;
+    ; Args:
+    ;   frac: a `Frac` object.
+    ;
+    ; Returns:
+    ;   A boolean, whether the fraction is equal to one.
+
+    (=
+      (@cypher.fracmath.Frac.get-numerator frac)
+      (@cypher.fracmath.Frac.get-denominator frac)
+    )
+  )
+  (defun cypher.fracmath.Frac.eq-one (frac)
+    (@cypher.fracmath.Frac.eq-one frac))
+
   (defun-inline @cypher.fracmath.Frac.gt-zero (frac)
     ;; `Greater than` against zero.
     ;
@@ -1304,6 +1335,14 @@
   (defmacro cf.Frac.repr args
     (c cypher.fracmath.Frac.repr args))
 
+  (defmacro @cf.Frac.eq-zero args
+    (c @cypher.fracmath.Frac.eq-zero args))
+  (defmacro cf.Frac.eq-zero args
+    (c cypher.fracmath.Frac.eq-zero args))
+  (defmacro @cf.Frac.eq-one args
+    (c @cypher.fracmath.Frac.eq-one args))
+  (defmacro cf.Frac.eq-one args
+    (c cypher.fracmath.Frac.eq-one args))
   (defmacro @cf.Frac.gt-zero args
     (c @cypher.fracmath.Frac.gt-zero args))
   (defmacro cf.Frac.gt-zero args

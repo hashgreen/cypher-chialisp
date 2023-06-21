@@ -45,6 +45,21 @@
       (@assert-startswith (@cf.Frac.str (@cf.Frac -123 45678)) "-0.002693")
       "test-fracmath.test-Frac-str"))
 
+  (defun-inline test-Frac-eq-zero ()
+    (@assert
+      (@cf.Frac.eq-zero (@cf.Frac 0 1))
+      (not (@cf.Frac.eq-zero (@cf.Frac 1 1)))
+      (not (@cf.Frac.eq-zero (@cf.Frac -1 1)))
+      "test-fracmath.test-Frac-eq-zero"))
+
+  (defun-inline test-Frac-eq-one ()
+    (@assert
+      (@cf.Frac.eq-one (@cf.Frac 1 1))
+      (@cf.Frac.eq-one (@cf.Frac 123 123))
+      (not (@cf.Frac.eq-one (@cf.Frac 0 1)))
+      (not (@cf.Frac.eq-one (@cf.Frac -1 1)))
+      "test-fracmath.test-Frac-eq-one"))
+
   (defun-inline test-Frac-gt-zero ()
     (@assert
       (@cf.Frac.gt-zero (@cf.Frac 314159 100000))
@@ -177,6 +192,8 @@
       (test-Frac-from-ash-frac)
       (test-Frac-getters)
       (test-Frac-str)
+      (test-Frac-eq-zero)
+      (test-Frac-eq-one)
       (test-Frac-gt-zero)
       (test-Frac-gt-one)
       (test-Frac-to-int)
