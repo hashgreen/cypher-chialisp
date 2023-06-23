@@ -18,6 +18,42 @@
 
   (defun-inline inline-add-two-vars (var1 var2) (+ var1 var2))
 
+  (defun-inline test-length ()
+    (@assert
+      (@assert-equal
+        (cf.length (list)) 0)
+      (@assert-equal
+        (cf.length (list 1 2 3 4)) 4)
+        "test-itertools.test-length"))
+
+  (defun-inline test-slice ()
+    (@assert
+      (@assert-equal
+        (cf.slice (list) 0 0) (list))
+      (@assert-equal
+        (cf.slice (list) 0 10) (list))
+      (@assert-equal
+        (cf.slice (list 1 2 3 4) 0 0) (list))
+      (@assert-equal
+        (cf.slice (list 1 2 3 4) 0 3) (list 1 2 3))
+      (@assert-equal
+        (cf.slice (list 1 2 3 4) 0 10) (list 1 2 3 4))
+      (@assert-equal
+        (cf.slice (list 1 2 3 4) 3 10) (list 4))
+      (@assert-equal
+        (cf.slice (list 1 2 3 4) 10 0) (list))
+      "test-itertools.test-slice"))
+
+  (defun-inline test-reverse ()
+    (@assert
+      (@assert-equal
+        (cf.reverse (list))
+        (list))
+      (@assert-equal
+        (cf.reverse (list 1 2 3 4))
+        (list 4 3 2 1))
+      "test-itertools.test-reverse"))
+
   (defun-inline test-chain ()
     (@assert
       (@assert-equal
@@ -55,6 +91,18 @@
       ;   (cf.map inline-add-two-vars iterable_of_two_vars))
       "test-itertools.test-map"))
 
+  (defun is-even var (= (r (divmod var 2)) 0))
+
+  (defun-inline test-filter ()
+    (@assert
+      (@assert-equal
+        (cf.filter (lambda var (= (r (divmod var 2)) 0)) (list 1 2 3 4 5 6 7 8 9 10))
+        (list 2 4 6 8 10))
+      (@assert-equal
+        (cf.filter is-even (list 1 2 3 4 5 6 7 8 9 10))
+        (list 2 4 6 8 10))
+      "test-itertools.test-filter"))
+
   (defun add-arg-if-not-equal-to-var (arg agg var)
     (if (= arg var) agg (+ arg agg)))
 
@@ -80,8 +128,11 @@
 
   (defun-inline test-itertools ()
     (@assert
+      (test-length)
+      (test-reverse)
       (test-chain)
       (test-map)
+      (test-filter)
       (test-reduce)
       "test-itertools"))
 

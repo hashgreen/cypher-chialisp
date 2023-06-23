@@ -4,13 +4,112 @@
 ;
 ; TODO: add the following functions:
 ;  - compress
-;  - filter
-;  - slice
 ;  - zip
-;  - reverse
 ;  - filtermap
 
 (
+  ;; Dependencies:
+  ;
+  ; (include cypher/constants.clsp)
+  ; (include cypher/math.clsp)
+  ; (include cypher/utils.clsp)
+
+  ;; length
+
+  (defun cypher.itertools.length (args)
+    ;; Get the length of the list.
+    ;
+    ; Args:
+    ;   args: The list to get the length of.
+    ;
+    ; Returns:
+    ;   The length of the list.
+
+    (if args
+      (+ 1 (cypher.itertools.length (r args)))
+      0
+    )
+  )
+
+  ;; slice
+
+  (defun --cypher.itertools.slice.stager (args start end)
+    (@cypher.utils.if
+      (not args) cypher.constants.NIL
+
+      (@cypher.math.eq end 0) cypher.constants.NIL
+
+      (@cypher.math.gt start 0)
+      (--cypher.itertools.slice.stager
+        (r args) (- start 1) (- end 1)
+      )
+
+      ; (@cypher.math.eq start 0)
+      (c
+        (f args)
+        (--cypher.itertools.slice.stager
+          (r args) start (- end 1)
+        )
+      )
+    )
+  )
+  (defun cypher.itertools.slice (args start end)
+    ;; Slice the list.
+    ;
+    ; Args:
+    ;   args: The list to slice.
+    ;   start: The start index.
+    ;   end: The end index.
+    ;
+    ; Returns:
+    ;   The sliced list.
+
+    (@cypher.utils.if
+      (@cypher.math.ge start end)
+      cypher.constants.NIL
+
+      (any (@cypher.math.lt start 0) (@cypher.math.lt end 0))
+      (x "Negative indices not supported.")
+
+      (--cypher.itertools.slice.stager args start end)
+    )
+  )
+
+  ;; reverse
+
+  (defun --cypher.itertools.reverse.stager (args reversed_args)
+    ;; Reverse the list, stager.
+    ;
+    ; Args:
+    ;   args: The list to reverse.
+    ;   reversed_args: The reversed list so far.
+    ;
+    ; Returns:
+    ;   The reversed list.
+
+    (if args
+      (--cypher.itertools.reverse.stager
+        (r args)
+        (c (f args) reversed_args)
+      )
+      reversed_args
+    )
+  )
+  (defun-inline cypher.itertools.reverse (args)
+    ;; Reverse the list.
+    ;
+    ; Args:
+    ;   args: The list to reverse.
+    ;
+    ; Returns:
+    ;   The reversed list.
+
+    (--cypher.itertools.reverse.stager
+      args
+      cypher.constants.NIL
+    )
+  )
+
   ;; chain
 
   (defun --cypher.itertools.chain (args_a args_b)
@@ -155,6 +254,30 @@
     )
   )
 
+  ;; filter
+
+  (defun --cypher.itertools.filter (fn args is_lambda)
+    (if args
+      (if (--@cypher.utils.apply fn (f args) is_lambda)
+        (c
+          (f args)
+          (--cypher.itertools.filter fn (r args) is_lambda)
+        )
+        (--cypher.itertools.filter fn (r args) is_lambda)
+      )
+      cypher.constants.NIL
+    )
+  )
+  (defmacro cypher.itertools.filter (fn args)
+    (qq
+      (--cypher.itertools.filter
+        (unquote fn)
+        (unquote args)
+        (unquote (l fn))
+      )
+    )
+  )
+
   ;; reduce
 
   (defmacro --@cypher.itertools.reduce (fn args initializer context is_lambda)
@@ -241,6 +364,15 @@
 
   ;; Exports
 
+  (defmacro cf.length args
+    (c cypher.itertools.length args))
+
+  (defmacro cf.slice args
+    (c cypher.itertools.slice args))
+
+  (defmacro cf.reverse args
+    (c cypher.itertools.reverse args))
+
   (defmacro @cf.chain args
     (c @cypher.itertools.chain args))
   (defmacro cf.chain args
@@ -250,6 +382,9 @@
     (c @cypher.itertools.map args))
   (defmacro cf.map args
     (c cypher.itertools.map args))
+
+  (defmacro cf.filter args
+    (c cypher.itertools.filter args))
 
   (defmacro @cf.reduce args
     (c @cypher.itertools.reduce args))
