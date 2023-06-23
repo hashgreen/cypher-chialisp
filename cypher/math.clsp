@@ -169,6 +169,96 @@
 
   ;; Binary operators.
 
+  (defun-inline @cypher.math.gt (var1 var2)
+    ;; Greater than.
+    ;
+    ; Args:
+    ;   var1: The first number.
+    ;   var2: The second number.
+    ;
+    ; Returns:
+    ;   A boolean, the result of the comparison.
+
+    (> var1 var2)
+  )
+  (defun cypher.math.gt (var1 var2)
+    (@cypher.math.gt var1 var2))
+
+  (defun-inline @cypher.math.ge (var1 var2)
+    ;; Greater than or equal to.
+    ;
+    ; Args:
+    ;   var1: The first number.
+    ;   var2: The second number.
+    ;
+    ; Returns:
+    ;   A boolean, the result of the comparison.
+
+    (any (> var1 var2) (= var1 var2))
+  )
+  (defun cypher.math.ge (var1 var2)
+    (@cypher.math.ge var1 var2))
+
+  (defun-inline @cypher.math.lt (var1 var2)
+    ;; Less than.
+    ;
+    ; Args:
+    ;   var1: The first number.
+    ;   var2: The second number.
+    ;
+    ; Returns:
+    ;   A boolean, the result of the comparison.
+
+    (> var2 var1)
+  )
+  (defun cypher.math.lt (var1 var2)
+    (@cypher.math.lt var1 var2))
+
+  (defun-inline @cypher.math.le (var1 var2)
+    ;; Less than or equal to.
+    ;
+    ; Args:
+    ;   var1: The first number.
+    ;   var2: The second number.
+    ;
+    ; Returns:
+    ;   A boolean, the result of the comparison.
+
+    (any (> var2 var1) (= var1 var2))
+  )
+  (defun cypher.math.le (var1 var2)
+    (@cypher.math.le var1 var2))
+
+  (defun-inline @cypher.math.eq (var1 var2)
+    ;; Equal to.
+    ;
+    ; Args:
+    ;   var1: The first number.
+    ;   var2: The second number.
+    ;
+    ; Returns:
+    ;   A boolean, the result of the comparison.
+
+    (= var1 var2)
+  )
+  (defun cypher.math.eq (var1 var2)
+    (@cypher.math.eq var1 var2))
+
+  (defun-inline @cypher.math.ne (var1 var2)
+    ;; Not equal to.
+    ;
+    ; Args:
+    ;   var1: The first number.
+    ;   var2: The second number.
+    ;
+    ; Returns:
+    ;   A boolean, the result of the comparison.
+
+    (not (= var1 var2))
+  )
+  (defun cypher.math.ne (var1 var2)
+    (@cypher.math.ne var1 var2))
+
   (defun-inline @cypher.math.add (augend addend)
     ;; Addition.
     ;
@@ -364,6 +454,31 @@
     (c @cypher.math.str args))
   (defmacro cf.math.str args
     (c cypher.math.str args))
+
+  (defmacro @cf.math.gt args
+    (c @cypher.math.gt args))
+  (defmacro cf.math.gt args
+    (c cypher.math.gt args))
+  (defmacro @cf.math.ge args
+    (c @cypher.math.ge args))
+  (defmacro cf.math.ge args
+    (c cypher.math.ge args))
+  (defmacro @cf.math.lt args
+    (c @cypher.math.lt args))
+  (defmacro cf.math.lt args
+    (c cypher.math.lt args))
+  (defmacro @cf.math.le args
+    (c @cypher.math.le args))
+  (defmacro cf.math.le args
+    (c cypher.math.le args))
+  (defmacro @cf.math.eq args
+    (c @cypher.math.eq args))
+  (defmacro cf.math.eq args
+    (c cypher.math.eq args))
+  (defmacro @cf.math.ne args
+    (c @cypher.math.ne args))
+  (defmacro cf.math.ne args
+    (c cypher.math.ne args))
 
   (defmacro @cf.math.add args
     (c @cypher.math.add args))

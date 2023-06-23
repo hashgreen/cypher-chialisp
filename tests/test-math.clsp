@@ -62,6 +62,64 @@
       (@assert-equal (@cf.math.str 1234567 3) "1234.567")
       "test-math.test-str"))
 
+  (defun-inline test-gt ()
+    (@assert
+      (@assert-equal (@cf.math.gt 1 0) 1)
+      (@assert-equal (@cf.math.gt 0 1) 0)
+      (@assert-equal (@cf.math.gt 1 1) 0)
+      "test-math.test-gt"))
+
+  (defun-inline test-ge ()
+    (@assert
+      (@assert-equal (@cf.math.ge 1 0) 1)
+      (@assert-equal (@cf.math.ge 0 1) 0)
+      (@assert-equal (@cf.math.ge 1 1) 1)
+      "test-math.test-ge"))
+
+  (defun-inline test-lt ()
+    (@assert
+      (@assert-equal (@cf.math.lt 1 0) 0)
+      (@assert-equal (@cf.math.lt 0 1) 1)
+      (@assert-equal (@cf.math.lt 1 1) 0)
+      "test-math.test-lt"))
+
+  (defun-inline test-le ()
+    (@assert
+      (@assert-equal (@cf.math.le 1 0) 0)
+      (@assert-equal (@cf.math.le 0 1) 1)
+      (@assert-equal (@cf.math.le 1 1) 1)
+      "test-math.test-le"))
+
+  (defun-inline test-eq ()
+    (@assert
+      (@assert-equal (@cf.math.eq 1 0) 0)
+      (@assert-equal (@cf.math.eq 0 1) 0)
+      (@assert-equal (@cf.math.eq 1 1) 1)
+      "test-math.test-eq"))
+
+  (defun-inline test-ne ()
+    (@assert
+      (@assert-equal (@cf.math.ne 1 0) 1)
+      (@assert-equal (@cf.math.ne 0 1) 1)
+      (@assert-equal (@cf.math.ne 1 1) 0)
+      "test-math.test-ne"))
+
+  (defun-inline test-add ()
+    (@assert
+      (@assert-equal (@cf.math.add 1 2) 3)
+      (@assert-equal (@cf.math.add 1 -2) -1)
+      (@assert-equal (@cf.math.add -1 2) 1)
+      (@assert-equal (@cf.math.add -1 -2) -3)
+      "test-math.test-add"))
+
+  (defun-inline test-sub ()
+    (@assert
+      (@assert-equal (@cf.math.sub 1 2) -1)
+      (@assert-equal (@cf.math.sub 1 -2) 3)
+      (@assert-equal (@cf.math.sub -1 2) -3)
+      (@assert-equal (@cf.math.sub -1 -2) 1)
+      "test-math.test-sub"))
+
   (defun-inline test-unsigned-sub ()
     (@assert
       (@assert-equal (@cf.math.unsigned-sub 2 2) 0)
@@ -92,7 +150,7 @@
 
   (defun-inline test-min ()
     (@assert
-      (@assert-equal (@cf.math.min 1 2 3 4 5) 1)
+      (@assert-equal (cf.math.min 1 2 3 4 5) 1)
       "test-math.test-min"))
 
   (defun-inline test-math ()
@@ -101,6 +159,14 @@
       (test-round)
       (test-sqrt)
       (test-str)
+      (test-gt)
+      (test-ge)
+      (test-lt)
+      (test-le)
+      (test-eq)
+      (test-ne)
+      (test-add)
+      (test-sub)
       (test-unsigned-sub)
       (test-div)
       (test-pow)
