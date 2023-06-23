@@ -14,7 +14,9 @@
   ; (include cypher/math.clsp)
   ; (include cypher/utils.clsp)
 
-  ;; length
+  ;; Iterator to atom
+
+  ; length
 
   (defun cypher.itertools.length (args)
     ;; Get the length of the list.
@@ -31,7 +33,38 @@
     )
   )
 
-  ;; slice
+  ;; Atom to iterator
+
+  ; range
+
+  (defun --cypher.itertools.range (start end)
+    (@cypher.utils.if
+      (@cypher.math.ge start end) cypher.constants.NIL
+
+      (c start (--cypher.itertools.range (+ start 1) end))
+    )
+  )
+  (defun cypher.itertools.range (start end)
+    ;; Get a range of numbers.
+    ;
+    ; Args:
+    ;   start: The start of the range.
+    ;   end: The end of the range.
+    ;
+    ; Returns:
+    ;   The range of numbers.
+
+    (@cypher.utils.if
+      (any (@cypher.math.lt start 0) (@cypher.math.lt end 0))
+      (x "Negative indices not supported.")
+
+      (--cypher.itertools.range start end)
+    )
+  )
+
+  ;; Iterator to iterator
+
+  ; slice
 
   (defun --cypher.itertools.slice.stager (args start end)
     (@cypher.utils.if
@@ -65,17 +98,16 @@
     ;   The sliced list.
 
     (@cypher.utils.if
-      (@cypher.math.ge start end)
-      cypher.constants.NIL
-
       (any (@cypher.math.lt start 0) (@cypher.math.lt end 0))
       (x "Negative indices not supported.")
+
+      (@cypher.math.ge start end) cypher.constants.NIL
 
       (--cypher.itertools.slice.stager args start end)
     )
   )
 
-  ;; reverse
+  ; reverse
 
   (defun --cypher.itertools.reverse.stager (args reversed_args)
     ;; Reverse the list, stager.
@@ -110,7 +142,7 @@
     )
   )
 
-  ;; chain
+  ; chain
 
   (defun --cypher.itertools.chain (args_a args_b)
     ;; Flatten two args.
@@ -168,7 +200,7 @@
     )
   )
 
-  ;; map
+  ; map
 
   (defmacro --@cypher.itertools.map (fn args is_lambda)
     (if args
@@ -254,7 +286,7 @@
     )
   )
 
-  ;; filter
+  ; filter
 
   (defun --cypher.itertools.filter (fn args is_lambda)
     (if args
@@ -278,7 +310,7 @@
     )
   )
 
-  ;; reduce
+  ; reduce
 
   (defmacro --@cypher.itertools.reduce (fn args initializer context is_lambda)
     (if args
@@ -367,12 +399,13 @@
   (defmacro cf.length args
     (c cypher.itertools.length args))
 
+  (defmacro cf.range args
+    (c cypher.itertools.range args))
+
   (defmacro cf.slice args
     (c cypher.itertools.slice args))
-
   (defmacro cf.reverse args
     (c cypher.itertools.reverse args))
-
   (defmacro @cf.chain args
     (c @cypher.itertools.chain args))
   (defmacro cf.chain args
@@ -382,10 +415,8 @@
     (c @cypher.itertools.map args))
   (defmacro cf.map args
     (c cypher.itertools.map args))
-
   (defmacro cf.filter args
     (c cypher.itertools.filter args))
-
   (defmacro @cf.reduce args
     (c @cypher.itertools.reduce args))
   (defmacro cf.reduce args

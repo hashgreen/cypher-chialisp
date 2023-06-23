@@ -9,6 +9,7 @@
   (include cypher/constants.clsp)
   (include cypher/hashlib.clsp)
   (include cypher/itertools.clsp)
+  (include cypher/math.clsp)
   (include cypher/utils.clsp)
 
   (include tests/utils.clsp)
@@ -25,6 +26,22 @@
       (@assert-equal
         (cf.length (list 1 2 3 4)) 4)
         "test-itertools.test-length"))
+
+  (defun-inline test-range ()
+    (@assert
+      (@assert-equal
+        (cf.range 0 0) (list))
+      (@assert-equal
+        (cf.range 0 1) (list 0))
+      (@assert-equal
+        (cf.range 0 3) (list 0 1 2))
+      (@assert-equal
+        (cf.range 0 10) (list 0 1 2 3 4 5 6 7 8 9))
+      (@assert-equal
+        (cf.range 3 10) (list 3 4 5 6 7 8 9))
+      (@assert-equal
+        (cf.range 10 3) (list))
+      "test-itertools.test-range"))
 
   (defun-inline test-slice ()
     (@assert
@@ -129,6 +146,8 @@
   (defun-inline test-itertools ()
     (@assert
       (test-length)
+      (test-range)
+      (test-slice)
       (test-reverse)
       (test-chain)
       (test-map)
