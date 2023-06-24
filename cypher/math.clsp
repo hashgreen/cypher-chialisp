@@ -1,6 +1,11 @@
 ;;; Math functions.
 
 (
+  ;; Dependencies:
+  ;
+  ; (include cypher/fracmath.clsp)
+  ; (include cypher/utils.clsp)
+
   ;; Unary operators.
 
   (defun-inline @cypher.math.abs (var)
@@ -338,7 +343,6 @@
     (@cypher.math.div numer denom))
 
   (defun --cypher.math.pow (base exponent)
-
     (if (> exponent 0)
       (* base (--cypher.math.pow base (- exponent 1)))
       1
@@ -387,6 +391,23 @@
 
   ;; List reduction operators.
 
+  ; min
+
+  (defun-inline --@cypher.math.min-two (var1 var2)
+    ;; Find the minimum value between two integers.
+    ;
+    ; Args:
+    ;   var1: An integer.
+    ;   var2: An integer.
+    ;
+    ; Returns:
+    ;   An integer, the minimum value in the list.
+
+    (if (> var1 var2) var2 var1)
+  )
+  (defun --cypher.math.min-two (var1 var2)
+    (--@cypher.math.min-two var1 var2))
+
   (defmacro @cypher.math.min args
     ;; Find the minimum value in an integer list, macro form.
     ;
@@ -396,16 +417,17 @@
     ; Returns:
     ;   An integer, the minimum value in the list.
 
-    (qq
-      (@cypher.itertools.reduce
-        (lambda (left right) (if (> left right) right left))
-        (unquote (f args))
-        ()
-        . (unquote args)
+    (if (r args)
+      (qq
+        (--@cypher.math.min-two
+          (unquote (f args))
+          (@cypher.math.min . (unquote (r args)))
+        )
       )
+      (f args)
     )
   )
-  (defmacro cypher.math.min args
+  (defun cypher.math.min (args)
     ;; Find the minimum value in an integer list, function form.
     ;
     ; Args:
@@ -414,15 +436,125 @@
     ; Returns:
     ;   An integer, the minimum value in the list.
 
-    (qq
-      (cypher.itertools.reduce
-        (lambda (left right) (if (> left right) right left))
-        (unquote (f args))
-        ()
-        (unquote args)
+    (if (r args)
+      (--cypher.math.min-two
+        (f args) (cypher.math.min (r args))
       )
+      (f args)
     )
   )
+
+  ; max
+
+  (defun-inline --@cypher.math.max-two (var1 var2)
+    ;; Find the maximum value between two integers.
+    ;
+    ; Args:
+    ;   var1: An integer.
+    ;   var2: An integer.
+    ;
+    ; Returns:
+    ;   An integer, the maximum value in the list.
+
+    (if (> var1 var2) var1 var2)
+  )
+  (defun --cypher.math.max-two (var1 var2)
+    (--@cypher.math.max-two var1 var2))
+
+  (defmacro @cypher.math.max args
+    ;; Find the maximum value in an integer list, macro form.
+    ;
+    ; Args:
+    ;   args: A list of integers.
+    ;
+    ; Returns:
+    ;   An integer, the maximum value in the list.
+
+    (if (r args)
+      (qq
+        (--@cypher.math.max-two
+          (unquote (f args))
+          (@cypher.math.max . (unquote (r args)))
+        )
+      )
+      (f args)
+    )
+  )
+  (defun cypher.math.max (args)
+    ;; Find the maximum value in an integer list, function form.
+    ;
+    ; Args:
+    ;   args: A list of integers.
+    ;
+    ; Returns:
+    ;   An integer, the maximum value in the list.
+
+    (if (r args)
+      (--cypher.math.max-two
+        (f args) (cypher.math.max (r args))
+      )
+      (f args)
+    )
+  )
+
+  ; sum
+
+  (defun-inline @cypher.math.sum args
+    ;; Find the sum of a list of integers, macro form.
+    ;
+    ; Args:
+    ;   args: A list of integers.
+    ;
+    ; Returns:
+    ;   An integer, the sum of the list.
+
+    (+ . args)
+  )
+
+  (defun cypher.math.sum (args)
+    ;; Find the sum of a list of integers, function form.
+    ;
+    ; Args:
+    ;   args: A list of integers.
+    ;
+    ; Returns:
+    ;   An integer, the sum of the list.
+
+    (if args
+      (+ (f args) (cypher.math.sum (r args)))
+      0
+    )
+  )
+
+  ; prod
+
+  (defun-inline @cypher.math.prod args
+    ;; Find the product of a list of integers, macro form.
+    ;
+    ; Args:
+    ;   args: A list of integers.
+    ;
+    ; Returns:
+    ;   An integer, the product of the list.
+
+    (* . args)
+  )
+
+  (defun cypher.math.prod (args)
+    ;; Find the product of a list of integers, function form.
+    ;
+    ; Args:
+    ;   args: A list of integers.
+    ;
+    ; Returns:
+    ;   An integer, the product of the list.
+
+    (if args
+      (* (f args) (cypher.math.prod (r args)))
+      1
+    )
+  )
+
 
   ;; Exports
 
@@ -511,4 +643,16 @@
     (c @cypher.math.min args))
   (defmacro cf.math.min args
     (c cypher.math.min args))
+  (defmacro @cf.math.max args
+    (c @cypher.math.max args))
+  (defmacro cf.math.max args
+    (c cypher.math.max args))
+  (defmacro @cf.math.sum args
+    (c @cypher.math.sum args))
+  (defmacro cf.math.sum args
+    (c cypher.math.sum args))
+  (defmacro @cf.math.prod args
+    (c @cypher.math.prod args))
+  (defmacro cf.math.prod args
+    (c cypher.math.prod args))
 )

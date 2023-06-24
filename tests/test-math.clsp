@@ -150,8 +150,31 @@
 
   (defun-inline test-min ()
     (@assert
-      (@assert-equal (cf.math.min 1 2 3 4 5) 1)
+      (@assert-equal (@cf.math.min 1 2 3 4 5) 1)
+      (@assert-equal (cf.math.min (list 1 2 3 4 5)) 1)
       "test-math.test-min"))
+
+  (defun-inline test-max ()
+    (@assert
+      (@assert-equal (@cf.math.max 1 2 3 4 5) 5)
+      (@assert-equal (cf.math.max (list 1 2 3 4 5)) 5)
+      "test-math.test-max"))
+
+  (defun-inline test-sum ()
+    (@assert
+      (@assert-equal (@cf.math.sum) 0)
+      (@assert-equal (@cf.math.sum 1 2 3 4 5) 15)
+      (@assert-equal (cf.math.sum (list)) 0)
+      (@assert-equal (cf.math.sum (list 1 2 3 4 5)) 15)
+      "test-math.test-sum"))
+
+  (defun-inline test-prod ()
+    (@assert
+      (@assert-equal (@cf.math.prod) 1)
+      (@assert-equal (@cf.math.prod 1 2 3 4 5) 120)
+      (@assert-equal (cf.math.prod (list)) 1)
+      (@assert-equal (cf.math.prod (list 1 2 3 4 5)) 120)
+      "test-math.test-prod"))
 
   (defun-inline test-math ()
     (@assert
@@ -172,6 +195,9 @@
       (test-pow)
       (test-mul-frac)
       (test-min)
+      (test-max)
+      (test-sum)
+      (test-prod)
       "test-math"))
 
   (test-math)
