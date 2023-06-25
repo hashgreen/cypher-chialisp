@@ -66,21 +66,21 @@
 
   ; slice
 
-  (defun --cypher.itertools.slice.stager (args start end)
+  (defun --cypher.itertools.slice (args start end)
     (@cypher.utils.if
       (not args) cypher.constants.NIL
 
       (@cypher.math.eq end 0) cypher.constants.NIL
 
       (@cypher.math.gt start 0)
-      (--cypher.itertools.slice.stager
+      (--cypher.itertools.slice
         (r args) (- start 1) (- end 1)
       )
 
       ; (@cypher.math.eq start 0)
       (c
         (f args)
-        (--cypher.itertools.slice.stager
+        (--cypher.itertools.slice
           (r args) start (- end 1)
         )
       )
@@ -103,7 +103,7 @@
 
       (@cypher.math.ge start end) cypher.constants.NIL
 
-      (--cypher.itertools.slice.stager args start end)
+      (--cypher.itertools.slice args start end)
     )
   )
 
