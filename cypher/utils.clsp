@@ -56,6 +56,34 @@
     (a fn (if is_lambda args (c fn args)))
   )
 
+  ;; tree
+
+  (defmacro @cypher.utils.at (at arg)
+    ;; Take a string of `f` and `r` and follow the path.
+    ;
+    ; Args:
+    ;   at: a string consisting of only `f`s and `r`s.
+    ;   arg: the argument to follow the path on.
+    ;
+    ; Returns:
+    ;   The result of following the path.
+
+    (if at
+      (qq
+        (@cypher.utils.if
+          (= (unquote (r (divmod at 256))) "f")
+          (f (@cypher.utils.at (unquote (f (divmod at 256))) (unquote arg)))
+
+          (= (unquote (r (divmod at 256))) "r")
+          (r (@cypher.utils.at (unquote (f (divmod at 256))) (unquote arg)))
+
+          (x)
+        )
+      )
+      arg
+    )
+  )
+
   ;; control flow
 
   (defmacro @cypher.utils.assert args
@@ -280,6 +308,8 @@
 
   ;; Exports
 
+  (defmacro @cf.at args
+    (c @cypher.utils.at args))
   (defmacro @cf.assert args
     (c @cypher.utils.assert args))
   (defmacro @cf.assert@debug args
