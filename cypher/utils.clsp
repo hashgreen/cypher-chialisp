@@ -58,6 +58,16 @@
 
   ;; tree
 
+  (defmacro --@cypher.utils.at.stager (at_r arg)
+    (qq
+      (@cypher.utils.if
+        (= (unquote at_r) "f") (f (unquote arg))
+        (= (unquote at_r) "r") (r (unquote arg))
+        (= (unquote at_r) " ") (unquote arg)
+        (x)
+      )
+    )
+  )
   (defmacro @cypher.utils.at (at arg)
     ;; Take a string of `f` and `r` and follow the path.
     ;
@@ -70,14 +80,10 @@
 
     (if at
       (qq
-        (@cypher.utils.if
-          (= (unquote (r (divmod at 256))) "f")
-          (f (@cypher.utils.at (unquote (f (divmod at 256))) (unquote arg)))
-
-          (= (unquote (r (divmod at 256))) "r")
-          (r (@cypher.utils.at (unquote (f (divmod at 256))) (unquote arg)))
-
-          (x)
+        (--@cypher.utils.at.stager
+          ; TODO: expand substr to support negative indices
+          (unquote (r (divmod at 256)))
+          (@cypher.utils.at (unquote (f (divmod at 256))) (unquote arg))
         )
       )
       arg
