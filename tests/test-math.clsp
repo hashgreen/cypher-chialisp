@@ -7,6 +7,12 @@
 
   (include tests/utils.clsp)
 
+  (defun-inline test-neg ()
+    (@assert
+      (@assert-equal (@cf.math.neg 1) -1)
+      (@assert-equal (@cf.math.neg -1) 1)
+      "test-math.test-neg"))
+
   (defun-inline test-abs ()
     (@assert
       (@assert-equal (@cf.math.abs -10) 10)
@@ -178,6 +184,7 @@
 
   (defun-inline test-math ()
     (@assert
+      (test-neg)
       (test-abs)
       (test-round)
       (test-sqrt)

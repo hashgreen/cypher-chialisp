@@ -22,6 +22,20 @@
   (defun cypher.math.abs (var)
     (@cypher.math.abs var))
 
+  (defun-inline @cypher.math.neg (var)
+    ;; Negation.
+    ;
+    ; Args:
+    ;   var: The number to negate.
+    ;
+    ; Returns:
+    ;   An integer, the negation of `var`.
+
+    (- 0 var)
+  )
+  (defun cypher.math.neg (var)
+    (@cypher.math.neg var))
+
   (defun-inline @cypher.math.round-down-to-even (var)
     ;; Round down to the nearest even number.
     ;
@@ -562,6 +576,10 @@
     (c @cypher.math.abs args))
   (defmacro cf.math.abs args
     (c cypher.math.abs args))
+  (defmacro @cf.math.neg args
+    (c @cypher.math.neg args))
+  (defmacro cf.math.neg args
+    (c cypher.math.neg args))
   (defmacro @cf.math.round-down-to-even args
     (c @cypher.math.round-down-to-even args))
   (defmacro cf.math.round-down-to-even args
