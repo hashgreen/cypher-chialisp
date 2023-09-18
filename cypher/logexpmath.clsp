@@ -147,7 +147,7 @@
     )
   )
 
-  (defun-inline --cypher.logexpmath.ln-72.stager (var_f)
+  (defun --cypher.logexpmath.ln-72.stager (var_f)
     (--cypher.logexpmath.ln-72.do
       (@cypher.fracmath.AshFrac.from-frac
         var_f
