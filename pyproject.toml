@@ -8,7 +8,7 @@ readme = "README.md"
 [tool.poetry.dependencies]
 python = "^3.11"
 clvm-tools = "^0.4.6"
-
+clvm-tools-rs = { git = "https://github.com/Chia-Network/clvm_tools_rs.git", rev = "nightly" }
 
 [build-system]
 requires = ["poetry-core"]

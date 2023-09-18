@@ -2,36 +2,37 @@
 
 [[package]]
 name = "blspy"
-version = "1.0.16"
+version = "2.0.2"
 description = "BLS signatures in c++ (python bindings)"
 category = "main"
 optional = false
 python-versions = ">=3.7"
 files = [
-    {file = "blspy-1.0.16-cp310-cp310-macosx_10_14_x86_64.whl", hash = "sha256:5c4d31f19df5e6bd2bb84c3f21a43ef3cc80ff9414bb2541a8e49dad111aead6"},
-    {file = "blspy-1.0.16-cp310-cp310-macosx_11_0_arm64.whl", hash = "sha256:0107d652f14ea196308eef635862d9ed2c20a2822486653c4f4f27a893aada92"},
-    {file = "blspy-1.0.16-cp310-cp310-manylinux_2_12_x86_64.manylinux2010_x86_64.whl", hash = "sha256:89660ff986d0fd3ba0dbe5f2c0534229177b4c0e6facb18b2af7cb0f7864e02d"},
-    {file = "blspy-1.0.16-cp310-cp310-manylinux_2_17_aarch64.manylinux2014_aarch64.whl", hash = "sha256:fe53d43cdbdd0229b746253dc22453961a07ebec800b09681db81422421932de"},
-    {file = "blspy-1.0.16-cp310-cp310-win_amd64.whl", hash = "sha256:fcf254d21bab581cfd0144fd83016a0f2927b593975ece15e0bc844c5adc0071"},
-    {file = "blspy-1.0.16-cp311-cp311-macosx_10_14_x86_64.whl", hash = "sha256:8661047adf878c4dc830c661c032b9bc9bcd9d854bd8348f61ea02f470664a35"},
-    {file = "blspy-1.0.16-cp311-cp311-macosx_11_0_arm64.whl", hash = "sha256:ac1f695938fa1415d3f56e45bf5d0cef62a8242a53b8b276e7eeefd39c42ba9b"},
-    {file = "blspy-1.0.16-cp311-cp311-manylinux_2_17_aarch64.manylinux2014_aarch64.whl", hash = "sha256:6ed4ec6cc7ff44bf03c211cf2a7c3d1e423facb48c892fa534462c1558a378b1"},
-    {file = "blspy-1.0.16-cp311-cp311-manylinux_2_17_x86_64.manylinux2014_x86_64.whl", hash = "sha256:a274dba827c77547e7bd7100468612b613c5928c4c71803270b908d0434b71d0"},
-    {file = "blspy-1.0.16-cp311-cp311-win_amd64.whl", hash = "sha256:3ea1105d1d68e7a4c26d942bd49cc00e04bb7608b9d86af8e6cae8e117b50b3a"},
-    {file = "blspy-1.0.16-cp37-cp37m-macosx_10_14_x86_64.whl", hash = "sha256:b592836f4e1e915dd211797741904de93d64ccfda4ed40d40d2d6f5cc0dec1b9"},
-    {file = "blspy-1.0.16-cp37-cp37m-manylinux_2_12_x86_64.manylinux2010_x86_64.whl", hash = "sha256:f387414e519b5499772bd79f478b98c52156870e137351fd3d924520f0c5528f"},
-    {file = "blspy-1.0.16-cp37-cp37m-manylinux_2_17_aarch64.manylinux2014_aarch64.whl", hash = "sha256:702daf04b5de0027df33b4772ff76ca06af3a707349d1fb1370e4be8a9db3f53"},
-    {file = "blspy-1.0.16-cp37-cp37m-win_amd64.whl", hash = "sha256:7f80eea462bd564bb5f6b475811f8951d27e52d827e1a6af279c65051173181b"},
-    {file = "blspy-1.0.16-cp38-cp38-macosx_10_14_x86_64.whl", hash = "sha256:7b058d575b316c86217be70fca2ae6151f6847070d31963ce10032f3a839ea7d"},
-    {file = "blspy-1.0.16-cp38-cp38-manylinux_2_12_x86_64.manylinux2010_x86_64.whl", hash = "sha256:f5a12bf7049b529577269da908eb617a8f5fd14c98a23d204285aae4caa837e9"},
-    {file = "blspy-1.0.16-cp38-cp38-manylinux_2_17_aarch64.manylinux2014_aarch64.whl", hash = "sha256:1c3dc4cd9c44698f3888c12ff71574de416461fa1058405ab1160e6619646e06"},
-    {file = "blspy-1.0.16-cp38-cp38-win_amd64.whl", hash = "sha256:b3e4fafe4415863c9857b272cf56e7660e2c348bde30ed2db129df89004ca44c"},
-    {file = "blspy-1.0.16-cp39-cp39-macosx_10_14_x86_64.whl", hash = "sha256:326216db8bf44a80d4e30d1d72f7817f1837bb8efe84c17f7b1eae42bb64914e"},
-    {file = "blspy-1.0.16-cp39-cp39-macosx_11_0_arm64.whl", hash = "sha256:dd6b3ebc418501ee6ae42660f05b1881682840098f2e4edb0835d099a7948c3c"},
-    {file = "blspy-1.0.16-cp39-cp39-manylinux_2_12_x86_64.manylinux2010_x86_64.whl", hash = "sha256:7e7eef70e8f163779e4bd7cc25fb1ea87c9780ab9edd77f97fd18eea77faf8be"},
-    {file = "blspy-1.0.16-cp39-cp39-manylinux_2_17_aarch64.manylinux2014_aarch64.whl", hash = "sha256:ff4c3a6ff76c39c2d9cd0253a63b110b5f38c5b04e9787294339ecc394ea62ac"},
-    {file = "blspy-1.0.16-cp39-cp39-win_amd64.whl", hash = "sha256:e0698f4c347c05a2b404367113dd8487c7e50715b6d462ab70deb36f982af359"},
-    {file = "blspy-1.0.16.tar.gz", hash = "sha256:5c005d4ba082509a59f4dd55adad3bf15d07a03537daed65df2cfde99287c057"},
+    {file = "blspy-2.0.2-cp310-cp310-macosx_10_14_x86_64.whl", hash = "sha256:c053733d674ff92fcb4059b36b75c29337d34afbd900a0bc2113ad86fc447b77"},
+    {file = "blspy-2.0.2-cp310-cp310-macosx_11_0_arm64.whl", hash = "sha256:dbb053ccb1b48584cc4d357f29c770a2cf3e05faa8b184bd9294e8ed01a565b5"},
+    {file = "blspy-2.0.2-cp310-cp310-manylinux_2_17_aarch64.manylinux2014_aarch64.whl", hash = "sha256:1a0b208b80fa76c9adf296a77aa805127840cf5ca8f1af6e8c223f803d1770c5"},
+    {file = "blspy-2.0.2-cp310-cp310-manylinux_2_17_x86_64.manylinux2014_x86_64.whl", hash = "sha256:fc615db0f93911c24bb6512140e8f098f506d455c44fa1830fdb98e2590bc9f0"},
+    {file = "blspy-2.0.2-cp310-cp310-win_amd64.whl", hash = "sha256:c5581b44d0a4e01ba55183cadfc0139b9a97620c7910a5487023918f07b85271"},
+    {file = "blspy-2.0.2-cp311-cp311-macosx_10_14_x86_64.whl", hash = "sha256:fdb1dfc95c2563a7c3faa31e729ef972f5be04bcfd4478cc40e97e7df6c81bfb"},
+    {file = "blspy-2.0.2-cp311-cp311-macosx_11_0_arm64.whl", hash = "sha256:ebff8fdecf5ce5d4fabd9f39d0a1a5bce66e560f7bd7126f300cfebe69ca5aff"},
+    {file = "blspy-2.0.2-cp311-cp311-manylinux_2_17_aarch64.manylinux2014_aarch64.whl", hash = "sha256:29731d2f8203bee252bc8b80347486a17c278bf7ab6e0956a44a45a91e2d595d"},
+    {file = "blspy-2.0.2-cp311-cp311-manylinux_2_17_x86_64.manylinux2014_x86_64.whl", hash = "sha256:67fe57111005f2ea19536b526c92e70567118fbba1f5bfc5aa59949a52127852"},
+    {file = "blspy-2.0.2-cp311-cp311-win_amd64.whl", hash = "sha256:7347d140e0f2082f311b944385db2bacbe01363622754a237e9024e417b35f8c"},
+    {file = "blspy-2.0.2-cp37-cp37m-macosx_10_14_x86_64.whl", hash = "sha256:e0c7c685aed512adf8691be054c0c0cc87a66b0323f2434a6341fe49076d78ab"},
+    {file = "blspy-2.0.2-cp37-cp37m-manylinux_2_17_aarch64.manylinux2014_aarch64.whl", hash = "sha256:368da188d7eb4298e4ca59d253e8a11639534af045959c85f58f4c188fa361c1"},
+    {file = "blspy-2.0.2-cp37-cp37m-manylinux_2_17_x86_64.manylinux2014_x86_64.whl", hash = "sha256:a9555039e51281ffe34bcb06215512721b5cd509102db68267eab8b314258c41"},
+    {file = "blspy-2.0.2-cp37-cp37m-win_amd64.whl", hash = "sha256:e31a1a9adbf04b5f09321c5fa6b9fdc50bdc685d2f4c8335444e95513d81090e"},
+    {file = "blspy-2.0.2-cp38-cp38-macosx_10_14_x86_64.whl", hash = "sha256:b2988f1ac4fa5063d3fb30ff5272ba5b51877d551120085dc9e1257d3228e89c"},
+    {file = "blspy-2.0.2-cp38-cp38-macosx_11_0_arm64.whl", hash = "sha256:c51b2be0b81b786e6bc786c41735fbda0e335d31e2e163ef735ae56c6d3adb7f"},
+    {file = "blspy-2.0.2-cp38-cp38-manylinux_2_17_aarch64.manylinux2014_aarch64.whl", hash = "sha256:b0e8fd5f7729e08451e7ef66134f377e4bf88a9ea25a010f27bcf881e89541ee"},
+    {file = "blspy-2.0.2-cp38-cp38-manylinux_2_17_x86_64.manylinux2014_x86_64.whl", hash = "sha256:5603dc3fb30e622be31dd8d1bbfdd5624291f8c56f076a1d177836959c733cff"},
+    {file = "blspy-2.0.2-cp38-cp38-win_amd64.whl", hash = "sha256:bf30732ac316b8cafaeaeefa694a96ea4a92922fb86dd3d30f79d48a202e1d51"},
+    {file = "blspy-2.0.2-cp39-cp39-macosx_10_14_x86_64.whl", hash = "sha256:286a684b1f645d3c38ccc7882a305ed1b038a0e603ff2f482e493c91ab0f0b58"},
+    {file = "blspy-2.0.2-cp39-cp39-macosx_11_0_arm64.whl", hash = "sha256:744043f6e4192f3b431f1433b07144bd198294fd129c9b4a19e0c122474df32b"},
+    {file = "blspy-2.0.2-cp39-cp39-manylinux_2_17_aarch64.manylinux2014_aarch64.whl", hash = "sha256:26fb12e7158230f7169781fddf6a4c15dd4366de26d1531a09df986f9706332a"},
+    {file = "blspy-2.0.2-cp39-cp39-manylinux_2_17_x86_64.manylinux2014_x86_64.whl", hash = "sha256:6b7183ef57f8675c9d29f4f66ba3a65280fd3742200fc4d8f2f7a53b98b77136"},
+    {file = "blspy-2.0.2-cp39-cp39-win_amd64.whl", hash = "sha256:21df21e27b5f7ed56e37f8a6272adb9273ba88d0570d26315e28a41e14c37f43"},
+    {file = "blspy-2.0.2.tar.gz", hash = "sha256:9b12d685f3c104d3fe0faf3618f6b824272d131b8ea3843190ad670618736775"},
 ]
 
 [package.dependencies]
@@ -73,38 +74,37 @@ clvm-tools-rs = ">=0.1.25"
 dev = ["pytest"]
 
 [[package]]
-name = "clvm-tools-rs"
-version = "0.1.30"
+name = "clvm_tools_rs"
+version = "0.1.50"
 description = "tools for working with chialisp language; compiler, repl, python and wasm bindings"
 category = "main"
 optional = false
 python-versions = "*"
-files = [
-    {file = "clvm_tools_rs-0.1.30-cp37-abi3-macosx_10_7_x86_64.whl", hash = "sha256:20ac70f3ac17722e566c88e5c1f6cd9e98b6677a46721bba4dc2521e00a23286"},
-    {file = "clvm_tools_rs-0.1.30-cp37-abi3-macosx_11_0_arm64.whl", hash = "sha256:8e01b29e0736f1b354e6a8870ff8bce2c4ec3d990f254d5c72ff65dce1989f5e"},
-    {file = "clvm_tools_rs-0.1.30-cp37-abi3-manylinux_2_12_x86_64.manylinux2010_x86_64.whl", hash = "sha256:f5f6d259d177f911cbf44268286b8238051c08f0b108da44c749c56f76dceb48"},
-    {file = "clvm_tools_rs-0.1.30-cp37-abi3-manylinux_2_17_aarch64.manylinux2014_aarch64.whl", hash = "sha256:07319ca80ef139267bd97f68bb4e4a07a995139e5568a89696f28152db4e97e9"},
-    {file = "clvm_tools_rs-0.1.30-cp37-abi3-musllinux_1_1_x86_64.whl", hash = "sha256:485ed10039add36977dcfbd23c2b685427d88cb1fe43114ff9d571db6bcf7a46"},
-    {file = "clvm_tools_rs-0.1.30-cp37-abi3-win_amd64.whl", hash = "sha256:1453e1223a1ba312229232619eaf9f79380c18f3b3f8d364d4e11fd4eb1a76b5"},
-    {file = "clvm_tools_rs-0.1.30.tar.gz", hash = "sha256:dda1e4a685b8db94a0dbe1bb99b0a9bc3fd85d52a08657dba8c7579feaf84d92"},
-]
+files = []
+develop = false
+
+[package.source]
+type = "git"
+url = "https://github.com/Chia-Network/clvm_tools_rs.git"
+reference = "nightly"
+resolved_reference = "dc529afd7a37b927b631d4004fc492c714292309"
 
 [[package]]
 name = "wheel"
-version = "0.38.4"
+version = "0.40.0"
 description = "A built-package format for Python"
 category = "main"
 optional = false
 python-versions = ">=3.7"
 files = [
-    {file = "wheel-0.38.4-py3-none-any.whl", hash = "sha256:b60533f3f5d530e971d6737ca6d58681ee434818fab630c83a734bb10c083ce8"},
-    {file = "wheel-0.38.4.tar.gz", hash = "sha256:965f5259b566725405b05e7cf774052044b1ed30119b5d586b2703aafe8719ac"},
+    {file = "wheel-0.40.0-py3-none-any.whl", hash = "sha256:d236b20e7cb522daf2390fa84c55eea81c5c30190f90f29ae2ca1ad8355bf247"},
+    {file = "wheel-0.40.0.tar.gz", hash = "sha256:cd1196f3faee2b31968d626e1731c94f99cbdb67cf5a46e4f5656cbee7738873"},
 ]
 
 [package.extras]
-test = ["pytest (>=3.0.0)"]
+test = ["pytest (>=6.0.0)"]
 
 [metadata]
 lock-version = "2.0"
 python-versions = "^3.11"
-content-hash = "70ea51303a09df97cf38a3c25fc6dea5cf3279a37de169b48279a5e5d73668b9"
+content-hash = "ea4e6e977991104123b6a0bbc483442934bbe5dac3d5b26f1155d1a4b13fb841"
