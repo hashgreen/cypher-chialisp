@@ -74,7 +74,7 @@
     (r (r condition)))
 
   ; CreateCoinAnnouncement
-  
+
   (defun-inline cypher.standards.conditions.CreateCoinAnnouncement (message)
     (cypher.standards.conditions.Condition CREATE_COIN_ANNOUNCEMENT message))
   (defun-inline cypher.standards.conditions.CreateCoinAnnouncement.is-condition (condition)
@@ -85,7 +85,7 @@
     (r (r condition)))
 
   ; AssertCoinAnnouncement
-;message here: (sha256 RING_MORPH_BYTE this_coin_id this_subtotal)
+
   (defun-inline cypher.standards.conditions.AssertCoinAnnouncement (coin_id message)
     (cypher.standards.conditions.Condition ASSERT_COIN_ANNOUNCEMENT (sha256 coin_id message)))
   (defun-inline cypher.standards.conditions.AssertCoinAnnouncement.is-condition (condition)
