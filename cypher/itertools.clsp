@@ -312,24 +312,6 @@
 
   ; reduce
 
-  (defmacro --@cypher.itertools.reduce (fn args initializer context is_lambda)
-    (if args
-      (qq
-        (--@cypher.utils.apply
-          (unquote fn)
-          (@cypher.utils.prelist
-            (unquote (f args))
-            (--@cypher.itertools.reduce
-              (unquote fn) (unquote (r args)) (unquote initializer) (unquote context) (unquote is_lambda)
-            )
-            (unquote context)
-          )
-          (unquote is_lambda)
-        )
-      )
-      initializer
-    )
-  )
   (defmacro @cypher.itertools.reduce (fn initializer context . args)
     ;; Apply reduce function to each element sequentially, macro form.
     ;
@@ -342,36 +324,25 @@
     ; Returns:
     ;   A reduced value.
 
-    (qq
-      (--@cypher.itertools.reduce
-        (unquote fn) (unquote args) (unquote initializer) (unquote context) (unquote (l fn))
-      )
-    )
-  )
-
-  (defun --cypher.itertools.reduce (fn args initializer context is_lambda)
-    ; `fn` should be concrete functions, not symbols, while `is_lambda` hints
-    ; the origin of `fn`
     (if args
-      (--@cypher.utils.apply
-        fn
-        (@cypher.utils.prelist
-          (f args)
-          (--cypher.itertools.reduce
-            fn (r args) initializer context is_lambda
+      (qq
+        ((unquote fn)
+          (unquote (f args))
+          (@cypher.itertools.reduce
+            (unquote fn) (unquote initializer) (unquote context) . (unquote (r args))
           )
-          context
+          (unquote context)
         )
-        is_lambda
       )
       initializer
     )
   )
-  (defmacro cypher.itertools.reduce (fn initializer context args)
+
+  (defun cypher.itertools.reduce (fn initializer context args)
     ;; Apply reduce function to each element sequentially, function form.
     ;
     ; Args:
-    ;   func: function that takes the arguments: (arg agg . context), where
+    ;   func: function that takes the arguments: (arg agg context), where
     ;     arg: the current argument,
     ;     agg: the reduced value, and
     ;     context: the global arguments.
@@ -383,14 +354,15 @@
     ; Returns:
     ;   A reduced value.
 
-    (qq
-      (--cypher.itertools.reduce
-        (unquote fn)
-        (unquote args)
-        (unquote initializer)
-        (unquote context)
-        (unquote (l fn))
+    (if args
+      (fn
+        (f args)
+        (cypher.itertools.reduce
+          fn initializer context (r args)
+        )
+        context
       )
+      initializer
     )
   )
 
