@@ -89,7 +89,7 @@
     (cf.puzzle-hash-of-curried-function
       (SingletonMod.get-mod-hash singleton_mod)
       inner_puzzle_hash
-      (sha256tree#singleton-lib singleton_mod)))
+      (cf.sha256tree singleton_mod)))
 
   ; SingletonMod.morph-coin-id
 
@@ -140,7 +140,7 @@
   (defun-inline SingletonMod.morph-conditions.HintDelta (condition)
     (odd_cons_m113 (cf.Condition.output-amount condition)))
   (defun odd_cons_m113 (output_amount)
-    (@cf.concat (= (logand output_amount 1) 1) (= output_amount -113)))
+    (@cf.prelist (= (logand output_amount 1) 1) (= output_amount -113)))
   (defun-inline SingletonMod.morph-conditions.HintDelta.get-is-output-odd (hint_delta)
     (f hint_delta))
   (defun-inline SingletonMod.morph-conditions.HintDelta.get-is-output-m113 (hint_delta)
@@ -188,7 +188,7 @@
   ;   list of cf.Condition
 
   (defun-inline SingletonMod.morph-conditions.reduce (singleton_mod condition conditions)
-    (@cf.concat condition conditions))
+    (@cf.prelist condition conditions))
 
   ;; SingletonMod.morph-conditions.do.stager-2
   ;
@@ -253,14 +253,10 @@
   ;; Utils
 
   (defun is_odd_create_coin (condition)
-    (@cf.and@v2
+    (@cf.and
       (cf.Condition.is-condition CREATE_COIN condition)
       (logand (cf.CreateCoin.get-amount condition) 1)
     )
   )
 
-  (defun sha256tree#singleton-lib (tree)
-    (if (l tree)
-      (sha256 2 (sha256tree#singleton-lib (f tree)) (sha256tree#singleton-lib (r tree)))
-      (sha256 1 tree)))
 )

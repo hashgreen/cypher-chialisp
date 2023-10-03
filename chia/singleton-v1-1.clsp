@@ -16,21 +16,19 @@
     (singleton_mod inner_puzzle lineage_proof amount inner_solution)
 
     (@cf.assert
-      (logand amount ONE#cypher.constants.ONE)
-      (@cf.concat
+      (logand amount cf.ONE)
+      (@cf.prelist
         (cf.AssertMyAmount amount)
-        (@cf.concat
-          (SingletonMod.verify-lineage-proof
-            singleton_mod
-            (cf.Coin.verified-id
-              (SingletonMod.lineage-proof-to-parent-coin singleton_mod
-                lineage_proof))
-            (EveLineageProof.is-not lineage_proof)
-          )
-          (SingletonMod.morph-conditions.do@v1-1 singleton_mod
-            (a inner_puzzle inner_solution)
-            0
-          )
+        (SingletonMod.verify-lineage-proof
+          singleton_mod
+          (cf.Coin.id@safe
+            (SingletonMod.lineage-proof-to-parent-coin singleton_mod
+              lineage_proof))
+          (EveLineageProof.is-not lineage_proof)
+        )
+        (SingletonMod.morph-conditions.do@v1-1 singleton_mod
+          (a inner_puzzle inner_solution)
+          0
         )
       )
     )

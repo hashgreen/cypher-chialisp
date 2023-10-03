@@ -11,7 +11,7 @@
   (defun-inline SingletonMod.morph-conditions.map@v1-1
     (singleton_mod condition is_output_odd)
 
-    (@cf.concat
+    (@cf.prelist
       (cf.Condition.get-condition-code condition)
       (SingletonMod.morph-puzzle-hash singleton_mod
         (cf.CreateCoin.get-puzzle-hash condition))
@@ -37,17 +37,17 @@
           (if
             (= (cf.CreateCoin.get-amount (f conditions)) -113)
             (SingletonMod.morph-conditions.do@v1-1
-              singleton_mod (r conditions) ONE#cypher.constants.ONE
+              singleton_mod (r conditions) cf.ONE
             )
-            (@cf.concat
+            (@cf.prelist
               (SingletonMod.morph-conditions.map@v1-1 singleton_mod (f conditions))
               (SingletonMod.morph-conditions.do@v1-1
-                singleton_mod (r conditions) ONE#cypher.constants.ONE
+                singleton_mod (r conditions) cf.ONE
               )
             )
           )
         )
-        (@cf.concat
+        (@cf.prelist
           (f conditions)
           (SingletonMod.morph-conditions.do@v1-1
             singleton_mod (r conditions) has_odd_output
@@ -55,6 +55,30 @@
         )
       )
       (@cf.assert has_odd_output ())
+    )
+  )
+
+  (defun SingletonMod.morph-conditions.reducer@v1-1
+    (condition (conditions has_odd_output))
+
+    (if (is_odd_create_coin condition)
+      (@cf.assert (not has_odd_output)
+        (if
+          (= (cf.CreateCoin.get-amount condition) -113)
+          (list conditions 1)
+          (list
+            (@cf.prelist
+              (SingletonMod.morph-conditions.map@v1-1 singleton_mod condition)
+              conditions
+            )
+            1
+          )
+        )
+      )
+      (list
+        (@cf.prelist condition conditions)
+        has_odd_output
+      )
     )
   )
 )

@@ -40,7 +40,7 @@
   ;; CatMod
 
   (defun-inline CatMod (mod_hash tail_program_hash)
-    (list mod_hash (cf.sha256one mod_hash) tail_program_hash))
+    (list mod_hash (@cf.sha256one mod_hash) tail_program_hash))
   (defun-inline CatMod.get-mod-hash (cat_mod)
     (f cat_mod))
   (defun-inline CatMod.get-mod-hash-hash (cat_mod)
@@ -48,10 +48,10 @@
   (defun-inline CatMod.get-tail-program-hash (cat_mod)
     (f (r (r cat_mod))))
   (defun-inline CatMod.is-coin-cat (cat_mod coin coin_id)
-    (= coin_id (cf.Coin.id (CatMod.morph-coin cat_mod coin))))
+    (= coin_id (cf.Coin.id@unsafe (CatMod.morph-coin cat_mod coin))))
   (defun-inline CatMod.verify-tail-program-hash (cat_mod tail_truth)
     (=
-      (sha256tree1#cat-lib (CatTailTruth.get-program tail_truth))
+      (cf.sha256tree (CatTailTruth.get-program tail_truth))
       (CatMod.get-tail-program-hash cat_mod)))
 
   ;; CatMod.morph-puzzle-hash
@@ -60,7 +60,7 @@
     (cf.puzzle-hash-of-curried-function
       (CatMod.get-mod-hash cat_mod)
       inner_puzzle_hash
-      (cf.sha256one (CatMod.get-tail-program-hash cat_mod))
+      (@cf.sha256one (CatMod.get-tail-program-hash cat_mod))
       (CatMod.get-mod-hash-hash cat_mod)))
 
   (defun-inline CatMod.morph-coin (cat_mod coin)
@@ -97,7 +97,7 @@
   ;; CatMod.MorphConditions.State
 
   (defun-inline CatMod.MorphConditions.State (conditions output_amount tail_truth)
-    (@cf.concat conditions output_amount tail_truth))
+    (@cf.prelist conditions output_amount tail_truth))
   (defun-inline CatMod.MorphConditions.State.get-conditions (state)
     (f state))
   (defun-inline CatMod.MorphConditions.State.get-output-amount (state)
@@ -108,7 +108,7 @@
   ;; CatMod.MorphConditions.StateDelta
 
   (defun-inline CatMod.MorphConditions.StateDelta (condition output_amount)
-    (@cf.concat condition output_amount))
+    (@cf.prelist condition output_amount))
   (defun-inline CatMod.MorphConditions.StateDelta.get-condition (state_delta)
     (f state_delta))
   (defun-inline CatMod.MorphConditions.StateDelta.get-output-amount (state_delta)
@@ -124,22 +124,26 @@
 
   (defun-inline CatMod.MorphConditions.map (cat_mod condition)
     (CatMod.MorphConditions.StateDelta
-      (@cf.switch
-        (
-          (cf.CreateCoin.is-condition condition) .
-          (@cf.concat
-            CREATE_COIN
-            (CatMod.morph-puzzle-hash cat_mod
-              (cf.CreateCoin.get-puzzle-hash condition))
-            (cf.CreateCoin.get-puzzle-hash-rest condition)))
-        (
-          (cf.CreateCoinAnnouncement.is-condition condition) .
-          (@cf.concat
-            CREATE_COIN_ANNOUNCEMENT
-            (CatMod.MorphMessage (cf.CreateCoinAnnouncement.get-message condition))
-            (cf.CreateCoinAnnouncement.get-message-rest condition)))
-        condition)
-      (cf.Condition.output-amount condition)))
+      (@cf.if
+        (cf.CreateCoin.is-condition condition)
+        (@cf.prelist
+          CREATE_COIN
+          (CatMod.morph-puzzle-hash cat_mod
+            (cf.CreateCoin.get-puzzle-hash condition)
+          )
+          (cf.CreateCoin.get-puzzle-hash-rest condition)
+        )
+        (cf.CreateCoinAnnouncement.is-condition condition)
+        (@cf.prelist
+          CREATE_COIN_ANNOUNCEMENT
+          (CatMod.MorphMessage (cf.CreateCoinAnnouncement.get-message condition))
+          (cf.CreateCoinAnnouncement.get-message-rest condition)
+        )
+        condition
+      )
+      (cf.Condition.output-amount condition)
+    )
+  )
 
   ;; CatMod.MorphConditions.initialize
   ;
@@ -194,19 +198,4 @@
           (CatMod.MorphConditions.do cat_mod (r conditions) tail_truth)))
       (CatMod.MorphConditions.initialize cat_mod tail_truth)))
 
-  ;; Utils
-
-  (defun sha256tree1#cat-lib (tree)
-    (if (l tree)
-      (sha256 2 (sha256tree1#cat-lib (f tree)) (sha256tree1#cat-lib (r tree)))
-      (cf.sha256one tree)))
-
-  (defun-inline merge-iterables (f . r)
-    (merge_list f . r))
-  (defun merge_list (iterable_a iterable_b)
-    (if iterable_a
-      (c
-        (f iterable_a)
-        (merge-iterables (r iterable_a) iterable_b))
-      iterable_b))
 )
