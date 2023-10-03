@@ -213,7 +213,7 @@
     ; Returns:
     ;   A boolean, the result of the comparison.
 
-    (any (> var1 var2) (= var1 var2))
+    (not (@cypher.math.lt var1 var2))
   )
   (defun cypher.math.ge (var1 var2)
     (@cypher.math.ge var1 var2))
@@ -229,6 +229,7 @@
     ;   A boolean, the result of the comparison.
 
     (> var2 var1)
+    (@cypher.math.gt var2 var1)
   )
   (defun cypher.math.lt (var1 var2)
     (@cypher.math.lt var1 var2))
@@ -243,7 +244,7 @@
     ; Returns:
     ;   A boolean, the result of the comparison.
 
-    (any (> var2 var1) (= var1 var2))
+    (not (@cypher.math.gt var1 var2))
   )
   (defun cypher.math.le (var1 var2)
     (@cypher.math.le var1 var2))
