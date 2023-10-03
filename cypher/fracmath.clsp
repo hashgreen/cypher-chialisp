@@ -1120,6 +1120,24 @@
   (defun cypher.fracmath.AshFrac.gt (ash_frac other)
     (@cypher.fracmath.AshFrac.gt ash_frac other))
 
+  (defun-inline @cypher.fracmath.AshFrac.lt (ash_frac other)
+    (@cypher.fracmath.AshFrac.gt other ash_frac)
+  )
+  (defun cypher.fracmath.AshFrac.lt (ash_frac other)
+    (@cypher.fracmath.AshFrac.lt ash_frac other))
+
+  (defun-inline @cypher.fracmath.AshFrac.ge (ash_frac other)
+    (not (@cypher.fracmath.AshFrac.lt ash_frac other))
+  )
+  (defun cypher.fracmath.AshFrac.ge (ash_frac other)
+    (@cypher.fracmath.AshFrac.ge ash_frac other))
+
+  (defun-inline @cypher.fracmath.AshFrac.le (ash_frac other)
+    (not (@cypher.fracmath.AshFrac.gt other ash_frac))
+  )
+  (defun cypher.fracmath.AshFrac.le (ash_frac other)
+    (@cypher.fracmath.AshFrac.le ash_frac other))
+
   (defun-inline --@cypher.fracmath.AshFrac.add@imprecise (ash_frac other)
     ;; Addition of fractions, not retaining sufficient precision.
     ;
@@ -1499,6 +1517,18 @@
     (c @cypher.fracmath.AshFrac.gt args))
   (defmacro cf.AshFrac.gt args
     (c cypher.fracmath.AshFrac.gt args))
+  (defmacro @cf.AshFrac.lt args
+    (c @cypher.fracmath.AshFrac.lt args))
+  (defmacro cf.AshFrac.lt args
+    (c cypher.fracmath.AshFrac.lt args))
+  (defmacro @cf.AshFrac.ge args
+    (c @cypher.fracmath.AshFrac.ge args))
+  (defmacro cf.AshFrac.ge args
+    (c cypher.fracmath.AshFrac.ge args))
+  (defmacro @cf.AshFrac.le args
+    (c @cypher.fracmath.AshFrac.le args))
+  (defmacro cf.AshFrac.le args
+    (c cypher.fracmath.AshFrac.le args))
   (defmacro @cf.AshFrac.add args
     (c @cypher.fracmath.AshFrac.add args))
   (defmacro cf.AshFrac.add args
